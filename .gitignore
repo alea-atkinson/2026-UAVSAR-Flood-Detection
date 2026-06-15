@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environments
+venv/
+
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model checkpoints
+checkpoints/
+models/
+*.pt
+*.pth
+
+# Generated datasets
+spie/Preprocessed-128/
+tiles/
+output/
+
+# macOS
+.DS_Store
