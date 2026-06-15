@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 
 # Virtual environments
-venv/
+
 
 
 # Jupyter
@@ -14,6 +14,7 @@ checkpoints/
 models/
 *.pt
 *.pth
+spie/spie_notebooks/artifacts/
 
 # Generated datasets
 spie/Preprocessed-128/
