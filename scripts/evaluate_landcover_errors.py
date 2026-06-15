@@ -8,6 +8,9 @@ land-cover code.
 Usage:
     python scripts/evaluate_landcover_errors.py --device cuda
     python scripts/evaluate_landcover_errors.py --device cpu --threshold 0.4
+    python scripts/evaluate_landcover_errors.py --device cuda \\
+        --threshold-csv outputs/threshold_sweep_baseline/threshold_sweep_selected_test_results.csv \\
+        --outputs-dir outputs/landcover_error_analysis_threshold_selected
 """
 
 from __future__ import annotations
@@ -54,9 +57,11 @@ _METRIC_COLS = [
     "dice", "iou", "precision", "recall",
     "false_positive_rate", "false_negative_rate",
 ]
-COLS_BY_FP_AND_CLASS = ["heldout_fp", "land_cover_code", "land_cover_name"] + _METRIC_COLS
+# threshold is included per-fp but omitted from the by-class aggregate because
+# that file folds results across multiple fps that may use different thresholds.
+COLS_BY_FP_AND_CLASS = ["heldout_fp", "threshold", "land_cover_code", "land_cover_name"] + _METRIC_COLS
 COLS_BY_CLASS = ["land_cover_code", "land_cover_name"] + _METRIC_COLS
-COLS_BY_FP = ["heldout_fp"] + _METRIC_COLS
+COLS_BY_FP = ["heldout_fp", "threshold"] + _METRIC_COLS
 
 
 # ---------------------------------------------------------------------------
@@ -187,6 +192,21 @@ def compute_metrics(tp: int, fp: int, fn: int, tn: int) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Threshold map loader
+# ---------------------------------------------------------------------------
+
+def load_threshold_map(csv_path: Path) -> dict[str, float]:
+    """Read threshold sweep results CSV; return {fp_label: selected_threshold}."""
+    result: dict[str, float] = {}
+    with csv_path.open("r", newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            result[row["heldout_fp"]] = float(row["selected_threshold"])
+    if not result:
+        raise ValueError(f"No rows found in threshold CSV: {csv_path}")
+    return result
+
+
+# ---------------------------------------------------------------------------
 # I/O helpers
 # ---------------------------------------------------------------------------
 
@@ -221,7 +241,17 @@ def parse_args() -> argparse.Namespace:
                         help="Fallback if not stored in checkpoint (default: 32)")
     parser.add_argument("--batch-size", type=int, default=8)
     parser.add_argument("--num-workers", type=int, default=2)
-    parser.add_argument("--threshold", type=float, default=0.5)
+    parser.add_argument("--threshold", type=float, default=0.5,
+                        help="Global threshold when --threshold-csv is not provided (default: 0.5)")
+    parser.add_argument(
+        "--threshold-csv",
+        type=Path,
+        default=None,
+        metavar="PATH",
+        help="Path to threshold_sweep_selected_test_results.csv. "
+             "When provided, uses the per-fp selected_threshold from that file "
+             "instead of --threshold.",
+    )
     parser.add_argument(
         "--device",
         default="cuda" if torch.cuda.is_available() else "cpu",
@@ -237,18 +267,30 @@ def main() -> None:
     args = parse_args()
     device = torch.device(args.device)
 
+    # Load per-fp thresholds if a sweep CSV was provided.
+    threshold_map: dict[str, float] = {}
+    if args.threshold_csv is not None:
+        if not args.threshold_csv.exists():
+            raise FileNotFoundError(f"--threshold-csv not found: {args.threshold_csv}")
+        threshold_map = load_threshold_map(args.threshold_csv)
+
     print(f"Device     : {device}")
     print(f"Data root  : {args.data_root}")
     print(f"Split dir  : {args.split_dir}")
     print(f"Models dir : {args.models_dir}")
     print(f"Outputs dir: {args.outputs_dir}")
-    print(f"Threshold  : {args.threshold}")
+    if threshold_map:
+        print(f"Threshold  : per-fp from {args.threshold_csv}")
+    else:
+        print(f"Threshold  : {args.threshold} (global)")
     print()
 
     # counts[(fp_label, lc_code)] = {"tp": N, "fp": N, "fn": N, "tn": N}
     counts: dict[tuple[str, int], dict[str, int]] = defaultdict(
         lambda: {"tp": 0, "fp": 0, "fn": 0, "tn": 0}
     )
+    # Record the threshold actually used for each fp so it can be written to CSVs.
+    fp_thresholds: dict[str, float] = {}
 
     for fp in FPS:
         fp_label = f"fp{fp}"
@@ -262,7 +304,11 @@ def main() -> None:
             print(f"[WARN] Test CSV not found, skipping: {test_csv}")
             continue
 
+        threshold = threshold_map.get(fp_label, args.threshold)
+        fp_thresholds[fp_label] = threshold
+
         print(f"[{fp_label}] Checkpoint : {checkpoint_path}")
+        print(f"[{fp_label}] Threshold  : {threshold:.4f}")
         checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
         saved_args = checkpoint.get("args", {})
         base_channels = saved_args.get("base_channels", args.base_channels)
@@ -282,7 +328,7 @@ def main() -> None:
         )
 
         print(f"[{fp_label}] Evaluating {len(dataset)} tiles (base_channels={base_channels}) ...")
-        accumulate_counts(model, loader, device, args.threshold, fp_label, counts)
+        accumulate_counts(model, loader, device, threshold, fp_label, counts)
         print(f"[{fp_label}] Done.\n")
 
     if not counts:
@@ -296,6 +342,7 @@ def main() -> None:
         m = compute_metrics(c["tp"], c["fp"], c["fn"], c["tn"])
         by_fp_class.append({
             "heldout_fp": fp_label,
+            "threshold": fp_thresholds.get(fp_label, args.threshold),
             "land_cover_code": lc_code,
             "land_cover_name": LC_NAMES.get(lc_code, f"Unknown ({lc_code})"),
             **m,
@@ -339,7 +386,11 @@ def main() -> None:
     by_fp: list[dict] = []
     for fp_label, c in sorted(fp_totals.items()):
         m = compute_metrics(c["tp"], c["fp"], c["fn"], c["tn"])
-        by_fp.append({"heldout_fp": fp_label, **m})
+        by_fp.append({
+            "heldout_fp": fp_label,
+            "threshold": fp_thresholds.get(fp_label, args.threshold),
+            **m,
+        })
 
     # ------------------------------------------------------------------
     # Write CSVs
@@ -382,12 +433,12 @@ def main() -> None:
 
     print("\n=== Overall by heldout flight path ===")
     print(
-        f"{'fp':>5}  {'pixels':>12}  {'dice':>6}  {'iou':>6}"
+        f"{'fp':>5}  {'threshold':>9}  {'pixels':>12}  {'dice':>6}  {'iou':>6}"
         f"  {'precision':>9}  {'recall':>7}  {'FPR':>6}  {'FNR':>6}"
     )
     for row in by_fp:
         print(
-            f"{row['heldout_fp']:>5}  {row['pixels']:>12,}  "
+            f"{row['heldout_fp']:>5}  {row['threshold']:>9.4f}  {row['pixels']:>12,}  "
             f"{_f(row['dice'], 6)}  {_f(row['iou'], 6)}  "
             f"{_f(row['precision'], 9)}  {_f(row['recall'], 7)}  "
             f"{_f(row['false_positive_rate'], 6)}  {_f(row['false_negative_rate'], 6)}"
