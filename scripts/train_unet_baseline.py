@@ -71,7 +71,6 @@ require_package("rasterio")
 import rasterio  # noqa: E402
 import torch  # noqa: E402
 import torch.nn as nn  # noqa: E402
-import torch.nn.functional as F  # noqa: E402
 from torch.utils.data import DataLoader, Dataset  # noqa: E402
 
 
