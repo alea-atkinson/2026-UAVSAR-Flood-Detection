@@ -1,0 +1,12 @@
+Best parameters:
+{'learning_rate': 6.814072753833465e-05, 'batch_size': 16, 'base_channels': 64}
+
+To run: python3 our_scripts/train_unet_baseline.py\
+    --learning-rate 6.814072753833465e-05\
+    --batch-size 16\
+    --base-channels 64\
+    --train-csv csv_splits/flood_splits_standard_strict_train_val/strict_no_overlap/heldout_fp2_train.csv\
+    --test-csv csv_splits/flood_splits_standard_strict_train_val/strict_no_overlap/heldout_fp2_test.csv\
+    --val-csv csv_splits/flood_splits_standard_strict_train_val/strict_no_overlap/heldout_fp2_validation.csv
+
+    csv_splits/flood_splits_standard_strict_train_val/strict_no_overlap/heldout_fp1_train.csv
