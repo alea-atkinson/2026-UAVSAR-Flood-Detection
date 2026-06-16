@@ -1,0 +1,5 @@
+{
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv-tf312/bin/python",
+  "python.envFile": "${workspaceFolder}/.env",
+  "jupyter.envFile": "${workspaceFolder}/.env"
+}

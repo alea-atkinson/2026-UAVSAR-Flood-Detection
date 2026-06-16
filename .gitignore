@@ -23,3 +23,12 @@ output/
 
 # macOS
 .DS_Store
+
+# Local notebook runtime
+.venv-tf312/
+.tmp/
+spie/spie/Preprocessed-128/
+spie/spie/notebooks/artifacts/
+.env
+spie/spie/Preprocessed-128-paper/
+spie/spie/Preprocessed-128-paper-filtered/
