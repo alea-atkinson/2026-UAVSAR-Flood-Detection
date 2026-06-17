@@ -2,16 +2,18 @@
 """Filter preprocessed SAR/flood TIFF pairs by flood-mask water coverage.
 
 Creates a symlinked dataset view with the same train/val/test folder structure
-used by the TensorFlow notebooks. By default it targets the SPIE paper settings:
-5%-85% water coverage and 3,873 total pairs split 70/15/15.
+used by the TensorFlow notebooks. The filtered pairs are pooled across the
+source splits and repartitioned into a fresh 70/15/15 train/val/test split.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import random
+import shutil
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -23,12 +25,12 @@ import warnings
 
 warnings.filterwarnings("ignore", category=NotGeoreferencedWarning)
 
-DEFAULT_TARGET_COUNTS = {"train": 2711, "val": 581, "test": 581}
+SPLIT_FRACTIONS = {"train": 0.70, "val": 0.15, "test": 0.15}
 
 
 @dataclass(frozen=True)
 class PairRecord:
-    split: str
+    source_split: str
     sar_path: Path
     flood_path: Path
     water_ratio: float
@@ -66,16 +68,6 @@ def safe_symlink(src: Path, dst: Path) -> None:
     dst.symlink_to(rel_src)
 
 
-def parse_target_counts(value: str | None) -> dict[str, int] | None:
-    if not value:
-        return None
-    parts = value.split(",")
-    if len(parts) != 3:
-        raise argparse.ArgumentTypeError("target counts must be train,val,test")
-    train, val, test = (int(part) for part in parts)
-    return {"train": train, "val": val, "test": test}
-
-
 def classify_ratio(ratio: float, min_ratio: float, max_ratio: float) -> str:
     if ratio < min_ratio:
         return "below_min"
@@ -84,113 +76,177 @@ def classify_ratio(ratio: float, min_ratio: float, max_ratio: float) -> str:
     return "kept"
 
 
+def split_counts(total: int) -> dict[str, int]:
+    train = int(round(total * SPLIT_FRACTIONS["train"]))
+    val = int(round(total * SPLIT_FRACTIONS["val"]))
+    test = total - train - val
+    return {"train": train, "val": val, "test": test}
+
+
+def output_name(record: PairRecord, kind: str) -> str:
+    """Avoid rare filename collisions after pooling previous source splits."""
+    digest = hashlib.sha1(str(record.sar_path.resolve()).encode("utf-8")).hexdigest()[:10]
+    sar_stem = record.sar_path.stem
+    if kind == "sar":
+        return f"{record.source_split}_{digest}_{sar_stem}{record.sar_path.suffix}"
+    flood_stem = sar_stem.replace("_prep", "_flood_prep")
+    return f"{record.source_split}_{digest}_{flood_stem}{record.flood_path.suffix}"
+
+
+def prepare_output_root(output_root: Path) -> None:
+    if output_root.exists():
+        for child in output_root.iterdir():
+            if child.is_dir() and not child.is_symlink():
+                shutil.rmtree(child)
+            else:
+                child.unlink()
+    output_root.mkdir(parents=True, exist_ok=True)
+
+
+def copy_metadata(source_root: Path, output_root: Path) -> None:
+    source_metadata = source_root / "metadata"
+    output_metadata = output_root / "metadata"
+    output_metadata.mkdir(parents=True, exist_ok=True)
+    for name in ["normalization_stats.json", "channel_analysis.json"]:
+        source_file = source_metadata / name
+        if source_file.exists():
+            shutil.copy2(source_file, output_metadata / name)
+
+
 def build_filtered_dataset(
     source_root: Path,
     output_root: Path,
     min_water_ratio: float,
     max_water_ratio: float,
-    target_counts: dict[str, int] | None,
     seed: int,
 ) -> dict[str, object]:
     rng = random.Random(seed)
-    output_root.mkdir(parents=True, exist_ok=True)
+    prepare_output_root(output_root)
 
     manifest: dict[str, object] = {
-        "description": "Water-ratio filtered symlink view of Preprocessed-128.",
+        "description": "SPIE paper water-ratio filtered symlink view of Preprocessed-128.",
         "source_root": str(source_root.resolve()),
         "output_root": str(output_root.resolve()),
         "seed": seed,
+        "split_strategy": "pool eligible pairs across source splits, shuffle, then split 70/15/15",
+        "split_fractions": SPLIT_FRACTIONS,
         "quality_thresholds": {
             "min_water_ratio": min_water_ratio,
             "max_water_ratio": max_water_ratio,
         },
-        "target_counts": target_counts,
         "splits": {},
     }
 
-    final_counts: dict[str, int] = {}
+    source_split_counts: dict[str, dict[str, int]] = {}
+    eligible_records: list[PairRecord] = []
     total_source = 0
-    total_kept_available = 0
-    total_selected = 0
     total_rejected = 0
+    total_below_min = 0
+    total_above_max = 0
+    all_ratio_values: list[float] = []
+    eligible_ratio_values: list[float] = []
 
-    for split in ["train", "val", "test"]:
-        source_pairs = pair_files(source_root, split)
+    for source_split in ["train", "val", "test"]:
+        source_pairs = pair_files(source_root, source_split)
         total_source += len(source_pairs)
-        records: list[PairRecord] = []
         rejection_counts: Counter[str] = Counter()
         ratio_values: list[float] = []
 
         for sar_path, flood_path in source_pairs:
             ratio = water_ratio(flood_path)
             ratio_values.append(ratio)
+            all_ratio_values.append(ratio)
             bucket = classify_ratio(ratio, min_water_ratio, max_water_ratio)
             rejection_counts[bucket] += 1
             if bucket == "kept":
-                records.append(PairRecord(split, sar_path, flood_path, ratio))
+                eligible_records.append(PairRecord(source_split, sar_path, flood_path, ratio))
+                eligible_ratio_values.append(ratio)
 
-        total_kept_available += len(records)
-        target_count = target_counts[split] if target_counts else len(records)
-        if len(records) < target_count:
-            raise ValueError(
-                f"Not enough eligible {split} pairs after filtering: "
-                f"{len(records)} available, {target_count} requested"
-            )
-
-        selected = rng.sample(records, target_count) if target_counts else records
-        selected = sorted(selected, key=lambda rec: rec.sar_path.name)
-        final_counts[split] = len(selected)
-        total_selected += len(selected)
-        total_rejected += len(source_pairs) - len(records)
-
-        for record in selected:
-            safe_symlink(record.sar_path, output_root / split / "sar" / record.sar_path.name)
-            safe_symlink(record.flood_path, output_root / split / "flood" / record.flood_path.name)
+        total_below_min += int(rejection_counts["below_min"])
+        total_above_max += int(rejection_counts["above_max"])
+        total_rejected += int(rejection_counts["below_min"] + rejection_counts["above_max"])
 
         ratio_array = np.array(ratio_values, dtype=np.float64)
-        selected_ratios = np.array([record.water_ratio for record in selected], dtype=np.float64)
-        manifest["splits"][split] = {
+        source_split_counts[source_split] = {
             "source_matched_pairs": len(source_pairs),
-            "eligible_after_filter": len(records),
-            "selected_pairs": len(selected),
+            "eligible_after_filter": int(rejection_counts["kept"]),
             "rejected_below_min": int(rejection_counts["below_min"]),
             "rejected_above_max": int(rejection_counts["above_max"]),
-            "source_water_ratio_summary": {
-                "min": float(ratio_array.min()) if ratio_array.size else None,
-                "mean": float(ratio_array.mean()) if ratio_array.size else None,
-                "max": float(ratio_array.max()) if ratio_array.size else None,
-            },
+            "water_ratio_min": float(ratio_array.min()) if ratio_array.size else None,
+            "water_ratio_mean": float(ratio_array.mean()) if ratio_array.size else None,
+            "water_ratio_max": float(ratio_array.max()) if ratio_array.size else None,
+        }
+
+    rng.shuffle(eligible_records)
+    final_counts = split_counts(len(eligible_records))
+    train_end = final_counts["train"]
+    val_end = train_end + final_counts["val"]
+    selected_by_split = {
+        "train": eligible_records[:train_end],
+        "val": eligible_records[train_end:val_end],
+        "test": eligible_records[val_end:],
+    }
+
+    for split, selected in selected_by_split.items():
+        selected = sorted(selected, key=lambda rec: (rec.source_split, rec.sar_path.name))
+        for record in selected:
+            safe_symlink(record.sar_path, output_root / split / "sar" / output_name(record, "sar"))
+            safe_symlink(record.flood_path, output_root / split / "flood" / output_name(record, "flood"))
+
+        selected_ratios = np.array([record.water_ratio for record in selected], dtype=np.float64)
+        source_counts = Counter(record.source_split for record in selected)
+        manifest["splits"][split] = {
+            "selected_pairs": len(selected),
+            "source_split_counts": dict(source_counts),
             "selected_water_ratio_summary": {
                 "min": float(selected_ratios.min()) if selected_ratios.size else None,
                 "mean": float(selected_ratios.mean()) if selected_ratios.size else None,
                 "max": float(selected_ratios.max()) if selected_ratios.size else None,
             },
-            "sample_sar_files": [record.sar_path.name for record in selected[:5]],
+            "sample_source_sar_files": [record.sar_path.name for record in selected[:5]],
         }
 
+    all_ratio_array = np.array(all_ratio_values, dtype=np.float64)
+    eligible_ratio_array = np.array(eligible_ratio_values, dtype=np.float64)
     metadata_dir = output_root / "metadata"
     metadata_dir.mkdir(exist_ok=True)
     summary = {
         "dataset_statistics": {
             "total_input_pairs": total_source,
-            "eligible_pairs_after_quality_filter": total_kept_available,
-            "total_preprocessed_pairs": total_selected,
-            "high_quality_pairs": total_selected,
+            "eligible_pairs_after_quality_filter": len(eligible_records),
+            "total_preprocessed_pairs": len(eligible_records),
+            "high_quality_pairs": len(eligible_records),
             "rejected_pairs": total_rejected,
+            "rejected_below_min": total_below_min,
+            "rejected_above_max": total_above_max,
         },
         "final_splits": final_counts,
         "preprocessing_settings": {
             "tile_size": "128x128",
             "normalization": "log_transform_standardization",
-            "speckle_filter": "gaussian_sigma_0.5",
+            "speckle_filter": "source Preprocessed-128 metadata: gaussian_sigma_0.5; source filenames indicate refined_lee_standard",
             "quality_thresholds": {
                 "min_water_ratio": min_water_ratio,
                 "max_water_ratio": max_water_ratio,
             },
         },
+        "water_ratio_summary": {
+            "source": {
+                "min": float(all_ratio_array.min()) if all_ratio_array.size else None,
+                "mean": float(all_ratio_array.mean()) if all_ratio_array.size else None,
+                "max": float(all_ratio_array.max()) if all_ratio_array.size else None,
+            },
+            "eligible": {
+                "min": float(eligible_ratio_array.min()) if eligible_ratio_array.size else None,
+                "mean": float(eligible_ratio_array.mean()) if eligible_ratio_array.size else None,
+                "max": float(eligible_ratio_array.max()) if eligible_ratio_array.size else None,
+            },
+        },
+        "source_splits": source_split_counts,
         "paper_reference": {
-            "total_pairs": 3873 if target_counts == DEFAULT_TARGET_COUNTS else None,
-            "split": "70/15/15" if target_counts == DEFAULT_TARGET_COUNTS else None,
+            "split": "70/15/15",
+            "min_water_ratio": 0.05,
+            "max_water_ratio": 0.85,
             "batch_size": 8,
             "learning_rate": 0.001,
             "dropout": 0.1,
@@ -202,29 +258,27 @@ def build_filtered_dataset(
 
     (output_root / "split_organization.json").write_text(json.dumps(manifest, indent=2) + "\n")
     (metadata_dir / "preprocessing_summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+    copy_metadata(source_root, output_root)
     return manifest
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source-root", type=Path, default=Path("spie/spie/Preprocessed-128"))
-    parser.add_argument("--output-root", type=Path, default=Path("spie/spie/Preprocessed-128-paper-filtered"))
+    parser.add_argument("--source-root", type=Path, default=Path("spie/Preprocessed-128"))
+    parser.add_argument("--output-root", type=Path, default=Path("spie/Preprocessed-128-paper-filtered"))
     parser.add_argument("--min-water-ratio", type=float, default=0.05)
     parser.add_argument("--max-water-ratio", type=float, default=0.85)
-    parser.add_argument("--target-counts", default="2711,581,581", help="train,val,test counts; use empty string to keep all eligible")
     parser.add_argument("--seed", type=int, default=42)
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    target_counts = parse_target_counts(args.target_counts)
     manifest = build_filtered_dataset(
         source_root=args.source_root,
         output_root=args.output_root,
         min_water_ratio=args.min_water_ratio,
         max_water_ratio=args.max_water_ratio,
-        target_counts=target_counts,
         seed=args.seed,
     )
     print(json.dumps({

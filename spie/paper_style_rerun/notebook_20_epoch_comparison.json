@@ -1,0 +1,63 @@
+{
+  "label": "20-epoch notebook run on available Preprocessed-128 dataset",
+  "dataset_note": "The saved notebook training_results.json files show these runs used spie/Preprocessed-128 directly, not the 15,714-pair Preprocessed-128-paper-filtered dataset.",
+  "dataset": {
+    "base_path": "/home/reuuzheng/2026-UAVSAR-Flood-Detection/spie/Preprocessed-128",
+    "train_samples": 17465,
+    "validation_samples": 3850,
+    "test_samples": 3853
+  },
+  "rows": [
+    {
+      "model": "U-Net",
+      "accuracy": 0.8332549945861991,
+      "precision": 0.6260419354544021,
+      "recall": 0.6017983385821285,
+      "dice": 0.6136807931875841,
+      "paper_accuracy": 0.87,
+      "paper_precision": 0.72,
+      "paper_recall": 0.8,
+      "paper_dice": 0.76,
+      "dice_gap": -0.1463192068124159,
+      "epochs": 20,
+      "total_training_time_sec": 2776.469861437101,
+      "mean_epoch_time_sec": 138.82349307185504,
+      "best_val_soft_dice": 0.5152904987335205,
+      "best_val_loss": 0.9535664319992065
+    },
+    {
+      "model": "Attention U-Net",
+      "accuracy": 0.8268232229249124,
+      "precision": 0.5947118149460909,
+      "recall": 0.6690343109394336,
+      "dice": 0.6296875633010482,
+      "paper_accuracy": 0.88,
+      "paper_precision": 0.74,
+      "paper_recall": 0.68,
+      "paper_dice": 0.71,
+      "dice_gap": -0.0803124366989518,
+      "epochs": 20,
+      "total_training_time_sec": 2840.4446122890804,
+      "mean_epoch_time_sec": 142.02223061445403,
+      "best_val_soft_dice": 0.5214323997497559,
+      "best_val_loss": 0.9727711081504822
+    },
+    {
+      "model": "U-Net++",
+      "accuracy": 0.8352059810587935,
+      "precision": 0.630683443368744,
+      "recall": 0.606119237194293,
+      "dice": 0.6181574047554788,
+      "paper_accuracy": 0.8,
+      "paper_precision": 0.62,
+      "paper_recall": 0.53,
+      "paper_dice": 0.57,
+      "dice_gap": 0.048157404755478795,
+      "epochs": 20,
+      "total_training_time_sec": 3374.3751742270542,
+      "mean_epoch_time_sec": 168.7187587113527,
+      "best_val_soft_dice": 0.5141242742538452,
+      "best_val_loss": 0.949813187122345
+    }
+  ]
+}

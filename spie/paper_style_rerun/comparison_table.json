@@ -1,0 +1,38 @@
+[
+  {
+    "Model": "U-Net",
+    "Accuracy": null,
+    "Precision": null,
+    "Recall": null,
+    "Dice": null,
+    "Paper Accuracy": 0.87,
+    "Paper Precision": 0.72,
+    "Paper Recall": 0.8,
+    "Paper Dice": 0.76,
+    "Gap": null
+  },
+  {
+    "Model": "Attention U-Net",
+    "Accuracy": null,
+    "Precision": null,
+    "Recall": null,
+    "Dice": null,
+    "Paper Accuracy": 0.88,
+    "Paper Precision": 0.74,
+    "Paper Recall": 0.68,
+    "Paper Dice": 0.71,
+    "Gap": null
+  },
+  {
+    "Model": "U-Net++",
+    "Accuracy": null,
+    "Precision": null,
+    "Recall": null,
+    "Dice": null,
+    "Paper Accuracy": 0.8,
+    "Paper Precision": 0.62,
+    "Paper Recall": 0.53,
+    "Paper Dice": 0.57,
+    "Gap": null
+  }
+]

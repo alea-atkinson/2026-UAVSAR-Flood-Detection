@@ -1,0 +1,68 @@
+{
+  "rerun_label": "paper-style rerun on available Preprocessed-128 dataset after water filtering",
+  "dataset_note": "The exact curated 3,873-tile SPIE dataset is unavailable in this repo. This dataset starts from the available Preprocessed-128 pairs and applies the paper water-ratio rule only: 0.05 <= water_ratio <= 0.85.",
+  "source_root": "/home/reuuzheng/2026-UAVSAR-Flood-Detection/spie/Preprocessed-128",
+  "filtered_dataset_root": "/home/reuuzheng/2026-UAVSAR-Flood-Detection/spie/Preprocessed-128-paper-filtered",
+  "filter": {
+    "water_ratio_min_inclusive": 0.05,
+    "water_ratio_max_inclusive": 0.85
+  },
+  "original_tile_pair_count": 25168,
+  "filtered_tile_pair_count": 15714,
+  "split_counts": {
+    "train": 11000,
+    "val": 2357,
+    "test": 2357
+  },
+  "sar_flood_matching_status": "ok",
+  "splits": {
+    "train": {
+      "sar_files": 11000,
+      "flood_files": 11000,
+      "matched_pairs": 11000,
+      "matching_status": "ok",
+      "unmatched_sar_files": [],
+      "unmatched_flood_files": [],
+      "water_ratio": {
+        "min": 0.050048828125,
+        "mean": 0.3173666770241477,
+        "median": 0.2418212890625,
+        "max": 0.849853515625
+      }
+    },
+    "val": {
+      "sar_files": 2357,
+      "flood_files": 2357,
+      "matched_pairs": 2357,
+      "matching_status": "ok",
+      "unmatched_sar_files": [],
+      "unmatched_flood_files": [],
+      "water_ratio": {
+        "min": 0.050048828125,
+        "mean": 0.31023602815416845,
+        "median": 0.236328125,
+        "max": 0.84765625
+      }
+    },
+    "test": {
+      "sar_files": 2357,
+      "flood_files": 2357,
+      "matched_pairs": 2357,
+      "matching_status": "ok",
+      "unmatched_sar_files": [],
+      "unmatched_flood_files": [],
+      "water_ratio": {
+        "min": 0.050048828125,
+        "mean": 0.32095625646345993,
+        "median": 0.246826171875,
+        "max": 0.849365234375
+      }
+    }
+  },
+  "water_ratio_summary": {
+    "min": 0.050048828125,
+    "mean": 0.31683553914403556,
+    "median": 0.24169921875,
+    "max": 0.849853515625
+  }
+}

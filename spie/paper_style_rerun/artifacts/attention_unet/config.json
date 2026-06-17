@@ -1,0 +1,42 @@
+{
+  "model": "attention_unet",
+  "model_label": "Attention U-Net",
+  "rerun_label": "paper-style rerun on available Preprocessed-128 dataset after water filtering",
+  "dataset_note": "The exact curated 3,873-tile SPIE dataset is unavailable in this repo. This run uses Preprocessed-128 filtered to 0.05 <= water_ratio <= 0.85.",
+  "dataset_root": "/home/reuuzheng/2026-UAVSAR-Flood-Detection/spie/Preprocessed-128-paper-filtered",
+  "input_shape": [
+    128,
+    128,
+    3
+  ],
+  "train_pairs": 11000,
+  "val_pairs": 2357,
+  "test_pairs": 2357,
+  "batch_size": 8,
+  "epochs": 80,
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "loss": "binary_crossentropy + dice_loss",
+  "training_monitor_metric": "soft_dice_metric",
+  "dropout": 0.1,
+  "early_stopping": false,
+  "reduce_lr_on_plateau": false,
+  "final_evaluation": "global thresholded TP/FP/FN/TN",
+  "threshold": 0.5,
+  "augmentation": {
+    "enabled": true,
+    "train_only": true,
+    "operations": [
+      "horizontal_flip",
+      "vertical_flip",
+      "rot90",
+      "sar_brightness_delta"
+    ]
+  },
+  "paper_metrics": {
+    "accuracy": 0.88,
+    "precision": 0.74,
+    "dice": 0.71,
+    "recall": 0.68
+  }
+}

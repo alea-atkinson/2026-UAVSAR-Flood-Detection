@@ -2,7 +2,9 @@
 __pycache__/
 *.pyc
 
-# Virtual environments
+# datasets
+*.json
+*.tif
 
 
 
@@ -14,10 +16,14 @@ checkpoints/
 models/
 *.pt
 *.pth
+*.h5
+*.keras
 spie/spie_notebooks/artifacts/
+spie/notebooks/artifacts/
 
 # Generated datasets
 spie/Preprocessed-128/
+spie/Preprocessed-128-paper-filtered/
 tiles/
 output/
 
@@ -27,8 +33,14 @@ output/
 # Local notebook runtime
 .venv-tf312/
 .tmp/
+.pip-cache/
 spie/spie/Preprocessed-128/
 spie/spie/notebooks/artifacts/
 .env
 spie/spie/Preprocessed-128-paper/
 spie/spie/Preprocessed-128-paper-filtered/
+
+# Keep small reproducibility docs/configs/results for the SPIE rerun.
+!spie/paper_style_rerun/
+!spie/paper_style_rerun/**/*.md
+!spie/paper_style_rerun/**/*.json
