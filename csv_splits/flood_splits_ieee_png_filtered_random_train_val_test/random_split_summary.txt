@@ -1,0 +1,91 @@
+======================================================================
+MASTER DATASET AUDIT
+======================================================================
+  Source: seven heldout_fp*_test.csv files from strict no-overlap splits
+  Exact duplicate rows found and removed : 0
+  Total rows after deduplication         : 1067
+  Unique tile_names                      : 817
+
+  Required columns present: ['sample_id', 'flight_path', 'tile_name', 'uavsar_path', 'flood_mask_path']
+
+  Rows per flight_path:
+      fp1    137  (12.8%)
+      fp2    138  (12.9%)
+      fp3    164  (15.4%)
+      fp4    181  (17.0%)
+      fp5    160  (15.0%)
+      fp6    170  (15.9%)
+      fp7    117  (11.0%)
+
+  uavsar_path: 1067 non-blank, 0 blank/NaN
+  flood_mask_path: 1067 non-blank, 0 blank/NaN
+  land_cover_mask_path: 1067 non-blank, 0 blank/NaN
+
+  has_flood_mask: {True: 1067}
+  has_land_cover_mask: {True: 1067}
+
+  tile_name in >1 flight_path: 250 tile names, 500 rows
+  tile_name_appears_in_multiple_flight_paths (column): {False: 567, True: 500}
+
+
+======================================================================
+SPLIT AUDIT: random_record_split
+======================================================================
+
+         Split    Rows   Rows%   Tiles   Tiles%
+  --------------------------------------------------
+         train     747   70.0%     628    67.0%
+    validation     160   15.0%     154    16.4%
+          test     160   15.0%     156    16.6%
+
+  Rows per flight_path:
+     flight_path         train    validation          test
+             fp1     103 (13.8%)      11 ( 6.9%)      23 (14.4%)
+             fp2      97 (13.0%)      22 (13.8%)      19 (11.9%)
+             fp3     122 (16.3%)      23 (14.4%)      19 (11.9%)
+             fp4     132 (17.7%)      21 (13.1%)      28 (17.5%)
+             fp5     103 (13.8%)      28 (17.5%)      29 (18.1%)
+             fp6     108 (14.5%)      36 (22.5%)      26 (16.2%)
+             fp7      82 (11.0%)      19 (11.9%)      16 (10.0%)
+
+  tile_name overlap between splits:
+    train ∩ val            : 55
+    train ∩ test           : 53
+    val   ∩ test           : 13
+    train ∩ val ∩ test     : 0
+
+  uavsar_path missing across all splits: 0
+  flood_mask_path missing across all splits: 0
+  land_cover_mask_path missing across all splits: 0
+
+
+======================================================================
+SPLIT AUDIT: random_tile_name_group_split
+======================================================================
+
+         Split    Rows   Rows%   Tiles   Tiles%
+  --------------------------------------------------
+         train     740   69.4%     572    70.0%
+    validation     169   15.8%     123    15.1%
+          test     158   14.8%     122    14.9%
+
+  Rows per flight_path:
+     flight_path         train    validation          test
+             fp1     100 (13.5%)      17 (10.1%)      20 (12.7%)
+             fp2     102 (13.8%)      25 (14.8%)      11 ( 7.0%)
+             fp3     105 (14.2%)      36 (21.3%)      23 (14.6%)
+             fp4     124 (16.8%)      27 (16.0%)      30 (19.0%)
+             fp5     107 (14.5%)      17 (10.1%)      36 (22.8%)
+             fp6     118 (15.9%)      32 (18.9%)      20 (12.7%)
+             fp7      84 (11.4%)      15 ( 8.9%)      18 (11.4%)
+
+  tile_name overlap between splits:
+    train ∩ val            : 0
+    train ∩ test           : 0
+    val   ∩ test           : 0
+    train ∩ val ∩ test     : 0
+
+  uavsar_path missing across all splits: 0
+  flood_mask_path missing across all splits: 0
+  land_cover_mask_path missing across all splits: 0
+

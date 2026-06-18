@@ -1,0 +1,7 @@
+variant,split,n_rows,pct_rows,n_unique_tile_names,rows_fp1,pct_fp1,rows_fp2,pct_fp2,rows_fp3,pct_fp3,rows_fp4,pct_fp4,rows_fp5,pct_fp5,rows_fp6,pct_fp6,rows_fp7,pct_fp7,tile_overlap_with_train,tile_overlap_with_validation,tile_overlap_with_test,missing_uavsar_path,missing_flood_mask_path,missing_land_cover_mask_path,has_flood_mask_true,has_flood_mask_false,has_land_cover_mask_true,has_land_cover_mask_false
+random_record_split,train,747,70.01,628,103,13.79,97,12.99,122,16.33,132,17.67,103,13.79,108,14.46,82,10.98,self,55,53,0,0,0,747,0,747,0
+random_record_split,validation,160,15.0,154,11,6.88,22,13.75,23,14.38,21,13.12,28,17.5,36,22.5,19,11.88,55,self,13,0,0,0,160,0,160,0
+random_record_split,test,160,15.0,156,23,14.38,19,11.88,19,11.88,28,17.5,29,18.12,26,16.25,16,10.0,53,13,self,0,0,0,160,0,160,0
+random_tile_name_group_split,train,740,69.35,572,100,13.51,102,13.78,105,14.19,124,16.76,107,14.46,118,15.95,84,11.35,self,0,0,0,0,0,740,0,740,0
+random_tile_name_group_split,validation,169,15.84,123,17,10.06,25,14.79,36,21.3,27,15.98,17,10.06,32,18.93,15,8.88,0,self,0,0,0,0,169,0,169,0
+random_tile_name_group_split,test,158,14.81,122,20,12.66,11,6.96,23,14.56,30,18.99,36,22.78,20,12.66,18,11.39,0,0,self,0,0,0,158,0,158,0
