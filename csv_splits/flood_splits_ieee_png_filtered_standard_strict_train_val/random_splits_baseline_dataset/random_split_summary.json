@@ -1,0 +1,63 @@
+{
+  "flight_path_counts_per_split": {
+    "test": {
+      "fp1": 21,
+      "fp2": 21,
+      "fp3": 25,
+      "fp4": 27,
+      "fp5": 24,
+      "fp6": 25,
+      "fp7": 17
+    },
+    "train": {
+      "fp1": 96,
+      "fp2": 96,
+      "fp3": 115,
+      "fp4": 127,
+      "fp5": 112,
+      "fp6": 119,
+      "fp7": 82
+    },
+    "val": {
+      "fp1": 20,
+      "fp2": 21,
+      "fp3": 24,
+      "fp4": 27,
+      "fp5": 24,
+      "fp6": 26,
+      "fp7": 18
+    }
+  },
+  "input_csv_path": "csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/random_splits_baseline_dataset/strict_no_overlap_tiles.csv",
+  "output_csv_paths": {
+    "test": "csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/random_splits_baseline_dataset/random_test.csv",
+    "train": "csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/random_splits_baseline_dataset/random_train.csv",
+    "val": "csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/random_splits_baseline_dataset/random_val.csv"
+  },
+  "random_seed": 42,
+  "row_counts": {
+    "test": 160,
+    "train": 747,
+    "val": 160
+  },
+  "split_proportions": {
+    "test": 0.15,
+    "train": 0.7,
+    "val": 0.15
+  },
+  "total_row_count": 1067,
+  "validation_results": {
+    "column_order_preserved": true,
+    "duplicate_sample_id_within_split": {
+      "test": 0,
+      "train": 0,
+      "val": 0
+    },
+    "input_total_rows": 1067,
+    "output_total_rows": 1067,
+    "random_seed_reproducible": 42,
+    "sample_id_overlap_between_splits": 0,
+    "stratified_by_flight_path": true,
+    "total_rows_match_input": true
+  }
+}
