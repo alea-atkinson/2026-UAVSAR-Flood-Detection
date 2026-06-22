@@ -1,0 +1,458 @@
+
+========================================================================
+IEEE PNG-Filtered Split Audit
+========================================================================
+Project root : /mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection
+Split root   : /mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val
+Data root    : /mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/2025_Tile_Data
+Output dir   : /mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/outputs/split_audit
+
+========================================================================
+Split type: standard
+========================================================================
+  --- heldout fp1 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 743
+  [INFO] validation rows: 187
+  [INFO] test rows: 137
+  [PASS] test: all 137 rows have flight_path == fp1
+  [PASS] train: heldout fp1 not present
+  [PASS] validation: heldout fp1 not present
+  [PASS] train/val: no tile_name overlap
+  [INFO] train/test tile_name overlap: 1 tiles (expected by design for train/test)
+  [INFO] validation/test tile_name overlap: 0 tiles (unexpected for val/test)
+  [WARN] train: 202 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 47 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 743 paths exist
+  [PASS] train/flood_mask_path: all 743 paths exist
+  [PASS] train/land_cover_mask_path: all 743 paths exist
+  [PASS] validation/uavsar_path: all 187 paths exist
+  [PASS] validation/flood_mask_path: all 187 paths exist
+  [PASS] validation/land_cover_mask_path: all 187 paths exist
+  [PASS] test/uavsar_path: all 137 paths exist
+  [PASS] test/flood_mask_path: all 137 paths exist
+  [PASS] test/land_cover_mask_path: all 137 paths exist
+  [INFO] train masks: total=743 with_flood=743 no_flood=0 missing=0 pos_px=11390829 neg_px=37302419
+  [INFO] validation masks: total=187 with_flood=187 no_flood=0 missing=0 pos_px=3276486 neg_px=8978746
+  [INFO] test masks: total=137 with_flood=137 no_flood=0 missing=0 pos_px=1253829 neg_px=7724603
+  --- heldout fp2 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 742
+  [INFO] validation rows: 187
+  [INFO] test rows: 138
+  [PASS] test: all 138 rows have flight_path == fp2
+  [PASS] train: heldout fp2 not present
+  [PASS] validation: heldout fp2 not present
+  [PASS] train/val: no tile_name overlap
+  [INFO] train/test tile_name overlap: 16 tiles (expected by design for train/test)
+  [FAIL] val/test tile_name overlap: 3 tiles (standard)
+  [WARN] train: 184 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 47 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 742 paths exist
+  [PASS] train/flood_mask_path: all 742 paths exist
+  [PASS] train/land_cover_mask_path: all 742 paths exist
+  [PASS] validation/uavsar_path: all 187 paths exist
+  [PASS] validation/flood_mask_path: all 187 paths exist
+  [PASS] validation/land_cover_mask_path: all 187 paths exist
+  [PASS] test/uavsar_path: all 138 paths exist
+  [PASS] test/flood_mask_path: all 138 paths exist
+  [PASS] test/land_cover_mask_path: all 138 paths exist
+  [INFO] train masks: total=742 with_flood=742 no_flood=0 missing=0 pos_px=10499742 neg_px=38127970
+  [INFO] validation masks: total=187 with_flood=187 no_flood=0 missing=0 pos_px=2888560 neg_px=9366672
+  [INFO] test masks: total=138 with_flood=138 no_flood=0 missing=0 pos_px=2532842 neg_px=6511126
+  --- heldout fp3 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 722
+  [INFO] validation rows: 181
+  [INFO] test rows: 164
+  [PASS] test: all 164 rows have flight_path == fp3
+  [PASS] train: heldout fp3 not present
+  [PASS] validation: heldout fp3 not present
+  [PASS] train/val: no tile_name overlap
+  [INFO] train/test tile_name overlap: 71 tiles (expected by design for train/test)
+  [FAIL] val/test tile_name overlap: 17 tiles (standard)
+  [WARN] train: 134 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 28 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 722 paths exist
+  [PASS] train/flood_mask_path: all 722 paths exist
+  [PASS] train/land_cover_mask_path: all 722 paths exist
+  [PASS] validation/uavsar_path: all 181 paths exist
+  [PASS] validation/flood_mask_path: all 181 paths exist
+  [PASS] validation/land_cover_mask_path: all 181 paths exist
+  [PASS] test/uavsar_path: all 164 paths exist
+  [PASS] test/flood_mask_path: all 164 paths exist
+  [PASS] test/land_cover_mask_path: all 164 paths exist
+  [INFO] train masks: total=722 with_flood=722 no_flood=0 missing=0 pos_px=10392894 neg_px=36924098
+  [INFO] validation masks: total=181 with_flood=181 no_flood=0 missing=0 pos_px=2443334 neg_px=9418682
+  [INFO] test masks: total=164 with_flood=164 no_flood=0 missing=0 pos_px=3084916 neg_px=7662988
+  --- heldout fp4 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 709
+  [INFO] validation rows: 177
+  [INFO] test rows: 181
+  [PASS] test: all 181 rows have flight_path == fp4
+  [PASS] train: heldout fp4 not present
+  [PASS] validation: heldout fp4 not present
+  [PASS] train/val: no tile_name overlap
+  [INFO] train/test tile_name overlap: 128 tiles (expected by design for train/test)
+  [FAIL] val/test tile_name overlap: 33 tiles (standard)
+  [WARN] train: 66 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 23 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 709 paths exist
+  [PASS] train/flood_mask_path: all 709 paths exist
+  [PASS] train/land_cover_mask_path: all 709 paths exist
+  [PASS] validation/uavsar_path: all 177 paths exist
+  [PASS] validation/flood_mask_path: all 177 paths exist
+  [PASS] validation/land_cover_mask_path: all 177 paths exist
+  [PASS] test/uavsar_path: all 181 paths exist
+  [PASS] test/flood_mask_path: all 181 paths exist
+  [PASS] test/land_cover_mask_path: all 181 paths exist
+  [INFO] train masks: total=709 with_flood=709 no_flood=0 missing=0 pos_px=10565809 neg_px=35899215
+  [INFO] validation masks: total=177 with_flood=177 no_flood=0 missing=0 pos_px=3316427 neg_px=8283445
+  [INFO] test masks: total=181 with_flood=181 no_flood=0 missing=0 pos_px=2038908 neg_px=9823108
+  --- heldout fp5 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 726
+  [INFO] validation rows: 181
+  [INFO] test rows: 160
+  [PASS] test: all 160 rows have flight_path == fp5
+  [PASS] train: heldout fp5 not present
+  [PASS] validation: heldout fp5 not present
+  [PASS] train/val: no tile_name overlap
+  [INFO] train/test tile_name overlap: 71 tiles (expected by design for train/test)
+  [FAIL] val/test tile_name overlap: 14 tiles (standard)
+  [WARN] train: 131 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 34 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 726 paths exist
+  [PASS] train/flood_mask_path: all 726 paths exist
+  [PASS] train/land_cover_mask_path: all 726 paths exist
+  [PASS] validation/uavsar_path: all 181 paths exist
+  [PASS] validation/flood_mask_path: all 181 paths exist
+  [PASS] validation/land_cover_mask_path: all 181 paths exist
+  [PASS] test/uavsar_path: all 160 paths exist
+  [PASS] test/flood_mask_path: all 160 paths exist
+  [PASS] test/land_cover_mask_path: all 160 paths exist
+  [INFO] train masks: total=726 with_flood=726 no_flood=0 missing=0 pos_px=10906224 neg_px=36672912
+  [INFO] validation masks: total=181 with_flood=181 no_flood=0 missing=0 pos_px=2606183 neg_px=9255833
+  [INFO] test masks: total=160 with_flood=160 no_flood=0 missing=0 pos_px=2408737 neg_px=8077023
+  --- heldout fp6 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 718
+  [INFO] validation rows: 179
+  [INFO] test rows: 170
+  [PASS] test: all 170 rows have flight_path == fp6
+  [PASS] train: heldout fp6 not present
+  [PASS] validation: heldout fp6 not present
+  [PASS] train/val: no tile_name overlap
+  [INFO] train/test tile_name overlap: 112 tiles (expected by design for train/test)
+  [FAIL] val/test tile_name overlap: 33 tiles (standard)
+  [WARN] train: 83 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 22 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 718 paths exist
+  [PASS] train/flood_mask_path: all 718 paths exist
+  [PASS] train/land_cover_mask_path: all 718 paths exist
+  [PASS] validation/uavsar_path: all 179 paths exist
+  [PASS] validation/flood_mask_path: all 179 paths exist
+  [PASS] validation/land_cover_mask_path: all 179 paths exist
+  [PASS] test/uavsar_path: all 170 paths exist
+  [PASS] test/flood_mask_path: all 170 paths exist
+  [PASS] test/land_cover_mask_path: all 170 paths exist
+  [INFO] train masks: total=718 with_flood=718 no_flood=0 missing=0 pos_px=10262184 neg_px=36792664
+  [INFO] validation masks: total=179 with_flood=179 no_flood=0 missing=0 pos_px=2687725 neg_px=9043219
+  [INFO] test masks: total=170 with_flood=170 no_flood=0 missing=0 pos_px=2971235 neg_px=8169885
+  --- heldout fp7 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 759
+  [INFO] validation rows: 191
+  [INFO] test rows: 117
+  [PASS] test: all 117 rows have flight_path == fp7
+  [PASS] train: heldout fp7 not present
+  [PASS] validation: heldout fp7 not present
+  [PASS] train/val: no tile_name overlap
+  [INFO] train/test tile_name overlap: 1 tiles (expected by design for train/test)
+  [INFO] validation/test tile_name overlap: 0 tiles (unexpected for val/test)
+  [WARN] train: 203 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 46 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 759 paths exist
+  [PASS] train/flood_mask_path: all 759 paths exist
+  [PASS] train/land_cover_mask_path: all 759 paths exist
+  [PASS] validation/uavsar_path: all 191 paths exist
+  [PASS] validation/flood_mask_path: all 191 paths exist
+  [PASS] validation/land_cover_mask_path: all 191 paths exist
+  [PASS] test/uavsar_path: all 117 paths exist
+  [PASS] test/flood_mask_path: all 117 paths exist
+  [PASS] test/land_cover_mask_path: all 117 paths exist
+  [INFO] train masks: total=759 with_flood=759 no_flood=0 missing=0 pos_px=11223059 neg_px=38518765
+  [INFO] validation masks: total=191 with_flood=191 no_flood=0 missing=0 pos_px=3067408 neg_px=9449968
+  [INFO] test masks: total=117 with_flood=117 no_flood=0 missing=0 pos_px=1630677 neg_px=6037035
+
+========================================================================
+Split standard: overall FAIL
+========================================================================
+
+========================================================================
+Split type: strict_no_overlap
+========================================================================
+  --- heldout fp1 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 743
+  [INFO] validation rows: 186
+  [INFO] test rows: 137
+  [PASS] test: all 137 rows have flight_path == fp1
+  [PASS] train: heldout fp1 not present
+  [PASS] validation: heldout fp1 not present
+  [PASS] train/val: no tile_name overlap
+  [PASS] train/test: no tile_name overlap (strict)
+  [PASS] validation/test: no tile_name overlap (strict)
+  [WARN] train: 204 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 45 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 743 paths exist
+  [PASS] train/flood_mask_path: all 743 paths exist
+  [PASS] train/land_cover_mask_path: all 743 paths exist
+  [PASS] validation/uavsar_path: all 186 paths exist
+  [PASS] validation/flood_mask_path: all 186 paths exist
+  [PASS] validation/land_cover_mask_path: all 186 paths exist
+  [PASS] test/uavsar_path: all 137 paths exist
+  [PASS] test/flood_mask_path: all 137 paths exist
+  [PASS] test/land_cover_mask_path: all 137 paths exist
+  [INFO] train masks: total=743 with_flood=743 no_flood=0 missing=0 pos_px=11563445 neg_px=37129803
+  [INFO] validation masks: total=186 with_flood=186 no_flood=0 missing=0 pos_px=3081745 neg_px=9107951
+  [INFO] test masks: total=137 with_flood=137 no_flood=0 missing=0 pos_px=1253829 neg_px=7724603
+  --- heldout fp2 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 728
+  [INFO] validation rows: 182
+  [INFO] test rows: 138
+  [PASS] test: all 138 rows have flight_path == fp2
+  [PASS] train: heldout fp2 not present
+  [PASS] validation: heldout fp2 not present
+  [PASS] train/val: no tile_name overlap
+  [PASS] train/test: no tile_name overlap (strict)
+  [PASS] validation/test: no tile_name overlap (strict)
+  [WARN] train: 183 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 48 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 728 paths exist
+  [PASS] train/flood_mask_path: all 728 paths exist
+  [PASS] train/land_cover_mask_path: all 728 paths exist
+  [PASS] validation/uavsar_path: all 182 paths exist
+  [PASS] validation/flood_mask_path: all 182 paths exist
+  [PASS] validation/land_cover_mask_path: all 182 paths exist
+  [PASS] test/uavsar_path: all 138 paths exist
+  [PASS] test/flood_mask_path: all 138 paths exist
+  [PASS] test/land_cover_mask_path: all 138 paths exist
+  [INFO] train masks: total=728 with_flood=728 no_flood=0 missing=0 pos_px=10105302 neg_px=37604906
+  [INFO] validation masks: total=182 with_flood=182 no_flood=0 missing=0 pos_px=3025892 neg_px=8901660
+  [INFO] test masks: total=138 with_flood=138 no_flood=0 missing=0 pos_px=2532842 neg_px=6511126
+  --- heldout fp3 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 652
+  [INFO] validation rows: 163
+  [INFO] test rows: 164
+  [PASS] test: all 164 rows have flight_path == fp3
+  [PASS] train: heldout fp3 not present
+  [PASS] validation: heldout fp3 not present
+  [PASS] train/val: no tile_name overlap
+  [PASS] train/test: no tile_name overlap (strict)
+  [PASS] validation/test: no tile_name overlap (strict)
+  [WARN] train: 133 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 29 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 652 paths exist
+  [PASS] train/flood_mask_path: all 652 paths exist
+  [PASS] train/land_cover_mask_path: all 652 paths exist
+  [PASS] validation/uavsar_path: all 163 paths exist
+  [PASS] validation/flood_mask_path: all 163 paths exist
+  [PASS] validation/land_cover_mask_path: all 163 paths exist
+  [PASS] test/uavsar_path: all 164 paths exist
+  [PASS] test/flood_mask_path: all 164 paths exist
+  [PASS] test/land_cover_mask_path: all 164 paths exist
+  [INFO] train masks: total=652 with_flood=652 no_flood=0 missing=0 pos_px=8801872 neg_px=33927600
+  [INFO] validation masks: total=163 with_flood=163 no_flood=0 missing=0 pos_px=2139393 neg_px=8542975
+  [INFO] test masks: total=164 with_flood=164 no_flood=0 missing=0 pos_px=3084916 neg_px=7662988
+  --- heldout fp4 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 580
+  [INFO] validation rows: 145
+  [INFO] test rows: 181
+  [PASS] test: all 181 rows have flight_path == fp4
+  [PASS] train: heldout fp4 not present
+  [PASS] validation: heldout fp4 not present
+  [PASS] train/val: no tile_name overlap
+  [PASS] train/test: no tile_name overlap (strict)
+  [PASS] validation/test: no tile_name overlap (strict)
+  [WARN] train: 73 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 16 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 580 paths exist
+  [PASS] train/flood_mask_path: all 580 paths exist
+  [PASS] train/land_cover_mask_path: all 580 paths exist
+  [PASS] validation/uavsar_path: all 145 paths exist
+  [PASS] validation/flood_mask_path: all 145 paths exist
+  [PASS] validation/land_cover_mask_path: all 145 paths exist
+  [PASS] test/uavsar_path: all 181 paths exist
+  [PASS] test/flood_mask_path: all 181 paths exist
+  [PASS] test/land_cover_mask_path: all 181 paths exist
+  [INFO] train masks: total=580 with_flood=580 no_flood=0 missing=0 pos_px=9673453 neg_px=28337427
+  [INFO] validation masks: total=145 with_flood=145 no_flood=0 missing=0 pos_px=2354720 neg_px=7148000
+  [INFO] test masks: total=181 with_flood=181 no_flood=0 missing=0 pos_px=2038908 neg_px=9823108
+  --- heldout fp5 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 658
+  [INFO] validation rows: 164
+  [INFO] test rows: 160
+  [PASS] test: all 160 rows have flight_path == fp5
+  [PASS] train: heldout fp5 not present
+  [PASS] validation: heldout fp5 not present
+  [PASS] train/val: no tile_name overlap
+  [PASS] train/test: no tile_name overlap (strict)
+  [PASS] validation/test: no tile_name overlap (strict)
+  [WARN] train: 133 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 32 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 658 paths exist
+  [PASS] train/flood_mask_path: all 658 paths exist
+  [PASS] train/land_cover_mask_path: all 658 paths exist
+  [PASS] validation/uavsar_path: all 164 paths exist
+  [PASS] validation/flood_mask_path: all 164 paths exist
+  [PASS] validation/land_cover_mask_path: all 164 paths exist
+  [PASS] test/uavsar_path: all 160 paths exist
+  [PASS] test/flood_mask_path: all 160 paths exist
+  [PASS] test/land_cover_mask_path: all 160 paths exist
+  [INFO] train masks: total=658 with_flood=658 no_flood=0 missing=0 pos_px=9731179 neg_px=33391509
+  [INFO] validation masks: total=164 with_flood=164 no_flood=0 missing=0 pos_px=2860475 neg_px=7887429
+  [INFO] test masks: total=160 with_flood=160 no_flood=0 missing=0 pos_px=2408737 neg_px=8077023
+  --- heldout fp6 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 602
+  [INFO] validation rows: 150
+  [INFO] test rows: 170
+  [PASS] test: all 170 rows have flight_path == fp6
+  [PASS] train: heldout fp6 not present
+  [PASS] validation: heldout fp6 not present
+  [PASS] train/val: no tile_name overlap
+  [PASS] train/test: no tile_name overlap (strict)
+  [PASS] validation/test: no tile_name overlap (strict)
+  [WARN] train: 89 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 16 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 602 paths exist
+  [PASS] train/flood_mask_path: all 602 paths exist
+  [PASS] train/land_cover_mask_path: all 602 paths exist
+  [PASS] validation/uavsar_path: all 150 paths exist
+  [PASS] validation/flood_mask_path: all 150 paths exist
+  [PASS] validation/land_cover_mask_path: all 150 paths exist
+  [PASS] test/uavsar_path: all 170 paths exist
+  [PASS] test/flood_mask_path: all 170 paths exist
+  [PASS] test/land_cover_mask_path: all 170 paths exist
+  [INFO] train masks: total=602 with_flood=602 no_flood=0 missing=0 pos_px=8273183 neg_px=31179489
+  [INFO] validation masks: total=150 with_flood=150 no_flood=0 missing=0 pos_px=2105561 neg_px=7724839
+  [INFO] test masks: total=170 with_flood=170 no_flood=0 missing=0 pos_px=2971235 neg_px=8169885
+  --- heldout fp7 ---
+  [PASS] train: all required columns present
+  [PASS] validation: all required columns present
+  [PASS] test: all required columns present
+  [INFO] train rows: 759
+  [INFO] validation rows: 190
+  [INFO] test rows: 117
+  [PASS] test: all 117 rows have flight_path == fp7
+  [PASS] train: heldout fp7 not present
+  [PASS] validation: heldout fp7 not present
+  [PASS] train/val: no tile_name overlap
+  [PASS] train/test: no tile_name overlap (strict)
+  [PASS] validation/test: no tile_name overlap (strict)
+  [WARN] train: 199 duplicate tile_name values
+  [PASS] train: no duplicate uavsar_path
+  [WARN] validation: 50 duplicate tile_name values
+  [PASS] validation: no duplicate uavsar_path
+  [PASS] test: no duplicate tile_name
+  [PASS] test: no duplicate uavsar_path
+  [PASS] train/uavsar_path: all 759 paths exist
+  [PASS] train/flood_mask_path: all 759 paths exist
+  [PASS] train/land_cover_mask_path: all 759 paths exist
+  [PASS] validation/uavsar_path: all 190 paths exist
+  [PASS] validation/flood_mask_path: all 190 paths exist
+  [PASS] validation/land_cover_mask_path: all 190 paths exist
+  [PASS] test/uavsar_path: all 117 paths exist
+  [PASS] test/flood_mask_path: all 117 paths exist
+  [PASS] test/land_cover_mask_path: all 117 paths exist
+  [INFO] train masks: total=759 with_flood=759 no_flood=0 missing=0 pos_px=11106659 neg_px=38635165
+  [INFO] validation masks: total=190 with_flood=190 no_flood=0 missing=0 pos_px=3161683 neg_px=9290157
+  [INFO] test masks: total=117 with_flood=117 no_flood=0 missing=0 pos_px=1630677 neg_px=6037035
+
+========================================================================
+Split strict_no_overlap: overall PASS
+========================================================================

@@ -1,0 +1,48 @@
+Using device: cuda
+Train CSV: csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap/heldout_fp1_train.csv
+Validation CSV: csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap/heldout_fp1_validation.csv
+Test CSV: csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap/heldout_fp1_test.csv
+Dataset sizes: train=743, val=186, test=137
+Epoch 001/020 train_loss=0.6496 val_loss=0.6010 val_dice=0.5850 val_iou=0.4232
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Epoch 002/020 train_loss=0.5798 val_loss=0.5470 val_dice=0.6258 val_iou=0.4648
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Epoch 003/020 train_loss=0.5615 val_loss=0.5246 val_dice=0.6570 val_iou=0.4979
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Epoch 004/020 train_loss=0.5506 val_loss=0.5195 val_dice=0.6496 val_iou=0.4904
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Epoch 005/020 train_loss=0.5448 val_loss=0.5138 val_dice=0.6632 val_iou=0.5031
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Epoch 006/020 train_loss=0.5364 val_loss=0.5156 val_dice=0.6514 val_iou=0.4937
+Epoch 007/020 train_loss=0.5282 val_loss=0.5204 val_dice=0.6336 val_iou=0.4743
+Epoch 008/020 train_loss=0.5183 val_loss=0.5008 val_dice=0.6651 val_iou=0.5062
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Epoch 009/020 train_loss=0.5039 val_loss=0.5647 val_dice=0.5865 val_iou=0.4212
+Epoch 010/020 train_loss=0.5028 val_loss=0.5193 val_dice=0.6327 val_iou=0.4697
+Epoch 011/020 train_loss=0.4902 val_loss=0.5132 val_dice=0.6082 val_iou=0.4512
+Epoch 012/020 train_loss=0.4824 val_loss=0.4712 val_dice=0.6806 val_iou=0.5236
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Epoch 013/020 train_loss=0.4727 val_loss=0.5099 val_dice=0.6276 val_iou=0.4653
+Epoch 014/020 train_loss=0.4744 val_loss=0.4810 val_dice=0.6620 val_iou=0.5040
+Epoch 015/020 train_loss=0.4608 val_loss=0.4566 val_dice=0.6870 val_iou=0.5280
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Epoch 016/020 train_loss=0.4566 val_loss=0.4553 val_dice=0.6893 val_iou=0.5328
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Epoch 017/020 train_loss=0.4442 val_loss=0.4510 val_dice=0.6918 val_iou=0.5338
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Epoch 018/020 train_loss=0.4471 val_loss=0.5837 val_dice=0.5733 val_iou=0.4075
+Epoch 019/020 train_loss=0.4362 val_loss=0.4539 val_dice=0.6870 val_iou=0.5271
+Epoch 020/020 train_loss=0.4321 val_loss=0.5253 val_dice=0.6239 val_iou=0.4587
+Best checkpoint test metrics: loss=0.6431 dice=0.5003 iou=0.3465
+Metrics CSV: results/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_metrics.csv
+Device      : cuda
+Checkpoint  : models/alea_tuned_filtered_strict_fp1_focaldice_adamw_20epochs_best.pt
+Val CSV     : csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap/heldout_fp1_validation.csv
+Test CSV    : csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap/heldout_fp1_test.csv
+Data root   : 2025_Tile_Data
+Thresholds  : 0.05 -> 0.95 (19 values)
+Validation inference (186 tiles) ...
+Selected threshold: 0.50 (val_dice=0.7084, val_iou=0.5485)
+Test inference (137 tiles) ...
+Wrote: outputs/alea_tuned_filtered_strict/threshold_sweeps/fp1_threshold_sweep.csv
+Test metrics at selected threshold 0.50: dice=0.5152 iou=0.3470

@@ -1,0 +1,86 @@
+U-Net Inference Hardware Profile — FPGA Acceleration Notes
+==============================================================
+
+Checkpoint     : alea_tuned_filtered_strict_fp2_focaldice_adamw_20epochs_best.pt
+Test CSV       : heldout_fp2_test.csv
+Device         : cuda
+Parameters     : 7,763,041
+Conv MACs/tile : 12.07 GMACs
+Input shape    : (1, 3, 256, 256)  (B x C x H x W)
+Tiles profiled : 133 (after 5-tile warmup)
+
+TIMING SUMMARY
+----------------------------------------
+  Data loading   : 7.15 ms/tile  (std=0.81, p95=8.92)
+  Forward pass   : 1.86 ms/tile  (std=0.35, p95=2.71)
+  Postprocessing : 0.08 ms/tile  (std=0.02, p95=0.12)
+  Total pipeline : 9.10 ms/tile
+  Throughput     : 109.9 tiles/sec
+  Total infer.   : 1.26 s  (138 tiles)
+
+LAYER BREAKDOWN  (% of sum of timed layers)
+----------------------------------------
+  Encoder   (enc1-enc4)       : 34.5%   [0.54 ms mean]
+  Bottleneck                  : 8.8%   [0.14 ms mean]
+  Decoder   (dec1-dec4)       : 41.0%   [0.64 ms mean]
+  Upsamplers(up1-up4)         : 13.7%   [0.22 ms mean]
+  Final conv(out)             : 2.0%   [0.03 ms mean]
+
+BOTTLENECK ANALYSIS
+----------------------------------------
+  Data loading is SIGNIFICANT (>50% of forward time)
+  Load / forward ratio        : 3.84x
+
+  Postprocessing is NEGLIGIBLE (<5% of forward time)
+  Post / forward ratio        : 0.0436x
+
+DOMINANT OPERATIONS
+----------------------------------------
+  All compute-heavy layers are Conv2d (3x3, stride=1, pad=1) inside
+  DoubleConv blocks, paired with BatchNorm2d and ReLU.
+  Upsampling uses ConvTranspose2d (kernel=2, stride=2).
+  MaxPool2d (2x2 stride-2) is used for downsampling.
+  BatchNorm and ReLU add minimal overhead relative to convolutions.
+  Conv MACs breakdown by block group:
+    Encoder    : 3379 MMACs (28.0%)
+    Bottleneck : 906 MMACs (7.5%)
+    Decoder    : 7248 MMACs (60.0%)
+    Upsamplers : 537 MMACs (4.4%)
+    Final out  : 2.1 MMACs (0.02%)
+
+FPGA ACCELERATION TARGETS (ranked by priority)
+----------------------------------------
+  1. PRIMARY: 3x3 Conv2d in DoubleConv blocks.
+     These are the most numerous and MAC-intensive operations.
+     FPGA systolic-array or DSP-tile architectures map well to
+     fixed-kernel 2D convolutions with known spatial dimensions.
+     Tile size is fixed at 256x256 — no dynamic shape issues.
+
+  2. SECONDARY: 2x2 ConvTranspose2d upsamplers (up1-up4).
+     Small kernel, stride-2; straightforward FPGA implementation.
+
+  3. TERTIARY: BatchNorm2d — fold into preceding Conv2d at inference.
+     BN gamma/beta/mean/var can be absorbed into Conv2d weight/bias
+     before deployment, eliminating separate BN hardware entirely.
+
+  4. DATA LOADING: rasterio .tif reads + percentile normalization.
+     Ratio 3.84x relative to forward pass.
+     For standalone FPGA inference: pre-normalize tiles offline.
+     On-chip FPGA normalization is feasible (simple statistics).
+
+  5. POSTPROCESSING: sigmoid approximation + threshold comparison.
+     Cost is negligible. Implement with LUT-based sigmoid or
+     piecewise linear approximation + a single comparator.
+
+REALISTIC NEXT HARDWARE STEPS
+----------------------------------------
+  A. BN folding: merge BatchNorm params into Conv2d bias.
+     torch.fx or manual weight arithmetic; then re-export.
+  B. INT8 quantization: torch.quantization or ONNX quantization.
+     Halves memory bandwidth and multiplier cost on FPGA DSPs.
+  C. ONNX export: torch.onnx.export -> Vitis-AI / hls4ml pipeline.
+  D. Tile streaming: process tile rows on-chip to fit BRAM budget.
+     256x256 fp32 single feature map = 256 KB. At 512 channels
+     (bottleneck) = 128 MB. Streaming or ping-pong buffering needed.
+  E. Target: Xilinx Zynq UltraScale+ or similar with enough DSPs
+     to cover 12.07 GMACs/tile at the required frame rate.

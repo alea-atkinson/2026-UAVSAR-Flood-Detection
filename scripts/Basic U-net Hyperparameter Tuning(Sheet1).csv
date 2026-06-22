@@ -1,0 +1,27 @@
+Test,Hyperparameters,Heldout flight path,Loss,Dice,IOU,Precision,Recall,,,,,,
+"Hyperparamter tuning pass 1 (batch size, learning rate, and base channels)","learning_rate': 6.814072753833465e-05, 'batch_size': 16, 'base_channels': 64, 'loss_function: 'bce'",1,0.3291,0.4167,0.2784,,,,,,,,
+"Hyperparamter tuning pass 1 (batch size, learning rate, and base channels)","learning_rate': 6.814072753833465e-05, 'batch_size': 16, 'base_channels': 64, 'loss_function: 'bce_dice'",2,0.3249,0.6044,0.4685,,,,,,,,
+"Hyperparamter tuning pass 2 (loss functions: bce, dice, and bce_dice, focal, focal_dice)","learning_rate': 6.814072753833465e-05, 'batch_size': 16, 'base_channels': 64, 'loss_function: 'bce_dice'",1,1.0135,0.4603,0.3132,,,,,,,,
+"Hyperparamter tuning pass 2 (loss functions: bce, dice, and bce_dice, focal, focal_dice)","learning_rate': 6.814072753833465e-05, 'batch_size': 16, 'base_channels': 64, 'loss_function: 'bce_dice'}",2,0.7513,0.6374,0.5051,,,,,,,,
+"Hyperparamter tuning pass 2 (loss functions: bce, dice, and bce_dice, focal, focal_dice)","learning_rate': 6.814072753833465e-05, 'batch_size': 16, 'base_channels': 64, 'loss_function: 'focal_dice'}",2,0.4886,0.6378,0.5027,,,,,,,,
+"Hyperparamter tuning pass 3 (optimizer functions: adam, adamw, rmsprop, sgd)","learning_rate': 6.814072753833465e-05, 'batch_size': 16, 'base_channels': 64, 'loss_function: 'bce_dice', 'optimizer': adamw}",1,1.1434,0.4067,0.2688,,,,*higher loss due to different loss function,,,,
+"Hyperparamter tuning pass 3 (optimizer functions: adam, adamw, rmsprop, sgd)","learning_rate': 6.814072753833465e-05, 'batch_size': 16, 'base_channels': 64, 'loss_function: 'bce_dice', 'optimizer': adamw}",2,0.7797,0.6351,0.5006,,,,,,,,
+"Hyperparamter tuning pass 4(test batch size, base channels, learning rate, and weight decay together)","learning_rate': 6.720552453426524e-05, 'weight_decay': 7.679382414422872e-06, 'batch_size': 16, 'base_channels': 16, adamw optimizer, bce_dice loss function",1,1.0908,0.4196,0.2784,,,,,,,,
+"Hyperparamter tuning pass 5(test batch size, base channels, learning rate, and weight decay together)","{'learning_rate': 9.327106954111342e-05, 'weight_decay': 6.088353841746043e-06, 'batch_size': 16, 'base_channels': 32} focal_dice_loss, AdamW",1,1.0000,0.4621,0.316,,,,Focal to help with class imbalance and AdamW to help with generalization,,,,
+*CONTINUATION OF LAST HYPERPARAMETERS,,2,0.4792,0.6462,0.5077,,,,,,,,
+,,3,0.5757,0.5131,0.3750,,,,,,,,
+,,4,0.6236,0.4733,0.3254,,,,,,,,
+,,5,0.506,0.6328,0.4732,,,,,,,,
+,,6,0.5539,0.5573,0.4065,,,,,,,,
+,,7,0.7514,0.3515,0.2398,,,,,,,Dice,IOU
+,,,,,,,,,,,Original Avg,0.4432,0.31784
+,,,,,,,,,,,Tuned Avg,0.519471429,0.3781
+,,,,,,,,,,,Tuned and threshold 0.65,0.637685714,0.476385714
+Raise threshold to 0.65 on global sweep,"{'learning_rate': 9.327106954111342e-05, 'weight_decay': 6.088353841746043e-06, 'batch_size': 16, 'base_channels': 32} focal_dice_loss, AdamW",1,,0.49,0.3245,,,,,,Tuned and diff Thresholds for each flight path,0.63774357,
+,,2,,0.7941,0.6585,,,,,,Diff thresholds for each flight path,0.598?,
+,,3,,0.6529,0.4847,,,,,,,,
+,,4,,0.5529,0.3821,,,,,,,,
+,,5,,0.7427,0.5907,,,,,,,,
+,,6,,0.6721,0.5062,,,,,,,,
+,,7,,0.5591,0.388,,,,,,,,
+Lower threshold to 0.4,,1,0.6836,0.4413,0.2831,0.3343,0.6492,,,,,,

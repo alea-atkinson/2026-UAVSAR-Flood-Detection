@@ -1,0 +1,36 @@
+Generated: 2026-06-19T13:28:36+00:00
+=== texas_2025_classified_vectors / UAVSAR Classified Image Vectors for the Flooding in Texas July 2025 ===
+ITEM_PAGE https://gis.earthdata.nasa.gov/portal/home/item.html?id=e58fef3c48494713945ec8845f7c2ae6 status= error=TimeoutError: The read operation timed out
+ITEM_PAGE first500=
+MAP_VIEWER https://gis.earthdata.nasa.gov/portal/apps/mapviewer/index.html?layers=e58fef3c48494713945ec8845f7c2ae6 status=500 error=HTTPError: HTTP Error 500: 
+MAP_VIEWER first500=ArcGIS Web Adaptor <div class="pane
+REST https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/e58fef3c48494713945ec8845f7c2ae6?f=json status=500 error=JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+REST first500=ArcGIS Web Adaptor <div class="pane
+REST https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/e58fef3c48494713945ec8845f7c2ae6/data?f=json status=500 error=JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+REST first500=ArcGIS Web Adaptor <div class="pane
+
+=== milton_2024_classification / UAVSAR Imagery Classification after Hurricane Milton ===
+ITEM_PAGE https://gis.earthdata.nasa.gov/portal/home/item.html?id=a8ffa63288694e5dacfbbbfcd65187e0 status=500 error=HTTPError: HTTP Error 500: 
+ITEM_PAGE first500=ArcGIS Web Adaptor <div class="pane
+REST https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/a8ffa63288694e5dacfbbbfcd65187e0?f=json status=500 error=JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+REST first500=ArcGIS Web Adaptor <div class="pane
+REST https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/a8ffa63288694e5dacfbbbfcd65187e0/data?f=json status=500 error=JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+REST first500=ArcGIS Web Adaptor <div class="pane
+
+=== milton_2024_rgb / UAVSAR Imagery RGB after Hurricane Milton ===
+ITEM_PAGE https://gis.earthdata.nasa.gov/portal/home/item.html?id=912fb5f69b694d1a89914551a09bb27b status=500 error=HTTPError: HTTP Error 500: 
+ITEM_PAGE first500=ArcGIS Web Adaptor <div class="pane
+REST https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/912fb5f69b694d1a89914551a09bb27b?f=json status=500 error=JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+REST first500=ArcGIS Web Adaptor <div class="pane
+REST https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/912fb5f69b694d1a89914551a09bb27b/data?f=json status=500 error=JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+REST first500=ArcGIS Web Adaptor <div class="pane
+
+=== dance_flood_extents_uavsar / Flood Extents from UAVSAR ===
+ITEM_PAGE https://gis.earthdata.nasa.gov/portal/home/item.html?id=d1846fce068b48898b6a4d11361b862a status=500 error=HTTPError: HTTP Error 500: 
+ITEM_PAGE first500=ArcGIS Web Adaptor <div class="pane
+MAP_VIEWER https://gis.earthdata.nasa.gov/portal/apps/mapviewer/index.html?layers=d1846fce068b48898b6a4d11361b862a status=500 error=HTTPError: HTTP Error 500: 
+MAP_VIEWER first500=ArcGIS Web Adaptor <div class="pane
+REST https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/d1846fce068b48898b6a4d11361b862a?f=json status=500 error=JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+REST first500=ArcGIS Web Adaptor <div class="pane
+REST https://gis.earthdata.nasa.gov/portal/sharing/rest/content/items/d1846fce068b48898b6a4d11361b862a/data?f=json status=500 error=JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+REST first500=ArcGIS Web Adaptor <div class="pane

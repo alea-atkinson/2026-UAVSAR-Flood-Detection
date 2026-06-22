@@ -1,0 +1,60 @@
+========================================================================
+U-Net Baseline and Tuning Inventory — Summary
+========================================================================
+
+Plain U-Net experiment rows: 11
+  - Baseline (fp1-fp7): 7
+  - Experiment variants (fp1 only): 4
+Architecture extension rows: 14
+
+Baseline default-0.5 test metrics (batch-averaged, threshold=0.5):
+  fp1   dice=0.3618  iou=0.2415
+  fp2   dice=0.6129  iou=0.4771
+  fp3   dice=0.5155  iou=0.3741
+  fp4   dice=0.3742  iou=0.2618
+  fp5   dice=0.5506  iou=0.4012
+  fp6   dice=0.4165  iou=0.2928
+  fp7   dice=0.2709  iou=0.1764
+
+Baseline threshold-sweep metrics (global pixel, val-selected threshold):
+  fp1   thresh=0.25  val_dice=0.6752  test_dice=0.5205  test_iou=0.3518  prec=0.4597  recall=0.5998
+  fp2   thresh=0.35  val_dice=0.6427  test_dice=0.7445  test_iou=0.5930  prec=0.7447  recall=0.7444
+  fp3   thresh=0.35  val_dice=0.6553  test_dice=0.6264  test_iou=0.4560  prec=0.7483  recall=0.5387
+  fp4   thresh=0.50  val_dice=0.6774  test_dice=0.4657  test_iou=0.3035  prec=0.5288  recall=0.4160
+  fp5   thresh=0.25  val_dice=0.6343  test_dice=0.6725  test_iou=0.5066  prec=0.6109  recall=0.7480
+  fp6   thresh=0.30  val_dice=0.6881  test_dice=0.6008  test_iou=0.4294  prec=0.6940  recall=0.5297
+  fp7   thresh=0.30  val_dice=0.6779  test_dice=0.5570  test_iou=0.3860  prec=0.6799  recall=0.4718
+
+Experiment variant results (fp1 only):
+  experiment_fp1_bce_dice_aug_20epochs
+    default-0.5: dice=0.4682  iou=0.3340
+    sweep(thresh=0.40): dice=0.5094  iou=0.3418  prec=0.4274  recall=0.6305
+  experiment_fp1_bce_dice_noaug_20epochs
+    default-0.5: dice=0.4426  iou=0.3085
+    sweep(thresh=0.55): dice=0.4879  iou=0.3226  prec=0.3815  recall=0.6767
+  experiment_fp1_bce_valdice_noaug_20epochs
+    default-0.5: dice=0.4206  iou=0.3003
+    sweep(thresh=0.35): dice=0.4950  iou=0.3289  prec=0.4141  recall=0.6152
+  experiment_fp1_weighted_bce_valdice_20epochs
+    default-0.5: dice=0.3997  iou=0.2701
+    sweep(thresh=0.65): dice=0.4914  iou=0.3257  prec=0.3873  recall=0.6719
+
+Missing or unclear data:
+  (none)
+
+Augmentation status not in run name:
+  - experiment_fp1_weighted_bce_valdice_20epochs: augmentation flag absent from run name
+  - attention_unet_fp1_bce_valdice_20epochs: augmentation flag absent from run name
+  - attention_unet_fp2_bce_valdice_20epochs: augmentation flag absent from run name
+  - attention_unet_fp3_bce_valdice_20epochs: augmentation flag absent from run name
+  - attention_unet_fp4_bce_valdice_20epochs: augmentation flag absent from run name
+  - attention_unet_fp5_bce_valdice_20epochs: augmentation flag absent from run name
+  - attention_unet_fp6_bce_valdice_20epochs: augmentation flag absent from run name
+  - attention_unet_fp7_bce_valdice_20epochs: augmentation flag absent from run name
+  - unetpp_fp1_bce_valdice_20epochs: augmentation flag absent from run name
+  - unetpp_fp2_bce_valdice_20epochs: augmentation flag absent from run name
+  - unetpp_fp3_bce_valdice_20epochs: augmentation flag absent from run name
+  - unetpp_fp4_bce_valdice_20epochs: augmentation flag absent from run name
+  - unetpp_fp5_bce_valdice_20epochs: augmentation flag absent from run name
+  - unetpp_fp6_bce_valdice_20epochs: augmentation flag absent from run name
+  - unetpp_fp7_bce_valdice_20epochs: augmentation flag absent from run name

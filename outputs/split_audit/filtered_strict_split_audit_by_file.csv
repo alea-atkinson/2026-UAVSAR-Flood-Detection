@@ -1,0 +1,379 @@
+split_type,heldout_fp,check,status,detail
+standard,fp1,row_count_train,INFO,743
+standard,fp1,row_count_validation,INFO,187
+standard,fp1,row_count_test,INFO,137
+standard,fp1,test_flight_path_correct,PASS,0 wrong-fp rows in test
+standard,fp1,train_no_heldout_fp,PASS,0 leaked rows
+standard,fp1,validation_no_heldout_fp,PASS,0 leaked rows
+standard,fp1,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+standard,fp1,train_test_tile_name_overlap,INFO,1 overlapping tile_names
+standard,fp1,validation_test_tile_name_overlap,INFO,0 overlapping tile_names
+standard,fp1,train_duplicate_tile_name,WARN,202 duplicates
+standard,fp1,train_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp1,validation_duplicate_tile_name,WARN,47 duplicates
+standard,fp1,validation_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp1,test_duplicate_tile_name,PASS,0 duplicates
+standard,fp1,test_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp1,train_uavsar_path_paths_exist,PASS,0/743 missing
+standard,fp1,train_flood_mask_path_paths_exist,PASS,0/743 missing
+standard,fp1,train_land_cover_mask_path_paths_exist,PASS,0/743 missing
+standard,fp1,validation_uavsar_path_paths_exist,PASS,0/187 missing
+standard,fp1,validation_flood_mask_path_paths_exist,PASS,0/187 missing
+standard,fp1,validation_land_cover_mask_path_paths_exist,PASS,0/187 missing
+standard,fp1,test_uavsar_path_paths_exist,PASS,0/137 missing
+standard,fp1,test_flood_mask_path_paths_exist,PASS,0/137 missing
+standard,fp1,test_land_cover_mask_path_paths_exist,PASS,0/137 missing
+standard,fp1,train_mask_validity,INFO,total=743 with_flood=743 no_flood=0 missing=0 pos_px=11390829 neg_px=37302419
+standard,fp1,validation_mask_validity,INFO,total=187 with_flood=187 no_flood=0 missing=0 pos_px=3276486 neg_px=8978746
+standard,fp1,test_mask_validity,INFO,total=137 with_flood=137 no_flood=0 missing=0 pos_px=1253829 neg_px=7724603
+standard,fp2,row_count_train,INFO,742
+standard,fp2,row_count_validation,INFO,187
+standard,fp2,row_count_test,INFO,138
+standard,fp2,test_flight_path_correct,PASS,0 wrong-fp rows in test
+standard,fp2,train_no_heldout_fp,PASS,0 leaked rows
+standard,fp2,validation_no_heldout_fp,PASS,0 leaked rows
+standard,fp2,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+standard,fp2,train_test_tile_name_overlap,INFO,16 overlapping tile_names
+standard,fp2,validation_test_tile_name_overlap,FAIL,3 overlapping tile_names
+standard,fp2,train_duplicate_tile_name,WARN,184 duplicates
+standard,fp2,train_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp2,validation_duplicate_tile_name,WARN,47 duplicates
+standard,fp2,validation_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp2,test_duplicate_tile_name,PASS,0 duplicates
+standard,fp2,test_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp2,train_uavsar_path_paths_exist,PASS,0/742 missing
+standard,fp2,train_flood_mask_path_paths_exist,PASS,0/742 missing
+standard,fp2,train_land_cover_mask_path_paths_exist,PASS,0/742 missing
+standard,fp2,validation_uavsar_path_paths_exist,PASS,0/187 missing
+standard,fp2,validation_flood_mask_path_paths_exist,PASS,0/187 missing
+standard,fp2,validation_land_cover_mask_path_paths_exist,PASS,0/187 missing
+standard,fp2,test_uavsar_path_paths_exist,PASS,0/138 missing
+standard,fp2,test_flood_mask_path_paths_exist,PASS,0/138 missing
+standard,fp2,test_land_cover_mask_path_paths_exist,PASS,0/138 missing
+standard,fp2,train_mask_validity,INFO,total=742 with_flood=742 no_flood=0 missing=0 pos_px=10499742 neg_px=38127970
+standard,fp2,validation_mask_validity,INFO,total=187 with_flood=187 no_flood=0 missing=0 pos_px=2888560 neg_px=9366672
+standard,fp2,test_mask_validity,INFO,total=138 with_flood=138 no_flood=0 missing=0 pos_px=2532842 neg_px=6511126
+standard,fp3,row_count_train,INFO,722
+standard,fp3,row_count_validation,INFO,181
+standard,fp3,row_count_test,INFO,164
+standard,fp3,test_flight_path_correct,PASS,0 wrong-fp rows in test
+standard,fp3,train_no_heldout_fp,PASS,0 leaked rows
+standard,fp3,validation_no_heldout_fp,PASS,0 leaked rows
+standard,fp3,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+standard,fp3,train_test_tile_name_overlap,INFO,71 overlapping tile_names
+standard,fp3,validation_test_tile_name_overlap,FAIL,17 overlapping tile_names
+standard,fp3,train_duplicate_tile_name,WARN,134 duplicates
+standard,fp3,train_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp3,validation_duplicate_tile_name,WARN,28 duplicates
+standard,fp3,validation_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp3,test_duplicate_tile_name,PASS,0 duplicates
+standard,fp3,test_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp3,train_uavsar_path_paths_exist,PASS,0/722 missing
+standard,fp3,train_flood_mask_path_paths_exist,PASS,0/722 missing
+standard,fp3,train_land_cover_mask_path_paths_exist,PASS,0/722 missing
+standard,fp3,validation_uavsar_path_paths_exist,PASS,0/181 missing
+standard,fp3,validation_flood_mask_path_paths_exist,PASS,0/181 missing
+standard,fp3,validation_land_cover_mask_path_paths_exist,PASS,0/181 missing
+standard,fp3,test_uavsar_path_paths_exist,PASS,0/164 missing
+standard,fp3,test_flood_mask_path_paths_exist,PASS,0/164 missing
+standard,fp3,test_land_cover_mask_path_paths_exist,PASS,0/164 missing
+standard,fp3,train_mask_validity,INFO,total=722 with_flood=722 no_flood=0 missing=0 pos_px=10392894 neg_px=36924098
+standard,fp3,validation_mask_validity,INFO,total=181 with_flood=181 no_flood=0 missing=0 pos_px=2443334 neg_px=9418682
+standard,fp3,test_mask_validity,INFO,total=164 with_flood=164 no_flood=0 missing=0 pos_px=3084916 neg_px=7662988
+standard,fp4,row_count_train,INFO,709
+standard,fp4,row_count_validation,INFO,177
+standard,fp4,row_count_test,INFO,181
+standard,fp4,test_flight_path_correct,PASS,0 wrong-fp rows in test
+standard,fp4,train_no_heldout_fp,PASS,0 leaked rows
+standard,fp4,validation_no_heldout_fp,PASS,0 leaked rows
+standard,fp4,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+standard,fp4,train_test_tile_name_overlap,INFO,128 overlapping tile_names
+standard,fp4,validation_test_tile_name_overlap,FAIL,33 overlapping tile_names
+standard,fp4,train_duplicate_tile_name,WARN,66 duplicates
+standard,fp4,train_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp4,validation_duplicate_tile_name,WARN,23 duplicates
+standard,fp4,validation_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp4,test_duplicate_tile_name,PASS,0 duplicates
+standard,fp4,test_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp4,train_uavsar_path_paths_exist,PASS,0/709 missing
+standard,fp4,train_flood_mask_path_paths_exist,PASS,0/709 missing
+standard,fp4,train_land_cover_mask_path_paths_exist,PASS,0/709 missing
+standard,fp4,validation_uavsar_path_paths_exist,PASS,0/177 missing
+standard,fp4,validation_flood_mask_path_paths_exist,PASS,0/177 missing
+standard,fp4,validation_land_cover_mask_path_paths_exist,PASS,0/177 missing
+standard,fp4,test_uavsar_path_paths_exist,PASS,0/181 missing
+standard,fp4,test_flood_mask_path_paths_exist,PASS,0/181 missing
+standard,fp4,test_land_cover_mask_path_paths_exist,PASS,0/181 missing
+standard,fp4,train_mask_validity,INFO,total=709 with_flood=709 no_flood=0 missing=0 pos_px=10565809 neg_px=35899215
+standard,fp4,validation_mask_validity,INFO,total=177 with_flood=177 no_flood=0 missing=0 pos_px=3316427 neg_px=8283445
+standard,fp4,test_mask_validity,INFO,total=181 with_flood=181 no_flood=0 missing=0 pos_px=2038908 neg_px=9823108
+standard,fp5,row_count_train,INFO,726
+standard,fp5,row_count_validation,INFO,181
+standard,fp5,row_count_test,INFO,160
+standard,fp5,test_flight_path_correct,PASS,0 wrong-fp rows in test
+standard,fp5,train_no_heldout_fp,PASS,0 leaked rows
+standard,fp5,validation_no_heldout_fp,PASS,0 leaked rows
+standard,fp5,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+standard,fp5,train_test_tile_name_overlap,INFO,71 overlapping tile_names
+standard,fp5,validation_test_tile_name_overlap,FAIL,14 overlapping tile_names
+standard,fp5,train_duplicate_tile_name,WARN,131 duplicates
+standard,fp5,train_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp5,validation_duplicate_tile_name,WARN,34 duplicates
+standard,fp5,validation_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp5,test_duplicate_tile_name,PASS,0 duplicates
+standard,fp5,test_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp5,train_uavsar_path_paths_exist,PASS,0/726 missing
+standard,fp5,train_flood_mask_path_paths_exist,PASS,0/726 missing
+standard,fp5,train_land_cover_mask_path_paths_exist,PASS,0/726 missing
+standard,fp5,validation_uavsar_path_paths_exist,PASS,0/181 missing
+standard,fp5,validation_flood_mask_path_paths_exist,PASS,0/181 missing
+standard,fp5,validation_land_cover_mask_path_paths_exist,PASS,0/181 missing
+standard,fp5,test_uavsar_path_paths_exist,PASS,0/160 missing
+standard,fp5,test_flood_mask_path_paths_exist,PASS,0/160 missing
+standard,fp5,test_land_cover_mask_path_paths_exist,PASS,0/160 missing
+standard,fp5,train_mask_validity,INFO,total=726 with_flood=726 no_flood=0 missing=0 pos_px=10906224 neg_px=36672912
+standard,fp5,validation_mask_validity,INFO,total=181 with_flood=181 no_flood=0 missing=0 pos_px=2606183 neg_px=9255833
+standard,fp5,test_mask_validity,INFO,total=160 with_flood=160 no_flood=0 missing=0 pos_px=2408737 neg_px=8077023
+standard,fp6,row_count_train,INFO,718
+standard,fp6,row_count_validation,INFO,179
+standard,fp6,row_count_test,INFO,170
+standard,fp6,test_flight_path_correct,PASS,0 wrong-fp rows in test
+standard,fp6,train_no_heldout_fp,PASS,0 leaked rows
+standard,fp6,validation_no_heldout_fp,PASS,0 leaked rows
+standard,fp6,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+standard,fp6,train_test_tile_name_overlap,INFO,112 overlapping tile_names
+standard,fp6,validation_test_tile_name_overlap,FAIL,33 overlapping tile_names
+standard,fp6,train_duplicate_tile_name,WARN,83 duplicates
+standard,fp6,train_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp6,validation_duplicate_tile_name,WARN,22 duplicates
+standard,fp6,validation_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp6,test_duplicate_tile_name,PASS,0 duplicates
+standard,fp6,test_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp6,train_uavsar_path_paths_exist,PASS,0/718 missing
+standard,fp6,train_flood_mask_path_paths_exist,PASS,0/718 missing
+standard,fp6,train_land_cover_mask_path_paths_exist,PASS,0/718 missing
+standard,fp6,validation_uavsar_path_paths_exist,PASS,0/179 missing
+standard,fp6,validation_flood_mask_path_paths_exist,PASS,0/179 missing
+standard,fp6,validation_land_cover_mask_path_paths_exist,PASS,0/179 missing
+standard,fp6,test_uavsar_path_paths_exist,PASS,0/170 missing
+standard,fp6,test_flood_mask_path_paths_exist,PASS,0/170 missing
+standard,fp6,test_land_cover_mask_path_paths_exist,PASS,0/170 missing
+standard,fp6,train_mask_validity,INFO,total=718 with_flood=718 no_flood=0 missing=0 pos_px=10262184 neg_px=36792664
+standard,fp6,validation_mask_validity,INFO,total=179 with_flood=179 no_flood=0 missing=0 pos_px=2687725 neg_px=9043219
+standard,fp6,test_mask_validity,INFO,total=170 with_flood=170 no_flood=0 missing=0 pos_px=2971235 neg_px=8169885
+standard,fp7,row_count_train,INFO,759
+standard,fp7,row_count_validation,INFO,191
+standard,fp7,row_count_test,INFO,117
+standard,fp7,test_flight_path_correct,PASS,0 wrong-fp rows in test
+standard,fp7,train_no_heldout_fp,PASS,0 leaked rows
+standard,fp7,validation_no_heldout_fp,PASS,0 leaked rows
+standard,fp7,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+standard,fp7,train_test_tile_name_overlap,INFO,1 overlapping tile_names
+standard,fp7,validation_test_tile_name_overlap,INFO,0 overlapping tile_names
+standard,fp7,train_duplicate_tile_name,WARN,203 duplicates
+standard,fp7,train_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp7,validation_duplicate_tile_name,WARN,46 duplicates
+standard,fp7,validation_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp7,test_duplicate_tile_name,PASS,0 duplicates
+standard,fp7,test_duplicate_uavsar_path,PASS,0 duplicates
+standard,fp7,train_uavsar_path_paths_exist,PASS,0/759 missing
+standard,fp7,train_flood_mask_path_paths_exist,PASS,0/759 missing
+standard,fp7,train_land_cover_mask_path_paths_exist,PASS,0/759 missing
+standard,fp7,validation_uavsar_path_paths_exist,PASS,0/191 missing
+standard,fp7,validation_flood_mask_path_paths_exist,PASS,0/191 missing
+standard,fp7,validation_land_cover_mask_path_paths_exist,PASS,0/191 missing
+standard,fp7,test_uavsar_path_paths_exist,PASS,0/117 missing
+standard,fp7,test_flood_mask_path_paths_exist,PASS,0/117 missing
+standard,fp7,test_land_cover_mask_path_paths_exist,PASS,0/117 missing
+standard,fp7,train_mask_validity,INFO,total=759 with_flood=759 no_flood=0 missing=0 pos_px=11223059 neg_px=38518765
+standard,fp7,validation_mask_validity,INFO,total=191 with_flood=191 no_flood=0 missing=0 pos_px=3067408 neg_px=9449968
+standard,fp7,test_mask_validity,INFO,total=117 with_flood=117 no_flood=0 missing=0 pos_px=1630677 neg_px=6037035
+strict_no_overlap,fp1,row_count_train,INFO,743
+strict_no_overlap,fp1,row_count_validation,INFO,186
+strict_no_overlap,fp1,row_count_test,INFO,137
+strict_no_overlap,fp1,test_flight_path_correct,PASS,0 wrong-fp rows in test
+strict_no_overlap,fp1,train_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp1,validation_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp1,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp1,train_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp1,validation_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp1,train_duplicate_tile_name,WARN,204 duplicates
+strict_no_overlap,fp1,train_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp1,validation_duplicate_tile_name,WARN,45 duplicates
+strict_no_overlap,fp1,validation_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp1,test_duplicate_tile_name,PASS,0 duplicates
+strict_no_overlap,fp1,test_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp1,train_uavsar_path_paths_exist,PASS,0/743 missing
+strict_no_overlap,fp1,train_flood_mask_path_paths_exist,PASS,0/743 missing
+strict_no_overlap,fp1,train_land_cover_mask_path_paths_exist,PASS,0/743 missing
+strict_no_overlap,fp1,validation_uavsar_path_paths_exist,PASS,0/186 missing
+strict_no_overlap,fp1,validation_flood_mask_path_paths_exist,PASS,0/186 missing
+strict_no_overlap,fp1,validation_land_cover_mask_path_paths_exist,PASS,0/186 missing
+strict_no_overlap,fp1,test_uavsar_path_paths_exist,PASS,0/137 missing
+strict_no_overlap,fp1,test_flood_mask_path_paths_exist,PASS,0/137 missing
+strict_no_overlap,fp1,test_land_cover_mask_path_paths_exist,PASS,0/137 missing
+strict_no_overlap,fp1,train_mask_validity,INFO,total=743 with_flood=743 no_flood=0 missing=0 pos_px=11563445 neg_px=37129803
+strict_no_overlap,fp1,validation_mask_validity,INFO,total=186 with_flood=186 no_flood=0 missing=0 pos_px=3081745 neg_px=9107951
+strict_no_overlap,fp1,test_mask_validity,INFO,total=137 with_flood=137 no_flood=0 missing=0 pos_px=1253829 neg_px=7724603
+strict_no_overlap,fp2,row_count_train,INFO,728
+strict_no_overlap,fp2,row_count_validation,INFO,182
+strict_no_overlap,fp2,row_count_test,INFO,138
+strict_no_overlap,fp2,test_flight_path_correct,PASS,0 wrong-fp rows in test
+strict_no_overlap,fp2,train_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp2,validation_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp2,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp2,train_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp2,validation_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp2,train_duplicate_tile_name,WARN,183 duplicates
+strict_no_overlap,fp2,train_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp2,validation_duplicate_tile_name,WARN,48 duplicates
+strict_no_overlap,fp2,validation_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp2,test_duplicate_tile_name,PASS,0 duplicates
+strict_no_overlap,fp2,test_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp2,train_uavsar_path_paths_exist,PASS,0/728 missing
+strict_no_overlap,fp2,train_flood_mask_path_paths_exist,PASS,0/728 missing
+strict_no_overlap,fp2,train_land_cover_mask_path_paths_exist,PASS,0/728 missing
+strict_no_overlap,fp2,validation_uavsar_path_paths_exist,PASS,0/182 missing
+strict_no_overlap,fp2,validation_flood_mask_path_paths_exist,PASS,0/182 missing
+strict_no_overlap,fp2,validation_land_cover_mask_path_paths_exist,PASS,0/182 missing
+strict_no_overlap,fp2,test_uavsar_path_paths_exist,PASS,0/138 missing
+strict_no_overlap,fp2,test_flood_mask_path_paths_exist,PASS,0/138 missing
+strict_no_overlap,fp2,test_land_cover_mask_path_paths_exist,PASS,0/138 missing
+strict_no_overlap,fp2,train_mask_validity,INFO,total=728 with_flood=728 no_flood=0 missing=0 pos_px=10105302 neg_px=37604906
+strict_no_overlap,fp2,validation_mask_validity,INFO,total=182 with_flood=182 no_flood=0 missing=0 pos_px=3025892 neg_px=8901660
+strict_no_overlap,fp2,test_mask_validity,INFO,total=138 with_flood=138 no_flood=0 missing=0 pos_px=2532842 neg_px=6511126
+strict_no_overlap,fp3,row_count_train,INFO,652
+strict_no_overlap,fp3,row_count_validation,INFO,163
+strict_no_overlap,fp3,row_count_test,INFO,164
+strict_no_overlap,fp3,test_flight_path_correct,PASS,0 wrong-fp rows in test
+strict_no_overlap,fp3,train_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp3,validation_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp3,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp3,train_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp3,validation_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp3,train_duplicate_tile_name,WARN,133 duplicates
+strict_no_overlap,fp3,train_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp3,validation_duplicate_tile_name,WARN,29 duplicates
+strict_no_overlap,fp3,validation_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp3,test_duplicate_tile_name,PASS,0 duplicates
+strict_no_overlap,fp3,test_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp3,train_uavsar_path_paths_exist,PASS,0/652 missing
+strict_no_overlap,fp3,train_flood_mask_path_paths_exist,PASS,0/652 missing
+strict_no_overlap,fp3,train_land_cover_mask_path_paths_exist,PASS,0/652 missing
+strict_no_overlap,fp3,validation_uavsar_path_paths_exist,PASS,0/163 missing
+strict_no_overlap,fp3,validation_flood_mask_path_paths_exist,PASS,0/163 missing
+strict_no_overlap,fp3,validation_land_cover_mask_path_paths_exist,PASS,0/163 missing
+strict_no_overlap,fp3,test_uavsar_path_paths_exist,PASS,0/164 missing
+strict_no_overlap,fp3,test_flood_mask_path_paths_exist,PASS,0/164 missing
+strict_no_overlap,fp3,test_land_cover_mask_path_paths_exist,PASS,0/164 missing
+strict_no_overlap,fp3,train_mask_validity,INFO,total=652 with_flood=652 no_flood=0 missing=0 pos_px=8801872 neg_px=33927600
+strict_no_overlap,fp3,validation_mask_validity,INFO,total=163 with_flood=163 no_flood=0 missing=0 pos_px=2139393 neg_px=8542975
+strict_no_overlap,fp3,test_mask_validity,INFO,total=164 with_flood=164 no_flood=0 missing=0 pos_px=3084916 neg_px=7662988
+strict_no_overlap,fp4,row_count_train,INFO,580
+strict_no_overlap,fp4,row_count_validation,INFO,145
+strict_no_overlap,fp4,row_count_test,INFO,181
+strict_no_overlap,fp4,test_flight_path_correct,PASS,0 wrong-fp rows in test
+strict_no_overlap,fp4,train_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp4,validation_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp4,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp4,train_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp4,validation_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp4,train_duplicate_tile_name,WARN,73 duplicates
+strict_no_overlap,fp4,train_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp4,validation_duplicate_tile_name,WARN,16 duplicates
+strict_no_overlap,fp4,validation_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp4,test_duplicate_tile_name,PASS,0 duplicates
+strict_no_overlap,fp4,test_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp4,train_uavsar_path_paths_exist,PASS,0/580 missing
+strict_no_overlap,fp4,train_flood_mask_path_paths_exist,PASS,0/580 missing
+strict_no_overlap,fp4,train_land_cover_mask_path_paths_exist,PASS,0/580 missing
+strict_no_overlap,fp4,validation_uavsar_path_paths_exist,PASS,0/145 missing
+strict_no_overlap,fp4,validation_flood_mask_path_paths_exist,PASS,0/145 missing
+strict_no_overlap,fp4,validation_land_cover_mask_path_paths_exist,PASS,0/145 missing
+strict_no_overlap,fp4,test_uavsar_path_paths_exist,PASS,0/181 missing
+strict_no_overlap,fp4,test_flood_mask_path_paths_exist,PASS,0/181 missing
+strict_no_overlap,fp4,test_land_cover_mask_path_paths_exist,PASS,0/181 missing
+strict_no_overlap,fp4,train_mask_validity,INFO,total=580 with_flood=580 no_flood=0 missing=0 pos_px=9673453 neg_px=28337427
+strict_no_overlap,fp4,validation_mask_validity,INFO,total=145 with_flood=145 no_flood=0 missing=0 pos_px=2354720 neg_px=7148000
+strict_no_overlap,fp4,test_mask_validity,INFO,total=181 with_flood=181 no_flood=0 missing=0 pos_px=2038908 neg_px=9823108
+strict_no_overlap,fp5,row_count_train,INFO,658
+strict_no_overlap,fp5,row_count_validation,INFO,164
+strict_no_overlap,fp5,row_count_test,INFO,160
+strict_no_overlap,fp5,test_flight_path_correct,PASS,0 wrong-fp rows in test
+strict_no_overlap,fp5,train_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp5,validation_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp5,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp5,train_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp5,validation_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp5,train_duplicate_tile_name,WARN,133 duplicates
+strict_no_overlap,fp5,train_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp5,validation_duplicate_tile_name,WARN,32 duplicates
+strict_no_overlap,fp5,validation_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp5,test_duplicate_tile_name,PASS,0 duplicates
+strict_no_overlap,fp5,test_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp5,train_uavsar_path_paths_exist,PASS,0/658 missing
+strict_no_overlap,fp5,train_flood_mask_path_paths_exist,PASS,0/658 missing
+strict_no_overlap,fp5,train_land_cover_mask_path_paths_exist,PASS,0/658 missing
+strict_no_overlap,fp5,validation_uavsar_path_paths_exist,PASS,0/164 missing
+strict_no_overlap,fp5,validation_flood_mask_path_paths_exist,PASS,0/164 missing
+strict_no_overlap,fp5,validation_land_cover_mask_path_paths_exist,PASS,0/164 missing
+strict_no_overlap,fp5,test_uavsar_path_paths_exist,PASS,0/160 missing
+strict_no_overlap,fp5,test_flood_mask_path_paths_exist,PASS,0/160 missing
+strict_no_overlap,fp5,test_land_cover_mask_path_paths_exist,PASS,0/160 missing
+strict_no_overlap,fp5,train_mask_validity,INFO,total=658 with_flood=658 no_flood=0 missing=0 pos_px=9731179 neg_px=33391509
+strict_no_overlap,fp5,validation_mask_validity,INFO,total=164 with_flood=164 no_flood=0 missing=0 pos_px=2860475 neg_px=7887429
+strict_no_overlap,fp5,test_mask_validity,INFO,total=160 with_flood=160 no_flood=0 missing=0 pos_px=2408737 neg_px=8077023
+strict_no_overlap,fp6,row_count_train,INFO,602
+strict_no_overlap,fp6,row_count_validation,INFO,150
+strict_no_overlap,fp6,row_count_test,INFO,170
+strict_no_overlap,fp6,test_flight_path_correct,PASS,0 wrong-fp rows in test
+strict_no_overlap,fp6,train_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp6,validation_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp6,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp6,train_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp6,validation_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp6,train_duplicate_tile_name,WARN,89 duplicates
+strict_no_overlap,fp6,train_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp6,validation_duplicate_tile_name,WARN,16 duplicates
+strict_no_overlap,fp6,validation_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp6,test_duplicate_tile_name,PASS,0 duplicates
+strict_no_overlap,fp6,test_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp6,train_uavsar_path_paths_exist,PASS,0/602 missing
+strict_no_overlap,fp6,train_flood_mask_path_paths_exist,PASS,0/602 missing
+strict_no_overlap,fp6,train_land_cover_mask_path_paths_exist,PASS,0/602 missing
+strict_no_overlap,fp6,validation_uavsar_path_paths_exist,PASS,0/150 missing
+strict_no_overlap,fp6,validation_flood_mask_path_paths_exist,PASS,0/150 missing
+strict_no_overlap,fp6,validation_land_cover_mask_path_paths_exist,PASS,0/150 missing
+strict_no_overlap,fp6,test_uavsar_path_paths_exist,PASS,0/170 missing
+strict_no_overlap,fp6,test_flood_mask_path_paths_exist,PASS,0/170 missing
+strict_no_overlap,fp6,test_land_cover_mask_path_paths_exist,PASS,0/170 missing
+strict_no_overlap,fp6,train_mask_validity,INFO,total=602 with_flood=602 no_flood=0 missing=0 pos_px=8273183 neg_px=31179489
+strict_no_overlap,fp6,validation_mask_validity,INFO,total=150 with_flood=150 no_flood=0 missing=0 pos_px=2105561 neg_px=7724839
+strict_no_overlap,fp6,test_mask_validity,INFO,total=170 with_flood=170 no_flood=0 missing=0 pos_px=2971235 neg_px=8169885
+strict_no_overlap,fp7,row_count_train,INFO,759
+strict_no_overlap,fp7,row_count_validation,INFO,190
+strict_no_overlap,fp7,row_count_test,INFO,117
+strict_no_overlap,fp7,test_flight_path_correct,PASS,0 wrong-fp rows in test
+strict_no_overlap,fp7,train_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp7,validation_no_heldout_fp,PASS,0 leaked rows
+strict_no_overlap,fp7,train_val_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp7,train_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp7,validation_test_tile_name_overlap,PASS,0 overlapping tile_names
+strict_no_overlap,fp7,train_duplicate_tile_name,WARN,199 duplicates
+strict_no_overlap,fp7,train_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp7,validation_duplicate_tile_name,WARN,50 duplicates
+strict_no_overlap,fp7,validation_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp7,test_duplicate_tile_name,PASS,0 duplicates
+strict_no_overlap,fp7,test_duplicate_uavsar_path,PASS,0 duplicates
+strict_no_overlap,fp7,train_uavsar_path_paths_exist,PASS,0/759 missing
+strict_no_overlap,fp7,train_flood_mask_path_paths_exist,PASS,0/759 missing
+strict_no_overlap,fp7,train_land_cover_mask_path_paths_exist,PASS,0/759 missing
+strict_no_overlap,fp7,validation_uavsar_path_paths_exist,PASS,0/190 missing
+strict_no_overlap,fp7,validation_flood_mask_path_paths_exist,PASS,0/190 missing
+strict_no_overlap,fp7,validation_land_cover_mask_path_paths_exist,PASS,0/190 missing
+strict_no_overlap,fp7,test_uavsar_path_paths_exist,PASS,0/117 missing
+strict_no_overlap,fp7,test_flood_mask_path_paths_exist,PASS,0/117 missing
+strict_no_overlap,fp7,test_land_cover_mask_path_paths_exist,PASS,0/117 missing
+strict_no_overlap,fp7,train_mask_validity,INFO,total=759 with_flood=759 no_flood=0 missing=0 pos_px=11106659 neg_px=38635165
+strict_no_overlap,fp7,validation_mask_validity,INFO,total=190 with_flood=190 no_flood=0 missing=0 pos_px=3161683 neg_px=9290157
+strict_no_overlap,fp7,test_mask_validity,INFO,total=117 with_flood=117 no_flood=0 missing=0 pos_px=1630677 neg_px=6037035

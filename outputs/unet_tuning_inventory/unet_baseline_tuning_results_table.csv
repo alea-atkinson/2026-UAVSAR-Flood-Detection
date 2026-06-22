@@ -1,0 +1,51 @@
+run_name,category,model_architecture,heldout_fp,loss_function,augmentation,checkpoint_selection,metric_source,threshold,test_dice,test_iou,test_precision,test_recall,val_dice_at_threshold,val_iou_at_threshold
+filtered_strict_fp1_unet_20epochs,plain_unet_tuning,plain_unet,fp1,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,default_0.5_training_script_batch_average,0.5,0.3618,0.2415,n/a,n/a,,
+filtered_strict_fp1_unet_20epochs,plain_unet_tuning,plain_unet,fp1,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,threshold_sweep_global_pixel,0.25,0.520508,0.351816,0.459738,0.599792,0.675155,0.50961
+filtered_strict_fp2_unet_20epochs,plain_unet_tuning,plain_unet,fp2,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,default_0.5_training_script_batch_average,0.5,0.6129,0.4771,n/a,n/a,,
+filtered_strict_fp2_unet_20epochs,plain_unet_tuning,plain_unet,fp2,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,threshold_sweep_global_pixel,0.35,0.744511,0.593005,0.744658,0.744365,0.642701,0.473515
+filtered_strict_fp3_unet_20epochs,plain_unet_tuning,plain_unet,fp3,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,default_0.5_training_script_batch_average,0.5,0.5155,0.3741,n/a,n/a,,
+filtered_strict_fp3_unet_20epochs,plain_unet_tuning,plain_unet,fp3,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,threshold_sweep_global_pixel,0.35,0.626408,0.456036,0.748292,0.538668,0.655335,0.487359
+filtered_strict_fp4_unet_20epochs,plain_unet_tuning,plain_unet,fp4,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,default_0.5_training_script_batch_average,0.5,0.3742,0.2618,n/a,n/a,,
+filtered_strict_fp4_unet_20epochs,plain_unet_tuning,plain_unet,fp4,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,threshold_sweep_global_pixel,0.5,0.465657,0.30349,0.528774,0.416001,0.677419,0.512195
+filtered_strict_fp5_unet_20epochs,plain_unet_tuning,plain_unet,fp5,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,default_0.5_training_script_batch_average,0.5,0.5506,0.4012,n/a,n/a,,
+filtered_strict_fp5_unet_20epochs,plain_unet_tuning,plain_unet,fp5,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,threshold_sweep_global_pixel,0.25,0.672539,0.506636,0.610924,0.747977,0.634277,0.464425
+filtered_strict_fp6_unet_20epochs,plain_unet_tuning,plain_unet,fp6,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,default_0.5_training_script_batch_average,0.5,0.4165,0.2928,n/a,n/a,,
+filtered_strict_fp6_unet_20epochs,plain_unet_tuning,plain_unet,fp6,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,threshold_sweep_global_pixel,0.3,0.600778,0.429365,0.693959,0.529658,0.688111,0.524519
+filtered_strict_fp7_unet_20epochs,plain_unet_tuning,plain_unet,fp7,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,default_0.5_training_script_batch_average,0.5,0.2709,0.1764,n/a,n/a,,
+filtered_strict_fp7_unet_20epochs,plain_unet_tuning,plain_unet,fp7,"bce (BCEWithLogitsLoss, unweighted)",False,val_loss,threshold_sweep_global_pixel,0.3,0.557049,0.386048,0.679949,0.471775,0.677865,0.512705
+experiment_fp1_bce_dice_aug_20epochs,plain_unet_tuning,plain_unet,fp1,bce_dice (BCEWithLogitsLoss + soft DiceLoss),True,val_loss,default_0.5_training_script_batch_average,0.5,0.468223,0.334031,n/a,n/a,,
+experiment_fp1_bce_dice_aug_20epochs,plain_unet_tuning,plain_unet,fp1,bce_dice (BCEWithLogitsLoss + soft DiceLoss),True,val_loss,threshold_sweep_global_pixel,0.4,0.509443,0.34178,0.427371,0.630529,0.685294,0.521253
+experiment_fp1_bce_dice_noaug_20epochs,plain_unet_tuning,plain_unet,fp1,bce_dice (BCEWithLogitsLoss + soft DiceLoss),False,val_loss,default_0.5_training_script_batch_average,0.5,0.442613,0.308548,n/a,n/a,,
+experiment_fp1_bce_dice_noaug_20epochs,plain_unet_tuning,plain_unet,fp1,bce_dice (BCEWithLogitsLoss + soft DiceLoss),False,val_loss,threshold_sweep_global_pixel,0.55,0.487878,0.322645,0.381455,0.676664,0.689802,0.526486
+experiment_fp1_bce_valdice_noaug_20epochs,plain_unet_tuning,plain_unet,fp1,bce (BCEWithLogitsLoss),False,val_dice,default_0.5_training_script_batch_average,0.5,0.420569,0.300336,n/a,n/a,,
+experiment_fp1_bce_valdice_noaug_20epochs,plain_unet_tuning,plain_unet,fp1,bce (BCEWithLogitsLoss),False,val_dice,threshold_sweep_global_pixel,0.35,0.494988,0.328893,0.414084,0.615183,0.690746,0.527587
+experiment_fp1_weighted_bce_valdice_20epochs,plain_unet_tuning,plain_unet,fp1,weighted_bce (BCEWithLogitsLoss with pos_weight = neg_px / pos_px from training masks),not_in_name (augmentation flag not in run name; default=False assumed),val_dice,default_0.5_training_script_batch_average,0.5,0.39974,0.27006,n/a,n/a,,
+experiment_fp1_weighted_bce_valdice_20epochs,plain_unet_tuning,plain_unet,fp1,weighted_bce (BCEWithLogitsLoss with pos_weight = neg_px / pos_px from training masks),not_in_name (augmentation flag not in run name; default=False assumed),val_dice,threshold_sweep_global_pixel,0.65,0.491366,0.325702,0.387288,0.671938,0.697903,0.535984
+attention_unet_fp1_bce_valdice_20epochs,arch_extension,attention_unet,fp1,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.43603,0.305135,n/a,n/a,,
+attention_unet_fp1_bce_valdice_20epochs,arch_extension,attention_unet,fp1,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.45,0.469555,0.306809,0.357003,0.685749,0.693474,
+attention_unet_fp2_bce_valdice_20epochs,arch_extension,attention_unet,fp2,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.650922,0.519213,n/a,n/a,,
+attention_unet_fp2_bce_valdice_20epochs,arch_extension,attention_unet,fp2,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.45,0.7397,0.586924,0.728886,0.75084,0.655954,
+attention_unet_fp3_bce_valdice_20epochs,arch_extension,attention_unet,fp3,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.527662,0.391666,n/a,n/a,,
+attention_unet_fp3_bce_valdice_20epochs,arch_extension,attention_unet,fp3,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.35,0.624096,0.45359,0.776784,0.521574,0.668138,
+attention_unet_fp4_bce_valdice_20epochs,arch_extension,attention_unet,fp4,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.42289,0.302955,n/a,n/a,,
+attention_unet_fp4_bce_valdice_20epochs,arch_extension,attention_unet,fp4,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.5,0.495334,0.329199,0.513691,0.478244,0.694475,
+attention_unet_fp5_bce_valdice_20epochs,arch_extension,attention_unet,fp5,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.570279,0.430927,n/a,n/a,,
+attention_unet_fp5_bce_valdice_20epochs,arch_extension,attention_unet,fp5,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.5,0.624431,0.453944,0.521971,0.77694,0.6443,
+attention_unet_fp6_bce_valdice_20epochs,arch_extension,attention_unet,fp6,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.527923,0.390995,n/a,n/a,,
+attention_unet_fp6_bce_valdice_20epochs,arch_extension,attention_unet,fp6,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.5,0.624455,0.453969,0.718076,0.55243,0.690755,
+attention_unet_fp7_bce_valdice_20epochs,arch_extension,attention_unet,fp7,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.367282,0.261251,n/a,n/a,,
+attention_unet_fp7_bce_valdice_20epochs,arch_extension,attention_unet,fp7,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.4,0.549,0.378359,0.489594,0.624813,0.684579,
+unetpp_fp1_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp1,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.428925,0.297172,n/a,n/a,,
+unetpp_fp1_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp1,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.35,0.476051,0.31238,0.386535,0.619523,0.671351,
+unetpp_fp2_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp2,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.640546,0.508798,n/a,n/a,,
+unetpp_fp2_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp2,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.4,0.749208,0.598986,0.75272,0.745728,0.655369,
+unetpp_fp3_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp3,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.549452,0.406437,n/a,n/a,,
+unetpp_fp3_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp3,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.45,0.608203,0.436991,0.796353,0.491968,0.662995,
+unetpp_fp4_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp4,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.383923,0.259434,n/a,n/a,,
+unetpp_fp4_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp4,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.55,0.461484,0.299954,0.418768,0.513905,0.654067,
+unetpp_fp5_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp5,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.567915,0.429484,n/a,n/a,,
+unetpp_fp5_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp5,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.35,0.617366,0.446514,0.497707,0.812773,0.653457,
+unetpp_fp6_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp6,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.497307,0.364781,n/a,n/a,,
+unetpp_fp6_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp6,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.4,0.633303,0.463382,0.755458,0.545154,0.709431,
+unetpp_fp7_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp7,bce (BCEWithLogitsLoss),not_in_name,val_dice,default_0.5_training_script_batch_average,0.5,0.378729,0.2712,n/a,n/a,,
+unetpp_fp7_bce_valdice_20epochs,arch_extension,unet_plus_plus,fp7,bce (BCEWithLogitsLoss),not_in_name,val_dice,threshold_sweep_global_pixel,0.4,0.560446,0.389319,0.524542,0.601626,0.687071,

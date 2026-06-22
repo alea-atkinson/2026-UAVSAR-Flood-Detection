@@ -1,0 +1,16 @@
+variant,device,batch_size,num_workers,n_tiles,data_load_ms,forward_ms,postproc_ms,total_ms,tiles_per_sec,notes
+raw_pipeline,cuda,1,0,138,8.043,1.609,0.121,9.772,102.3,sync_io
+batch_scale,cuda,1,0,138,8.733,1.837,0.121,10.691,93.5,sync_io
+batch_scale,cuda,2,0,138,8.729,1.214,0.095,10.038,99.6,sync_io
+batch_scale,cuda,4,0,138,8.814,1.051,0.090,9.955,100.4,sync_io
+batch_scale,cuda,8,0,138,7.210,1.252,0.039,8.501,117.6,sync_io
+batch_scale,cuda,16,0,138,7.166,1.456,0.036,8.657,115.5,sync_io
+worker_scale,cuda,1,0,138,7.393,1.437,0.096,8.927,112.0,sync_io
+worker_scale,cuda,1,2,138,2.037,1.386,0.089,3.512,284.7,nw2_prefetch
+worker_scale,cuda,1,4,138,0.511,1.316,0.084,1.911,523.4,nw4_prefetch
+preloaded,cuda,1,0,138,0.000,1.175,0.070,1.245,802.9,model_only_bs1
+preloaded,cuda,2,0,138,0.000,0.979,0.052,1.031,970.0,model_only_bs2
+preloaded,cuda,4,0,138,0.000,0.942,0.041,0.983,1017.7,model_only_bs4
+preloaded,cuda,8,0,138,0.000,1.111,0.034,1.145,873.3,model_only_bs8
+preloaded,cuda,16,0,138,0.000,1.324,0.038,1.362,734.4,model_only_bs16
+cpu_subset,cpu,1,0,20,N/A,29.694,N/A,29.694,33.7,cpu_fwd_only_first20tiles

@@ -1,0 +1,51 @@
+Using device: cuda
+Train CSV: csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap/heldout_fp4_train.csv
+Validation CSV: csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap/heldout_fp4_validation.csv
+Test CSV: csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap/heldout_fp4_test.csv
+Dataset sizes: train=580, val=145, test=181
+Epoch 001/020 train_loss=0.6458 val_loss=0.8010 val_dice=0.4613 val_iou=0.3106
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 002/020 train_loss=0.5746 val_loss=0.6029 val_dice=0.5474 val_iou=0.3958
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 003/020 train_loss=0.5399 val_loss=0.5896 val_dice=0.5588 val_iou=0.4082
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 004/020 train_loss=0.5313 val_loss=0.5872 val_dice=0.5542 val_iou=0.4007
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 005/020 train_loss=0.5186 val_loss=0.5849 val_dice=0.5507 val_iou=0.3995
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 006/020 train_loss=0.5117 val_loss=0.5562 val_dice=0.5821 val_iou=0.4342
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 007/020 train_loss=0.5140 val_loss=0.5447 val_dice=0.5884 val_iou=0.4409
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 008/020 train_loss=0.5026 val_loss=0.5380 val_dice=0.6055 val_iou=0.4569
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 009/020 train_loss=0.4973 val_loss=0.5849 val_dice=0.5612 val_iou=0.4070
+Epoch 010/020 train_loss=0.4821 val_loss=0.5248 val_dice=0.6252 val_iou=0.4809
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 011/020 train_loss=0.4829 val_loss=0.5242 val_dice=0.6163 val_iou=0.4706
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 012/020 train_loss=0.4793 val_loss=0.5291 val_dice=0.6029 val_iou=0.4558
+Epoch 013/020 train_loss=0.4685 val_loss=0.5150 val_dice=0.6294 val_iou=0.4858
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 014/020 train_loss=0.4687 val_loss=0.5216 val_dice=0.6143 val_iou=0.4679
+Epoch 015/020 train_loss=0.4447 val_loss=0.4910 val_dice=0.6429 val_iou=0.5050
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 016/020 train_loss=0.4581 val_loss=0.5027 val_dice=0.6345 val_iou=0.4959
+Epoch 017/020 train_loss=0.4317 val_loss=0.4892 val_dice=0.6393 val_iou=0.4998
+  Saved best checkpoint: models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Epoch 018/020 train_loss=0.4398 val_loss=0.5232 val_dice=0.6148 val_iou=0.4711
+Epoch 019/020 train_loss=0.4166 val_loss=0.5148 val_dice=0.6095 val_iou=0.4673
+Epoch 020/020 train_loss=0.4101 val_loss=0.4970 val_dice=0.6382 val_iou=0.4971
+Best checkpoint test metrics: loss=0.6059 dice=0.4959 iou=0.3458
+Metrics CSV: results/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_metrics.csv
+Device      : cuda
+Checkpoint  : models/alea_tuned_filtered_strict_fp4_focaldice_adamw_20epochs_best.pt
+Val CSV     : csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap/heldout_fp4_validation.csv
+Test CSV    : csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap/heldout_fp4_test.csv
+Data root   : 2025_Tile_Data
+Thresholds  : 0.05 -> 0.95 (19 values)
+Validation inference (145 tiles) ...
+Selected threshold: 0.55 (val_dice=0.7215, val_iou=0.5643)
+Test inference (181 tiles) ...
+Wrote: outputs/alea_tuned_filtered_strict/threshold_sweeps/fp4_threshold_sweep.csv
+Test metrics at selected threshold 0.55: dice=0.5445 iou=0.3741
