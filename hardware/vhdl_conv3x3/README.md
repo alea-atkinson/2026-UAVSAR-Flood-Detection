@@ -39,12 +39,16 @@ hardware/vhdl_conv3x3/
 ├── mac_unit.vhd                    Clocked MAC: acc += a*b  (INT8 in, INT32 out)
 ├── conv3x3_dot.vhd                 Combinational 3×3 dot product + bias (INT8/INT32)
 ├── conv3x3_dot_pipelined.vhd       3-stage pipelined dot product (INT8/INT32, 3-cycle latency)
+├── window3x3_stream.vhd            Sliding 3×3 window generator (pixel stream → 9 pixel outputs)
 ├── tb_conv3x3_dot.vhd              Self-checking testbench — combinational design
 ├── tb_conv3x3_dot_pipelined.vhd    Self-checking testbench — pipelined design (clocked)
+├── tb_window3x3_stream.vhd         Self-checking testbench — window generator (5×5 image)
 ├── run_ghdl.sh                     GHDL simulation — combinational testbench
 ├── run_ghdl_pipelined.sh           GHDL simulation — pipelined testbench
+├── run_ghdl_window.sh              GHDL simulation — window generator testbench
 ├── run_vivado_sim.tcl              Vivado xsim — combinational testbench
 ├── run_vivado_sim_pipelined.tcl    Vivado xsim — pipelined testbench
+├── run_vivado_sim_window.tcl       Vivado xsim — window generator testbench
 └── README.md                       This file
 ```
 
@@ -113,6 +117,54 @@ test vectors, and waits for `valid_out` before checking `y`.  Uses a
 `wait until rising_edge(clk) / exit when valid_out = '1'` loop so the check
 works for any pipeline depth without hard-coding cycle counts.
 
+### `window3x3_stream.vhd`
+
+Sliding 3×3 window generator.  Accepts a pixel stream in row-major order and
+produces overlapping 3×3 pixel windows, which are the inputs that
+`conv3x3_dot.vhd` / `conv3x3_dot_pipelined.vhd` operate on.
+
+```
+pixel_in stream →  window3x3_stream  →  p0..p8  →  conv3x3_dot_pipelined  →  y
+(row-major)        (line buffers)        (3×3)       (dot product + bias)     (INT32)
+```
+
+**This is still NOT a full Conv2d layer or U-Net block.**  It handles one input
+channel; a full Conv2d layer also accumulates over all input channels, applies
+BatchNorm (or folds it into weights), and slides the window across the full
+H×W spatial map.
+
+**How the window generator works:**
+
+Three internal line buffers (one per row) store the most recent IMG_WIDTH pixels
+from each of the last three rows.  A round-robin write pointer (`wptr`) cycles
+among them so the oldest row is overwritten by the newest incoming row.
+
+```
+Line buffers (IMG_WIDTH = 5):
+  buf[oldest]   [p00 p01 p02 p03 p04]   ← complete row, written earlier
+  buf[mid]      [p10 p11 p12 p13 p14]   ← complete row, written earlier
+  buf[wptr]     [p20 p21 p22 ...    ]   ← being filled now
+
+At column c >= 2 and rows_done >= 2:
+  p0 = buf[oldest][c-2]   p1 = buf[oldest][c-1]   p2 = buf[oldest][c]
+  p3 = buf[mid][c-2]      p4 = buf[mid][c-1]       p5 = buf[mid][c]
+  p6 = buf[wptr][c-2]     p7 = buf[wptr][c-1]      p8 = pixel_in  ← current pixel
+```
+
+The output is registered: `valid_out` and `p0..p8` update on the same clock
+that receives the bottom-right pixel of the window.
+
+**Limitations of this educational prototype:**
+- No padding — the first valid output requires 2 complete rows + 2 more columns.
+- `IMG_WIDTH` is fixed at elaboration time (synthesis would use BRAM for large widths).
+- `valid_in` must stay high for a complete row; mid-row pausing corrupts state.
+
+### `tb_window3x3_stream.vhd`
+
+Streams a 5×5 image (values 1–25 in row-major order) into the window generator
+and checks the first 3 valid windows against expected values.  All 9 valid
+windows are counted; the final assertion confirms 9 total appeared.
+
 ---
 
 ## Why Pipelining Matters on FPGA
@@ -159,6 +211,10 @@ bash run_ghdl.sh --vcd && gtkwave tb_conv3x3_dot.vcd
 # Pipelined testbench
 bash run_ghdl_pipelined.sh
 bash run_ghdl_pipelined.sh --vcd && gtkwave tb_conv3x3_dot_pipelined.vcd
+
+# Window generator testbench
+bash run_ghdl_window.sh
+bash run_ghdl_window.sh --vcd && gtkwave tb_window3x3_stream.vcd
 ```
 
 ### Option B — Vivado xsim (requires Xilinx Vivado ≥ 2020.1)
@@ -189,6 +245,11 @@ xsim  tb_conv3x3_dot_sim --runall
 xvhdl --2008 conv3x3_dot_pipelined.vhd tb_conv3x3_dot_pipelined.vhd
 xelab -debug typical tb_conv3x3_dot_pipelined -s tb_pip_sim
 xsim  tb_pip_sim --runall
+
+# Window generator
+xvhdl --2008 window3x3_stream.vhd tb_window3x3_stream.vhd
+xelab -debug typical tb_window3x3_stream -s tb_win_sim
+xsim  tb_win_sim --runall
 ```
 
 Expected output — combinational:
@@ -207,16 +268,27 @@ PASS test 3 (pipelined): y = 10  (expected 10)
 === All conv3x3_dot_pipelined tests PASSED ===
 ```
 
+Expected output — window generator:
+```
+PASS window 1 (stream):  [1,2,3;  6,7,8;  11,12,13]
+PASS window 2 (stream):  [2,3,4;  7,8,9;  12,13,14]
+PASS window 3 (stream):  [3,4,5;  8,9,10;  13,14,15]
+=== All window3x3_stream tests PASSED ===  (9 valid windows total)
+```
+
 ---
 
 ## What This Prototype Is and Is Not
+
+**This is NOT a full U-Net or full Conv2d layer.**  The table below shows what
+each module provides and what a production Conv2d accelerator would still need.
 
 | Aspect | This prototype | Full Conv2d accelerator |
 |---|---|---|
 | Kernel size | 3×3, fixed | 3×3 |
 | Input channels | 1 (single dot product) | C_in (32–512 in U-Net) |
-| Spatial sweep | Not implemented | H×W sliding window |
-| Line buffer | Not implemented | Required for streaming |
+| Spatial sweep | **Implemented** (`window3x3_stream.vhd`) | H×W sliding window |
+| Line buffer | **Implemented** (`window3x3_stream.vhd`, 3 rows × IMG_WIDTH) | Required for streaming |
 | BatchNorm | Not implemented | Fold into Conv weights |
 | Activation (ReLU) | Not implemented | Comparator + clamp |
 | Quantization | INT8 shown in types | Needs calibration/training |
@@ -231,10 +303,9 @@ PASS test 3 (pipelined): y = 10  (expected 10)
 1. ✅ **Pipeline registers** — implemented in `conv3x3_dot_pipelined.vhd`
    (multiply → partial-sum → bias add, 3 stages, 3-cycle latency).
 
-2. **Add a line buffer** for streaming image windows.  A 3-row FIFO with
-   a shift register of width 3 presents a new 3×3 window each clock cycle
-   without re-reading from BRAM, eliminating the main memory bandwidth
-   bottleneck.
+2. ✅ **Line buffer / window generator** — implemented in `window3x3_stream.vhd`
+   (3 line buffers of width IMG_WIDTH, round-robin rotation, 1 window per clock
+   once primed).  Still single-channel; see step 3 for channel accumulation.
 
 3. **Sum over input channels**.  Extend `conv3x3_dot` with an outer loop
    (or parallel lanes) over C_in input channels.  Each lane has its own
