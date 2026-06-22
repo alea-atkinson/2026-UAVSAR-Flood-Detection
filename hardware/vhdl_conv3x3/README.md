@@ -36,20 +36,24 @@ parallel MAC array targeting this operation could serve as a prototype for accel
 
 ```
 hardware/vhdl_conv3x3/
-├── mac_unit.vhd                    Clocked MAC: acc += a*b  (INT8 in, INT32 out)
-├── conv3x3_dot.vhd                 Combinational 3×3 dot product + bias (INT8/INT32)
-├── conv3x3_dot_pipelined.vhd       3-stage pipelined dot product (INT8/INT32, 3-cycle latency)
-├── window3x3_stream.vhd            Sliding 3×3 window generator (pixel stream → 9 pixel outputs)
-├── tb_conv3x3_dot.vhd              Self-checking testbench — combinational design
-├── tb_conv3x3_dot_pipelined.vhd    Self-checking testbench — pipelined design (clocked)
-├── tb_window3x3_stream.vhd         Self-checking testbench — window generator (5×5 image)
-├── run_ghdl.sh                     GHDL simulation — combinational testbench
-├── run_ghdl_pipelined.sh           GHDL simulation — pipelined testbench
-├── run_ghdl_window.sh              GHDL simulation — window generator testbench
-├── run_vivado_sim.tcl              Vivado xsim — combinational testbench
-├── run_vivado_sim_pipelined.tcl    Vivado xsim — pipelined testbench
-├── run_vivado_sim_window.tcl       Vivado xsim — window generator testbench
-└── README.md                       This file
+├── mac_unit.vhd                      Clocked MAC: acc += a*b  (INT8 in, INT32 out)
+├── conv3x3_dot.vhd                   Combinational 3×3 dot product + bias (INT8/INT32)
+├── conv3x3_dot_pipelined.vhd         3-stage pipelined dot product (INT8/INT32, 3-cycle latency)
+├── window3x3_stream.vhd              Sliding 3×3 window generator (pixel stream → 9 pixel outputs)
+├── stream_conv3x3_cell.vhd           ★ Integrated cell: pixel stream → convolution output stream
+├── tb_conv3x3_dot.vhd                Self-checking testbench — combinational design
+├── tb_conv3x3_dot_pipelined.vhd      Self-checking testbench — pipelined design (clocked)
+├── tb_window3x3_stream.vhd           Self-checking testbench — window generator (5×5 image)
+├── tb_stream_conv3x3_cell.vhd        Self-checking testbench — integrated cell (5×5 image, 9 outputs)
+├── run_ghdl.sh                       GHDL simulation — combinational testbench
+├── run_ghdl_pipelined.sh             GHDL simulation — pipelined testbench
+├── run_ghdl_window.sh                GHDL simulation — window generator testbench
+├── run_ghdl_stream_cell.sh           GHDL simulation — integrated cell testbench
+├── run_vivado_sim.tcl                Vivado xsim — combinational testbench
+├── run_vivado_sim_pipelined.tcl      Vivado xsim — pipelined testbench
+├── run_vivado_sim_window.tcl         Vivado xsim — window generator testbench
+├── run_vivado_sim_stream_cell.tcl    Vivado xsim — integrated cell testbench
+└── README.md                         This file
 ```
 
 ### `mac_unit.vhd`
@@ -162,8 +166,58 @@ that receives the bottom-right pixel of the window.
 ### `tb_window3x3_stream.vhd`
 
 Streams a 5×5 image (values 1–25 in row-major order) into the window generator
-and checks the first 3 valid windows against expected values.  All 9 valid
-windows are counted; the final assertion confirms 9 total appeared.
+and checks all 9 valid windows against expected values.  Final assertion
+confirms exactly 9 windows appeared, failing with `severity failure` if not.
+
+---
+
+## Integrated Streaming Convolution Cell
+
+**This is NOT a full U-Net or full Conv2d layer.**  It is the first integrated
+mini convolution accelerator prototype, combining all previous building blocks
+into an end-to-end streaming pipeline:
+
+```
+pixel_in  →  window3x3_stream  →  conv3x3_dot_pipelined  →  y
+(stream)     (line buffers)        (3-stage pipeline)        (stream)
+                   ↓                      ↓
+             p0..p8, win_valid      valid_in, w0..w8, bias
+```
+
+### `stream_conv3x3_cell.vhd`
+
+Instantiates `window3x3_stream` and `conv3x3_dot_pipelined` as named instances
+(`win_gen` and `dot_prod`), connected by the internal `win_valid` handshake
+signal and the 9-pixel window bus `s_p0..s_p8`.
+
+**Timing details:**
+
+| Event | Clock |
+|---|---|
+| Pixel N arrives (`valid_in='1'`) | N |
+| window generator outputs window W (`win_valid='1'`) | N |
+| dot product stage 1 captures window W | N+1 |
+| dot product stage 2 (partial sums) | N+2 |
+| dot product stage 3 → `valid_out='1'`, `y` valid | N+3 |
+
+The 1-clock gap between N and N+1 is an inherent property of VHDL concurrent
+process semantics: both submodules are clocked by the same edge, so the dot
+product reads the window generator's registered output on the following cycle.
+
+**Total cell latency: 3 clock cycles** from triggering pixel to visible output.
+**Throughput: 1 result per clock** once the pipeline is primed (within a valid row).
+
+Gaps occur at the start of each new row (columns 0–1) and between image rows,
+matching the valid-convolution output cadence.
+
+### `tb_stream_conv3x3_cell.vhd`
+
+Streams a 5×5 image with a vertical Sobel-like kernel ([1,0,−1] repeated 3 rows,
+bias=0).  All 9 expected outputs equal −6.  The testbench collects 6 outputs
+during the 25-pixel loop and 3 more during a 3-clock drain phase (required
+because windows 7–9 are triggered by pixels 23–25 and need 3 more cycles to
+flush through the dot-product pipeline).  Final assertion requires exactly 9
+outputs; failing with `severity failure` if the count is wrong.
 
 ---
 
@@ -215,6 +269,10 @@ bash run_ghdl_pipelined.sh --vcd && gtkwave tb_conv3x3_dot_pipelined.vcd
 # Window generator testbench
 bash run_ghdl_window.sh
 bash run_ghdl_window.sh --vcd && gtkwave tb_window3x3_stream.vcd
+
+# Integrated cell testbench
+bash run_ghdl_stream_cell.sh
+bash run_ghdl_stream_cell.sh --vcd && gtkwave tb_stream_conv3x3_cell.vcd
 ```
 
 ### Option B — Vivado xsim (requires Xilinx Vivado ≥ 2020.1)
@@ -250,6 +308,11 @@ xsim  tb_pip_sim --runall
 xvhdl --2008 window3x3_stream.vhd tb_window3x3_stream.vhd
 xelab -debug typical tb_window3x3_stream -s tb_win_sim
 xsim  tb_win_sim --runall
+
+# Integrated cell
+xvhdl --2008 window3x3_stream.vhd conv3x3_dot_pipelined.vhd stream_conv3x3_cell.vhd tb_stream_conv3x3_cell.vhd
+xelab -debug typical tb_stream_conv3x3_cell -s tb_cell_sim
+xsim  tb_cell_sim --runall
 ```
 
 Expected output — combinational:
@@ -271,9 +334,18 @@ PASS test 3 (pipelined): y = 10  (expected 10)
 Expected output — window generator:
 ```
 PASS window 1 (stream):  [1,2,3;  6,7,8;  11,12,13]
-PASS window 2 (stream):  [2,3,4;  7,8,9;  12,13,14]
-PASS window 3 (stream):  [3,4,5;  8,9,10;  13,14,15]
-=== All window3x3_stream tests PASSED ===  (9 valid windows total)
+...
+PASS window 9 (stream):  [13,14,15;  18,19,20;  23,24,25]
+=== All window3x3_stream tests PASSED ===  (9 / 9 valid windows checked)
+```
+
+Expected output — integrated cell:
+```
+PASS output 1 (stream_conv3x3_cell): y = -6
+PASS output 2 (stream_conv3x3_cell): y = -6
+...
+PASS output 9 (stream_conv3x3_cell): y = -6
+=== All stream_conv3x3_cell tests PASSED ===  (9 / 9 outputs, all y = -6)
 ```
 
 ---
@@ -289,6 +361,7 @@ each module provides and what a production Conv2d accelerator would still need.
 | Input channels | 1 (single dot product) | C_in (32–512 in U-Net) |
 | Spatial sweep | **Implemented** (`window3x3_stream.vhd`) | H×W sliding window |
 | Line buffer | **Implemented** (`window3x3_stream.vhd`, 3 rows × IMG_WIDTH) | Required for streaming |
+| End-to-end pipeline | **Implemented** (`stream_conv3x3_cell.vhd`, 3-cycle latency) | Required |
 | BatchNorm | Not implemented | Fold into Conv weights |
 | Activation (ReLU) | Not implemented | Comparator + clamp |
 | Quantization | INT8 shown in types | Needs calibration/training |
@@ -307,11 +380,15 @@ each module provides and what a production Conv2d accelerator would still need.
    (3 line buffers of width IMG_WIDTH, round-robin rotation, 1 window per clock
    once primed).  Still single-channel; see step 3 for channel accumulation.
 
-3. **Sum over input channels**.  Extend `conv3x3_dot` with an outer loop
+3. ✅ **Integrated streaming cell** — implemented in `stream_conv3x3_cell.vhd`
+   (pixel stream → window generator → pipelined dot product → output stream;
+   3-cycle total latency, 1 result/clock throughput within valid rows).
+
+5. **Sum over input channels**.  Extend `stream_conv3x3_cell` with an outer loop
    (or parallel lanes) over C_in input channels.  Each lane has its own
    3×3 dot product; the channel accumulator adds them all.
 
-4. **Fold BatchNorm into Conv weights** before synthesis.  At inference,
+6. **Fold BatchNorm into Conv weights** before synthesis.  At inference,
    BN parameters (γ, β, μ, σ) can be absorbed into the Conv2d weight
    matrix and bias:
    ```
@@ -320,17 +397,17 @@ each module provides and what a production Conv2d accelerator would still need.
    ```
    This eliminates separate BN hardware entirely.
 
-5. **INT8 quantization**.  Export the model to ONNX with INT8 weights and
+7. **INT8 quantization**.  Export the model to ONNX with INT8 weights and
    activations (torch.quantization or ONNX Runtime quantization).  The
    bit widths in `mac_unit.vhd` and `conv3x3_dot.vhd` already match INT8
    inference convention: INT8 × INT8 → INT32 accumulator.
 
-6. **Synthesize on Cmod A7-35T** via Vivado.  The xc7a35tcpg236-1 has
+8. **Synthesize on Cmod A7-35T** via Vivado.  The xc7a35tcpg236-1 has
    90 DSP48E1 slices.  Each DSP slice implements one 18×18 signed MAC in
    one clock cycle.  A single 3×3 kernel requires 9 MACs; 10 parallel
    3×3 engines fit in 90 DSPs.
 
-7. **Evaluate hls4ml or Vitis-AI** for a higher-level synthesis path from
+9. **Evaluate hls4ml or Vitis-AI** for a higher-level synthesis path from
    the ONNX model directly to FPGA bitstream, skipping hand-written VHDL
    for the full network while retaining this prototype as a reference for
    the core arithmetic.
