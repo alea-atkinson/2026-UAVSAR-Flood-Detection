@@ -1,0 +1,49 @@
+Using device: cuda
+Train CSV: csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_tile_name_group_split/train.csv
+Validation CSV: csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_tile_name_group_split/validation.csv
+Test CSV: csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_tile_name_group_split/test.csv
+Dataset sizes: train=740, val=169, test=158
+Epoch 001/020 train_loss=0.4877 val_loss=0.4270 val_dice=0.5016 val_iou=0.3564
+  Saved best checkpoint: models/random_group_original_unet_20epochs_best.pt
+Epoch 002/020 train_loss=0.4305 val_loss=0.4198 val_dice=0.5704 val_iou=0.4262
+  Saved best checkpoint: models/random_group_original_unet_20epochs_best.pt
+Epoch 003/020 train_loss=0.4233 val_loss=0.4132 val_dice=0.4624 val_iou=0.3248
+  Saved best checkpoint: models/random_group_original_unet_20epochs_best.pt
+Epoch 004/020 train_loss=0.4112 val_loss=0.4178 val_dice=0.5562 val_iou=0.4074
+Epoch 005/020 train_loss=0.4063 val_loss=0.3972 val_dice=0.5335 val_iou=0.3910
+  Saved best checkpoint: models/random_group_original_unet_20epochs_best.pt
+Epoch 006/020 train_loss=0.4058 val_loss=0.3883 val_dice=0.4922 val_iou=0.3595
+  Saved best checkpoint: models/random_group_original_unet_20epochs_best.pt
+Epoch 007/020 train_loss=0.3998 val_loss=0.4101 val_dice=0.4765 val_iou=0.3348
+Epoch 008/020 train_loss=0.4014 val_loss=0.3877 val_dice=0.5477 val_iou=0.4052
+  Saved best checkpoint: models/random_group_original_unet_20epochs_best.pt
+Epoch 009/020 train_loss=0.4007 val_loss=0.4022 val_dice=0.4926 val_iou=0.3521
+Epoch 010/020 train_loss=0.3909 val_loss=0.3783 val_dice=0.5150 val_iou=0.3839
+  Saved best checkpoint: models/random_group_original_unet_20epochs_best.pt
+Epoch 011/020 train_loss=0.3899 val_loss=0.3885 val_dice=0.5504 val_iou=0.4079
+Epoch 012/020 train_loss=0.3899 val_loss=0.3957 val_dice=0.4349 val_iou=0.3071
+Epoch 013/020 train_loss=0.3903 val_loss=0.3788 val_dice=0.5197 val_iou=0.3844
+Epoch 014/020 train_loss=0.3928 val_loss=0.3745 val_dice=0.5397 val_iou=0.4012
+  Saved best checkpoint: models/random_group_original_unet_20epochs_best.pt
+Epoch 015/020 train_loss=0.3944 val_loss=0.3769 val_dice=0.5563 val_iou=0.4161
+Epoch 016/020 train_loss=0.3857 val_loss=0.3927 val_dice=0.4679 val_iou=0.3311
+Epoch 017/020 train_loss=0.3867 val_loss=0.3790 val_dice=0.5365 val_iou=0.3999
+Epoch 018/020 train_loss=0.3883 val_loss=0.3721 val_dice=0.5189 val_iou=0.3860
+  Saved best checkpoint: models/random_group_original_unet_20epochs_best.pt
+Epoch 019/020 train_loss=0.3879 val_loss=0.3870 val_dice=0.4841 val_iou=0.3490
+/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/scripts/train_unet_baseline.py:379: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(checkpoint_path, map_location=device)
+Epoch 020/020 train_loss=0.3816 val_loss=0.3933 val_dice=0.5789 val_iou=0.4391
+Best checkpoint test metrics: loss=0.3263 dice=0.5035 iou=0.3664
+Metrics CSV: results/random_group_original_unet_20epochs_metrics.csv
+Device      : cuda
+Checkpoint  : models/random_group_original_unet_20epochs_best.pt
+Val CSV     : csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_tile_name_group_split/validation.csv
+Test CSV    : csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_tile_name_group_split/test.csv
+Data root   : 2025_Tile_Data
+Thresholds  : 0.05 -> 0.95 (19 values)
+Validation inference (169 tiles) ...
+Selected threshold: 0.25 (val_dice=0.6734, val_iou=0.5076)
+Test inference (158 tiles) ...
+Wrote: outputs/random_split/random_group_baseline/threshold_sweeps/original_unet_threshold_sweep.csv
+Test metrics at selected threshold 0.25: dice=0.5917 iou=0.4202

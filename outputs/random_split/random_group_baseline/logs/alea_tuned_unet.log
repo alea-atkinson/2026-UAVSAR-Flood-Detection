@@ -1,0 +1,48 @@
+Using device: cuda
+Train CSV: csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_tile_name_group_split/train.csv
+Validation CSV: csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_tile_name_group_split/validation.csv
+Test CSV: csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_tile_name_group_split/test.csv
+Dataset sizes: train=740, val=169, test=158
+Epoch 001/020 train_loss=0.6590 val_loss=0.5852 val_dice=0.5538 val_iou=0.3980
+  Saved best checkpoint: models/random_group_alea_tuned_unet_20epochs_best.pt
+Epoch 002/020 train_loss=0.6070 val_loss=0.5600 val_dice=0.5972 val_iou=0.4429
+  Saved best checkpoint: models/random_group_alea_tuned_unet_20epochs_best.pt
+Epoch 003/020 train_loss=0.5876 val_loss=0.5460 val_dice=0.6219 val_iou=0.4662
+  Saved best checkpoint: models/random_group_alea_tuned_unet_20epochs_best.pt
+Epoch 004/020 train_loss=0.5738 val_loss=0.5602 val_dice=0.6043 val_iou=0.4460
+Epoch 005/020 train_loss=0.5572 val_loss=0.5458 val_dice=0.5843 val_iou=0.4292
+  Saved best checkpoint: models/random_group_alea_tuned_unet_20epochs_best.pt
+Epoch 006/020 train_loss=0.5470 val_loss=0.5286 val_dice=0.5974 val_iou=0.4467
+  Saved best checkpoint: models/random_group_alea_tuned_unet_20epochs_best.pt
+Epoch 007/020 train_loss=0.5417 val_loss=0.5964 val_dice=0.4944 val_iou=0.3462
+Epoch 008/020 train_loss=0.5325 val_loss=0.5452 val_dice=0.5935 val_iou=0.4369
+Epoch 009/020 train_loss=0.5249 val_loss=0.5252 val_dice=0.5975 val_iou=0.4485
+  Saved best checkpoint: models/random_group_alea_tuned_unet_20epochs_best.pt
+Epoch 010/020 train_loss=0.5179 val_loss=0.5097 val_dice=0.6197 val_iou=0.4673
+  Saved best checkpoint: models/random_group_alea_tuned_unet_20epochs_best.pt
+Epoch 011/020 train_loss=0.5056 val_loss=0.5295 val_dice=0.6115 val_iou=0.4539
+Epoch 012/020 train_loss=0.4950 val_loss=0.4970 val_dice=0.6387 val_iou=0.4868
+  Saved best checkpoint: models/random_group_alea_tuned_unet_20epochs_best.pt
+Epoch 013/020 train_loss=0.4907 val_loss=0.5061 val_dice=0.6241 val_iou=0.4719
+Epoch 014/020 train_loss=0.4878 val_loss=0.4882 val_dice=0.6383 val_iou=0.4841
+  Saved best checkpoint: models/random_group_alea_tuned_unet_20epochs_best.pt
+Epoch 015/020 train_loss=0.4752 val_loss=0.5283 val_dice=0.6182 val_iou=0.4619
+Epoch 016/020 train_loss=0.4855 val_loss=0.4895 val_dice=0.6374 val_iou=0.4852
+Epoch 017/020 train_loss=0.4610 val_loss=0.4704 val_dice=0.6537 val_iou=0.5029
+  Saved best checkpoint: models/random_group_alea_tuned_unet_20epochs_best.pt
+Epoch 018/020 train_loss=0.4631 val_loss=0.5131 val_dice=0.6118 val_iou=0.4553
+Epoch 019/020 train_loss=0.4637 val_loss=0.4793 val_dice=0.6599 val_iou=0.5082
+Epoch 020/020 train_loss=0.4317 val_loss=0.5602 val_dice=0.5673 val_iou=0.4084
+Best checkpoint test metrics: loss=0.5087 dice=0.6621 iou=0.5028
+Metrics CSV: results/random_group_alea_tuned_unet_20epochs_metrics.csv
+Device      : cuda
+Checkpoint  : models/random_group_alea_tuned_unet_20epochs_best.pt
+Val CSV     : csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_tile_name_group_split/validation.csv
+Test CSV    : csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_tile_name_group_split/test.csv
+Data root   : 2025_Tile_Data
+Thresholds  : 0.05 -> 0.95 (19 values)
+Validation inference (169 tiles) ...
+Selected threshold: 0.55 (val_dice=0.7053, val_iou=0.5447)
+Test inference (158 tiles) ...
+Wrote: outputs/random_split/random_group_baseline/threshold_sweeps/alea_tuned_unet_threshold_sweep.csv
+Test metrics at selected threshold 0.55: dice=0.6844 iou=0.5203
