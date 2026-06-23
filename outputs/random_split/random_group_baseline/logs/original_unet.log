@@ -45,5 +45,5 @@ Thresholds  : 0.05 -> 0.95 (19 values)
 Validation inference (169 tiles) ...
 Selected threshold: 0.25 (val_dice=0.6734, val_iou=0.5076)
 Test inference (158 tiles) ...
-Wrote: outputs/random_group_baseline/threshold_sweeps/original_unet_threshold_sweep.csv
+Wrote: outputs/random_split/random_group_baseline/threshold_sweeps/original_unet_threshold_sweep.csv
 Test metrics at selected threshold 0.25: dice=0.5917 iou=0.4202

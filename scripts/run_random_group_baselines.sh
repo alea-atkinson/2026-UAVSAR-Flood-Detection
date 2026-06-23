@@ -21,8 +21,8 @@ TRAIN_CSV="${SPLIT_DIR}/train.csv"
 VAL_CSV="${SPLIT_DIR}/validation.csv"
 TEST_CSV="${SPLIT_DIR}/test.csv"
 
-LOG_DIR="outputs/random_group_baseline/logs"
-SWEEP_DIR="outputs/random_group_baseline/threshold_sweeps"
+LOG_DIR="outputs/random_split/random_group_baseline/logs"
+SWEEP_DIR="outputs/random_split/random_group_baseline/threshold_sweeps"
 
 mkdir -p "${LOG_DIR}" "${SWEEP_DIR}"
 

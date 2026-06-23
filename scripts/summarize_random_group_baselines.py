@@ -2,12 +2,12 @@
 """Summarize random-group-split baseline results and compare against strict flight-path results.
 
 Reads threshold-sweep CSVs from:
-  outputs/random_group_baseline/threshold_sweeps/original_unet_threshold_sweep.csv
-  outputs/random_group_baseline/threshold_sweeps/alea_tuned_unet_threshold_sweep.csv
+  outputs/random_split/random_group_baseline/threshold_sweeps/original_unet_threshold_sweep.csv
+  outputs/random_split/random_group_baseline/threshold_sweeps/alea_tuned_unet_threshold_sweep.csv
 
 Writes:
-  outputs/random_group_baseline/random_group_baseline_summary.csv
-  outputs/random_group_baseline/random_group_baseline_summary.md
+  outputs/random_split/random_group_baseline/random_group_baseline_summary.csv
+  outputs/random_split/random_group_baseline/random_group_baseline_summary.md
 
 Answers four key questions:
   1. How high is performance on the random mixed-flight-path split?
@@ -29,8 +29,8 @@ import pandas as pd
 # Paths
 # ---------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-SWEEP_DIR = PROJECT_ROOT / "outputs" / "random_group_baseline" / "threshold_sweeps"
-OUT_DIR = PROJECT_ROOT / "outputs" / "random_group_baseline"
+SWEEP_DIR = PROJECT_ROOT / "outputs" / "random_split" / "random_group_baseline" / "threshold_sweeps"
+OUT_DIR = PROJECT_ROOT / "outputs" / "random_split" / "random_group_baseline"
 
 ORIG_SWEEP = SWEEP_DIR / "original_unet_threshold_sweep.csv"
 ALEA_SWEEP = SWEEP_DIR / "alea_tuned_unet_threshold_sweep.csv"
