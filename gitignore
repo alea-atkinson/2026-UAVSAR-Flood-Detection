@@ -1,2 +1,2 @@
-# Ignore large tif files
+# Ignore large tif files to speed up git processes
 *.tif
