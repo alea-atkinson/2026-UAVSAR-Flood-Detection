@@ -557,8 +557,16 @@ def main() -> None:
     args = parse_args()
     set_seed(args.seed)
 
+    if args.device == "cuda" and not torch.cuda.is_available():
+        raise SystemExit(
+            "You requested --device cuda, but torch.cuda.is_available() is False. "
+            "Run this from a GPU node/session before training."
+        )
+
     device = torch.device(args.device)
     print(f"Using device: {device}")
+    if device.type == "cuda":
+        print(f"GPU: {torch.cuda.get_device_name(0)}")
     print(f"Train CSV: {args.train_csv}")
     print(f"Validation CSV: {args.val_csv}")
     print(f"Test CSV: {args.test_csv}")
