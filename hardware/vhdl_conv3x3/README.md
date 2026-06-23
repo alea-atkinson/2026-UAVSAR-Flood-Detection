@@ -40,20 +40,24 @@ hardware/vhdl_conv3x3/
 ├── conv3x3_dot.vhd                   Combinational 3×3 dot product + bias (INT8/INT32)
 ├── conv3x3_dot_pipelined.vhd         3-stage pipelined dot product (INT8/INT32, 3-cycle latency)
 ├── window3x3_stream.vhd              Sliding 3×3 window generator (pixel stream → 9 pixel outputs)
-├── stream_conv3x3_cell.vhd           ★ Integrated cell: pixel stream → convolution output stream
-├── tb_conv3x3_dot.vhd                Self-checking testbench — combinational design
-├── tb_conv3x3_dot_pipelined.vhd      Self-checking testbench — pipelined design (clocked)
-├── tb_window3x3_stream.vhd           Self-checking testbench — window generator (5×5 image)
-├── tb_stream_conv3x3_cell.vhd        Self-checking testbench — integrated cell (5×5 image, 9 outputs)
-├── run_ghdl.sh                       GHDL simulation — combinational testbench
-├── run_ghdl_pipelined.sh             GHDL simulation — pipelined testbench
-├── run_ghdl_window.sh                GHDL simulation — window generator testbench
-├── run_ghdl_stream_cell.sh           GHDL simulation — integrated cell testbench
-├── run_vivado_sim.tcl                Vivado xsim — combinational testbench
-├── run_vivado_sim_pipelined.tcl      Vivado xsim — pipelined testbench
-├── run_vivado_sim_window.tcl         Vivado xsim — window generator testbench
-├── run_vivado_sim_stream_cell.tcl    Vivado xsim — integrated cell testbench
-└── README.md                         This file
+├── stream_conv3x3_cell.vhd             ★ 1-channel cell: pixel stream → convolution output stream
+├── stream_conv3x3_3chan_cell.vhd       ★ 3-channel cell: 3-channel input → one output channel (closer to U-Net)
+├── tb_conv3x3_dot.vhd                  Self-checking testbench — combinational design
+├── tb_conv3x3_dot_pipelined.vhd        Self-checking testbench — pipelined design (clocked)
+├── tb_window3x3_stream.vhd             Self-checking testbench — window generator (5×5 image)
+├── tb_stream_conv3x3_cell.vhd          Self-checking testbench — 1-channel cell (5×5 image, 9 outputs)
+├── tb_stream_conv3x3_3chan_cell.vhd    Self-checking testbench — 3-channel cell (5×5 image, 9 outputs)
+├── run_ghdl.sh                         GHDL simulation — combinational testbench
+├── run_ghdl_pipelined.sh               GHDL simulation — pipelined testbench
+├── run_ghdl_window.sh                  GHDL simulation — window generator testbench
+├── run_ghdl_stream_cell.sh             GHDL simulation — 1-channel cell testbench
+├── run_ghdl_3chan_cell.sh              GHDL simulation — 3-channel cell testbench
+├── run_vivado_sim.tcl                  Vivado xsim — combinational testbench
+├── run_vivado_sim_pipelined.tcl        Vivado xsim — pipelined testbench
+├── run_vivado_sim_window.tcl           Vivado xsim — window generator testbench
+├── run_vivado_sim_stream_cell.tcl      Vivado xsim — 1-channel cell testbench
+├── run_vivado_sim_3chan_cell.tcl       Vivado xsim — 3-channel cell testbench
+└── README.md                           This file
 ```
 
 ### `mac_unit.vhd`
@@ -221,6 +225,79 @@ outputs; failing with `severity failure` if the count is wrong.
 
 ---
 
+## Three-Channel Streaming Conv2d Cell
+
+**This is NOT a full U-Net or full Conv2d layer.**  It computes **one output
+channel** of one Conv2d layer for 3 input channels.  A complete first layer
+(`Conv2d(3, base_channels, 3)`) would require `base_channels` of these cells operating in parallel.
+
+### Why 3 input channels matter for UAVSAR
+
+The UAVSAR flood-detection dataset provides **3 SAR polarimetry bands** (HH, HV,
+VV intensity or equivalent representations) stacked as a 3-channel input tensor.
+The U-Net's first `Conv2d(3, base_channels, 3, padding=1)` maps those 3 channels
+into `base_channels` feature maps (a model hyperparameter; the tuned model uses
+`base_channels=32`).  For one output feature map at one spatial position, this means:
+
+```
+y = bias + Σ_{c=0}^{2}  dot(window_c, kernel_c)
+```
+
+The single-channel prototype (`stream_conv3x3_cell.vhd`) handles only one term
+of that sum.  The three-channel prototype handles all three terms for one output
+channel.
+
+### `stream_conv3x3_3chan_cell.vhd`
+
+Instantiates:
+- Three `window3x3_stream` instances (one per UAVSAR input channel)
+- Three `conv3x3_dot_pipelined` instances each with **zero internal bias**
+- One `final_sum` registered stage: `y_r <= bias + y_c0 + y_c1 + y_c2`
+
+```
+pixel_c0 → win_gen_c0 → dot_c0 (bias=0) → y_c0  ─┐
+pixel_c1 → win_gen_c1 → dot_c1 (bias=0) → y_c1  ─┼→ y = bias + y_c0 + y_c1 + y_c2
+pixel_c2 → win_gen_c2 → dot_c2 (bias=0) → y_c2  ─┘
+```
+
+The bias is added **once** in the final stage, which matches how a real Conv2d
+accumulates partial channel contributions before adding the output-channel bias.
+
+**Total cell latency: 4 clock cycles** (one more than the single-channel cell,
+due to the extra registered summation stage).
+
+| Clock | Event |
+|---|---|
+| N | All three window generators process pixel N, schedule `win_valid='1'` |
+| N+1 | All three dot-product stage 1 capture (1-cycle VHDL interface lag) |
+| N+2 | Dot-product stage 2 (partial sums per channel) |
+| N+3 | Dot-product stage 3 outputs `y_c0`, `y_c1`, `y_c2` |
+| N+4 | Final summation register: `y = bias + y_c0 + y_c1 + y_c2`; `valid_out='1'` |
+
+**Throughput: 1 result per clock** once primed (within valid rows).
+
+### `tb_stream_conv3x3_3chan_cell.vhd`
+
+Streams a 5×5 image across three channels:
+- Channel 0: values 1–25 (baseline)
+- Channel 1: values 2–50 (2 × channel 0)
+- Channel 2: values −1 to −25 (−1 × channel 0)
+
+Kernel [1,0,−1; 1,0,−1; 1,0,−1] applied to all channels; bias = 10.
+
+Expected y for every window:
+```
+y = 10 + y_c0 + y_c1 + y_c2
+  = 10 + (−6) + (−12) + (6)
+  = −2
+```
+
+The testbench collects 6 outputs during the 25-pixel loop (i=17,18,19,22,23,24)
+and 3 more during a **4-clock drain phase** (windows 7–9 exit at drain d=2,3,4;
+d=1 is empty).  Final assertion requires exactly 9 outputs with `severity failure`.
+
+---
+
 ## Why Pipelining Matters on FPGA
 
 A purely combinational 3×3 dot product chains 9 multipliers and 8 adders into
@@ -270,9 +347,13 @@ bash run_ghdl_pipelined.sh --vcd && gtkwave tb_conv3x3_dot_pipelined.vcd
 bash run_ghdl_window.sh
 bash run_ghdl_window.sh --vcd && gtkwave tb_window3x3_stream.vcd
 
-# Integrated cell testbench
+# 1-channel integrated cell testbench
 bash run_ghdl_stream_cell.sh
 bash run_ghdl_stream_cell.sh --vcd && gtkwave tb_stream_conv3x3_cell.vcd
+
+# 3-channel integrated cell testbench
+bash run_ghdl_3chan_cell.sh
+bash run_ghdl_3chan_cell.sh --vcd && gtkwave tb_stream_conv3x3_3chan_cell.vcd
 ```
 
 ### Option B — Vivado xsim (requires Xilinx Vivado ≥ 2020.1)
@@ -309,10 +390,15 @@ xvhdl --2008 window3x3_stream.vhd tb_window3x3_stream.vhd
 xelab -debug typical tb_window3x3_stream -s tb_win_sim
 xsim  tb_win_sim --runall
 
-# Integrated cell
+# 1-channel integrated cell
 xvhdl --2008 window3x3_stream.vhd conv3x3_dot_pipelined.vhd stream_conv3x3_cell.vhd tb_stream_conv3x3_cell.vhd
 xelab -debug typical tb_stream_conv3x3_cell -s tb_cell_sim
 xsim  tb_cell_sim --runall
+
+# 3-channel integrated cell
+xvhdl --2008 window3x3_stream.vhd conv3x3_dot_pipelined.vhd stream_conv3x3_3chan_cell.vhd tb_stream_conv3x3_3chan_cell.vhd
+xelab -debug typical tb_stream_conv3x3_3chan_cell -s tb_3chan_sim
+xsim  tb_3chan_sim --runall
 ```
 
 Expected output — combinational:
@@ -339,13 +425,20 @@ PASS window 9 (stream):  [13,14,15;  18,19,20;  23,24,25]
 === All window3x3_stream tests PASSED ===  (9 / 9 valid windows checked)
 ```
 
-Expected output — integrated cell:
+Expected output — 1-channel integrated cell:
 ```
 PASS output 1 (stream_conv3x3_cell): y = -6
-PASS output 2 (stream_conv3x3_cell): y = -6
 ...
 PASS output 9 (stream_conv3x3_cell): y = -6
 === All stream_conv3x3_cell tests PASSED ===  (9 / 9 outputs, all y = -6)
+```
+
+Expected output — 3-channel integrated cell:
+```
+PASS output 1 (stream_conv3x3_3chan_cell): y = -2
+...
+PASS output 9 (stream_conv3x3_3chan_cell): y = -2
+=== All stream_conv3x3_3chan_cell tests PASSED ===  (9 / 9 outputs, all y = -2 = bias(10) + y_c0(-6) + y_c1(-12) + y_c2(+6))
 ```
 
 ---
@@ -358,10 +451,11 @@ each module provides and what a production Conv2d accelerator would still need.
 | Aspect | This prototype | Full Conv2d accelerator |
 |---|---|---|
 | Kernel size | 3×3, fixed | 3×3 |
-| Input channels | 1 (single dot product) | C_in (32–512 in U-Net) |
+| Input channels | **3 implemented** (`stream_conv3x3_3chan_cell.vhd`, one output channel) | C_in (32–512 in U-Net) |
 | Spatial sweep | **Implemented** (`window3x3_stream.vhd`) | H×W sliding window |
 | Line buffer | **Implemented** (`window3x3_stream.vhd`, 3 rows × IMG_WIDTH) | Required for streaming |
-| End-to-end pipeline | **Implemented** (`stream_conv3x3_cell.vhd`, 3-cycle latency) | Required |
+| End-to-end 1-chan pipeline | **Implemented** (`stream_conv3x3_cell.vhd`, 3-cycle latency) | Required |
+| End-to-end 3-chan pipeline | **Implemented** (`stream_conv3x3_3chan_cell.vhd`, 4-cycle latency) | Matches first U-Net layer |
 | BatchNorm | Not implemented | Fold into Conv weights |
 | Activation (ReLU) | Not implemented | Comparator + clamp |
 | Quantization | INT8 shown in types | Needs calibration/training |
@@ -384,9 +478,14 @@ each module provides and what a production Conv2d accelerator would still need.
    (pixel stream → window generator → pipelined dot product → output stream;
    3-cycle total latency, 1 result/clock throughput within valid rows).
 
-5. **Sum over input channels**.  Extend `stream_conv3x3_cell` with an outer loop
-   (or parallel lanes) over C_in input channels.  Each lane has its own
-   3×3 dot product; the channel accumulator adds them all.
+5. ✅ **Sum over input channels (C_in=3)** — implemented in `stream_conv3x3_3chan_cell.vhd`
+   (3 window generators + 3 dot products + final registered summation;
+   matches the first `Conv2d(3, N, 3)` layer of the UAVSAR U-Net input stage).
+
+6. **Scale to C_out=base_channels**.  Instantiate `base_channels` copies of
+   `stream_conv3x3_3chan_cell` with independent weight sets; collect
+   `base_channels` output streams in parallel.  Each output stream is one
+   feature map of the first U-Net Conv2d layer.
 
 6. **Fold BatchNorm into Conv weights** before synthesis.  At inference,
    BN parameters (γ, β, μ, σ) can be absorbed into the Conv2d weight
