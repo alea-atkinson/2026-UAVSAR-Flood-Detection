@@ -1,0 +1,37 @@
+Using device: cuda
+GPU: NVIDIA GeForce RTX 4080
+Train CSV: csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_record_split/train.csv
+Validation CSV: csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_record_split/validation.csv
+Test CSV: csv_splits/flood_splits_ieee_png_filtered_random_train_val_test/random_record_split/test.csv
+Arch: unet_plus_plus
+Loss: bce
+Save best by: val_dice
+Augment: False
+Dataset sizes: train=747, val=160, test=160
+Epoch 001/020 train_loss=0.4830 val_loss=0.4957 val_dice=0.5547 val_iou=0.3934
+  Saved best checkpoint (val_dice=0.5547): models/jz_unetpp_random_record_best.pt
+Epoch 002/020 train_loss=0.4133 val_loss=0.4425 val_dice=0.4829 val_iou=0.3284
+Epoch 003/020 train_loss=0.4085 val_loss=0.4165 val_dice=0.5065 val_iou=0.3482
+Epoch 004/020 train_loss=0.4032 val_loss=0.3934 val_dice=0.5883 val_iou=0.4249
+  Saved best checkpoint (val_dice=0.5883): models/jz_unetpp_random_record_best.pt
+Epoch 005/020 train_loss=0.3994 val_loss=0.5145 val_dice=0.5807 val_iou=0.4215
+Epoch 006/020 train_loss=0.3939 val_loss=0.3911 val_dice=0.6001 val_iou=0.4371
+  Saved best checkpoint (val_dice=0.6001): models/jz_unetpp_random_record_best.pt
+Epoch 007/020 train_loss=0.3950 val_loss=0.3803 val_dice=0.6119 val_iou=0.4523
+  Saved best checkpoint (val_dice=0.6119): models/jz_unetpp_random_record_best.pt
+Epoch 008/020 train_loss=0.3888 val_loss=0.4008 val_dice=0.5762 val_iou=0.4136
+Epoch 009/020 train_loss=0.3896 val_loss=0.4105 val_dice=0.5109 val_iou=0.3532
+Epoch 010/020 train_loss=0.3855 val_loss=0.4006 val_dice=0.5144 val_iou=0.3575
+Epoch 011/020 train_loss=0.3938 val_loss=0.4216 val_dice=0.5881 val_iou=0.4240
+Epoch 012/020 train_loss=0.3855 val_loss=0.4128 val_dice=0.4958 val_iou=0.3432
+Epoch 013/020 train_loss=0.3735 val_loss=0.3779 val_dice=0.5836 val_iou=0.4248
+Epoch 014/020 train_loss=0.3726 val_loss=0.3831 val_dice=0.5426 val_iou=0.3863
+Epoch 015/020 train_loss=0.3702 val_loss=0.3691 val_dice=0.6002 val_iou=0.4458
+Epoch 016/020 train_loss=0.3737 val_loss=0.3705 val_dice=0.6107 val_iou=0.4518
+Epoch 017/020 train_loss=0.3735 val_loss=0.3703 val_dice=0.6054 val_iou=0.4492
+Epoch 018/020 train_loss=0.3722 val_loss=0.3734 val_dice=0.6146 val_iou=0.4537
+  Saved best checkpoint (val_dice=0.6146): models/jz_unetpp_random_record_best.pt
+Epoch 019/020 train_loss=0.3820 val_loss=0.3791 val_dice=0.5702 val_iou=0.4113
+Epoch 020/020 train_loss=0.3704 val_loss=0.3793 val_dice=0.5533 val_iou=0.3994
+Best checkpoint test metrics: loss=0.3683 dice=0.6026 iou=0.4466
+Metrics CSV: results/jz_unetpp_random_record_metrics.csv
