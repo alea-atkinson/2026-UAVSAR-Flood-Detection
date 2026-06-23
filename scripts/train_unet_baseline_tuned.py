@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Train a simple SAR-only U-Net baseline for flood/change segmentation.
 
-Example:
-    python scripts/train_unet_baseline.py \
-        --train-csv csv_splits/flood_splits_standard_strict_train_val/strict_no_overlap/heldout_fp1_train.csv \
-        --val-csv csv_splits/flood_splits_standard_strict_train_val/strict_no_overlap/heldout_fp1_validation.csv \
-        --test-csv csv_splits/flood_splits_standard_strict_train_val/strict_no_overlap/heldout_fp1_test.csv
+Example: 
+    python3 scripts/train_unet_baseline_tuned.py \
+        --train-csv {your training csv here} \
+        --val-csv {your validation csv here} \
+        --test-csv {your test csv here}
 """
 
 from __future__ import annotations
@@ -209,6 +209,8 @@ def dice_iou_from_logits(logits: torch.Tensor, targets: torch.Tensor, threshold:
     return float(dice.item()), float(iou.item())
 
 
+#CUSTOM LOSS FUNCTIONS 
+
 class DiceLoss(nn.Module):
     def __init__(self, smooth=1.0):
         super().__init__()
@@ -231,7 +233,6 @@ class DiceLoss(nn.Module):
 
         return 1 - dice
 
-#CUSTOM LOSS FUNCTIONS
 
 class BCEDiceLoss(nn.Module):
     def __init__(self):
@@ -277,7 +278,7 @@ class FocalLoss(nn.Module):
 
         return loss.mean()
     
-#focal and dice combined loss to handle class imbalance and optimize for segmentation metrics
+#focal and dice combined to handle class imbalance and optimize for segmentation metrics
 
 class FocalDiceLoss(nn.Module):
     def __init__(
@@ -305,6 +306,7 @@ class FocalDiceLoss(nn.Module):
             self.focal_weight * focal_loss
             + self.dice_weight * dice_loss
         )
+
 
 def run_epoch(
     model: nn.Module,
@@ -359,23 +361,22 @@ def write_metrics_csv(metrics_path: Path, rows: list[dict[str, float | int]]) ->
 
 
 def parse_args() -> argparse.Namespace:
-    default_split_dir = Path("csv_splits/flood_splits_standard_strict_train_val/strict_no_overlap")
+    default_split_dir = Path("csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap")
     parser = argparse.ArgumentParser(description="Train a simple SAR-only binary U-Net baseline.")
     parser.add_argument("--data-root", type=Path, default=Path("2025_Tile_Data"))
     parser.add_argument("--train-csv", type=Path, default=default_split_dir / "heldout_fp1_train.csv")
     parser.add_argument("--val-csv", type=Path, default=default_split_dir / "heldout_fp1_validation.csv")
     parser.add_argument("--test-csv", type=Path, default=default_split_dir / "heldout_fp1_test.csv")
     parser.add_argument("--epochs", type=int, default=20)
-    parser.add_argument("--batch-size", type=int, default=8)
-    parser.add_argument("--learning-rate", type=float, default=1e-3)
-    parser.add_argument("--loss-fn", type=str, default="bce")
-    parser.add_argument("--optimizer", type=str, default="adam")
+    parser.add_argument("--batch-size", type=int, default=16)
+    parser.add_argument("--learning-rate", type=float, default= 9.327106954111342e-05)
+    parser.add_argument("--weight-decay", type=float, default=  6.088353841746043e-06)
     parser.add_argument("--num-workers", type=int, default=2)
     parser.add_argument("--base-channels", type=int, default=32)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--models-dir", type=Path, default=Path("models"))
     parser.add_argument("--results-dir", type=Path, default=Path("results"))
-    parser.add_argument("--run-name", default="unet_baseline_strict_fp1")
+    parser.add_argument("--run-name", default="unet_baseline_strict_tuned_fp1")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     return parser.parse_args()
 
@@ -427,23 +428,8 @@ def main() -> None:
     )
 
     model = UNet(in_channels=3, out_channels=1, base_channels=args.base_channels).to(device)
-    loss_name = args.loss_fn  
-
-    if loss_name == "dice":
-         loss_fn = DiceLoss()
-    elif loss_name == "bce_dice":
-         loss_fn = BCEDiceLoss()
-    elif loss_name == "focal":
-        loss_fn = FocalLoss()
-    elif loss_name == "focal_dice":
-        loss_fn = FocalDiceLoss()
-    else:
-        loss_fn = nn.BCEWithLogitsLoss()
-    if args.optimizer == "adam":
-        optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
-    elif args.optimizer == "adamw": 
-        optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate)
-
+    loss_fn = FocalDiceLoss()
+    optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
 
     args.models_dir.mkdir(parents=True, exist_ok=True)
     checkpoint_path = args.models_dir / f"{args.run_name}_best.pt"
