@@ -1,0 +1,15 @@
+split_type,heldout_flight_path,test_records,train_pool_records,train_records,validation_records,removed_from_train_pool_for_strict_no_overlap,overlapping_tile_names_removed_for_strict_no_overlap,train_validation_shared_tile_names,test_train_pool_shared_tile_names
+standard,fp1,137,930,743,187,0,0,0,1
+standard,fp2,138,929,742,187,0,0,0,19
+standard,fp3,164,903,722,181,0,0,0,88
+standard,fp4,181,886,709,177,0,0,0,161
+standard,fp5,160,907,726,181,0,0,0,85
+standard,fp6,170,897,718,179,0,0,0,145
+standard,fp7,117,950,759,191,0,0,0,1
+strict_no_overlap,fp1,137,929,743,186,1,1,0,0
+strict_no_overlap,fp2,138,910,728,182,19,19,0,0
+strict_no_overlap,fp3,164,815,652,163,88,88,0,0
+strict_no_overlap,fp4,181,725,580,145,161,161,0,0
+strict_no_overlap,fp5,160,822,658,164,85,85,0,0
+strict_no_overlap,fp6,170,752,602,150,145,145,0,0
+strict_no_overlap,fp7,117,949,759,190,1,1,0,0
