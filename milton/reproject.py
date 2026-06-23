@@ -2,7 +2,7 @@ import rasterio
 import numpy as np
 from rasterio.transform import xy
 from rasterio.warp import reproject, Resampling
-"""
+
 uavsar_files = [
 
     "flcorr_06206_24075_007_241011_L090_CX_01_pauli.tif",
@@ -13,6 +13,7 @@ uavsar_files = [
     "tampaf_06207_24075_010_241011_L090_CX_01_pauli.tif",
     "tampaf_24209_24075_011_241011_L090_CX_01_pauli.tif"
 ]
+
 
 opera_files = [
     "milton/OPERA_DSWx-S1_BWTR_ChngMap_20241011-20241003.tif",
@@ -57,18 +58,7 @@ with rasterio.open(opera_files[0]) as op:
                 crs=uav.crs,
                 transform=uav.transform
             ) as dst:
-                dst.write(aligned_mask, 1) """
-
-uavsar_files = [
-
-    "flcorr_06206_24075_007_241011_L090_CX_01_pauli.tif",
-    "peacer_19512_24075_004_241011_L090_CX_01_pauli.tif",
-    "stjohn_17815_24075_002_241011_L090_CX_01_pauli.tif",
-    "tampab_15102_24075_006_241011_L090_CX_01_pauli.tif",
-    "tampab_33105_24075_005_241011_L090_CX_01_pauli.tif",
-    "tampaf_06207_24075_010_241011_L090_CX_01_pauli.tif",
-    "tampaf_24209_24075_011_241011_L090_CX_01_pauli.tif"
-]
+                dst.write(aligned_mask, 1) 
 
 
 for uav_file in uavsar_files:
