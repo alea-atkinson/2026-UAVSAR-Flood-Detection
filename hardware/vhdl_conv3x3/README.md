@@ -56,7 +56,10 @@ hardware/vhdl_conv3x3/
 ├── run_vivado_sim_pipelined.tcl        Vivado xsim — pipelined testbench
 ├── run_vivado_sim_window.tcl           Vivado xsim — window generator testbench
 ├── run_vivado_sim_stream_cell.tcl      Vivado xsim — 1-channel cell testbench
-├── run_vivado_sim_3chan_cell.tcl       Vivado xsim — 3-channel cell testbench
+├── run_vivado_sim_3chan_cell.tcl        Vivado xsim — 3-channel cell testbench (toy weights)
+├── tb_stream_conv3x3_3chan_realweights.vhd  ★ Real-weight testbench (model-derived INT8 kernel)
+├── run_ghdl_3chan_realweights.sh       GHDL simulation — real-weight testbench
+├── run_vivado_sim_3chan_realweights.tcl Vivado xsim — real-weight testbench
 └── README.md                           This file
 ```
 
@@ -298,6 +301,64 @@ d=1 is empty).  Final assertion requires exactly 9 outputs with `severity failur
 
 ---
 
+## Real-Weight Testbench — Model-Derived INT8 Kernel
+
+The testbench above uses an analytical kernel ([1,0,−1] × 3 rows) chosen so all
+9 outputs equal a known constant.  The real-weight testbench below uses an INT8
+kernel extracted from the actual trained model checkpoint, and checks against
+Python-computed golden values.
+
+**This confirms that the VHDL integer datapath produces exactly the same INT32
+results as the Python golden-vector script — not merely that the pipeline timing
+is correct.**
+
+### `tb_stream_conv3x3_3chan_realweights.vhd`
+
+Uses the same 5×5×3 toy input patch and 4-cycle cell latency as the toy
+testbench, but drives `stream_conv3x3_3chan_cell` with a real INT8 kernel
+extracted from the Alea-tuned U-Net:
+
+| Field | Value |
+|---|---|
+| Checkpoint | `models/alea_tuned_filtered_strict_fp2_focaldice_adamw_20epochs_best.pt` |
+| Tensor key | `enc1.block.0.weight` — shape `[32, 3, 3, 3]` |
+| Output channel | 0 |
+| Quantization | symmetric per-tensor INT8: `scale_w = 0.00136063` |
+| Bias | 0 (Conv2d uses BatchNorm, no direct bias) |
+
+Hard-coded INT8 weights (row-major w0..w8 per input channel):
+
+| Input channel | w0 | w1 | w2 | w3 | w4 | w5 | w6 | w7 | w8 |
+|---|---|---|---|---|---|---|---|---|---|
+| 0 | 110 | 117 | −38 | 127 | −28 | 33 | −66 | 86 | 124 |
+| 1 | −103 | 120 | 24 | 102 | 20 | 67 | −19 | 108 | 20 |
+| 2 | −68 | 31 | −72 | −21 | −59 | 92 | −112 | −66 | −44 |
+
+Expected INT32 outputs (verified by `scripts/export_first_layer_conv3x3_vhdl_vectors.py`):
+
+```
+output_index  row  col   y_int32   y_float_ref  (×scale_w)
+1             0    0     11287     ≈ 15.40
+2             0    1     12749     ≈ 17.39
+3             0    2     14211     ≈ 19.39
+4             1    0     18597     ≈ 25.38
+5             1    1     20059     ≈ 27.38
+6             1    2     21521     ≈ 29.37
+7             2    0     25907     ≈ 35.36
+8             2    1     27369     ≈ 37.36
+9             2    2     28831     ≈ 39.35
+```
+
+Max quantization error vs float reference: **0.13** (in float units after rescaling).
+
+**Limitations:** BatchNorm parameters are NOT folded into these weights.  A full
+quantized inference pipeline would require BN folding before deployment.  This
+testbench validates integer datapath arithmetic only.
+
+The test-vector source files are in `hardware/vhdl_conv3x3/test_vectors/`.
+
+---
+
 ## Why Pipelining Matters on FPGA
 
 A purely combinational 3×3 dot product chains 9 multipliers and 8 adders into
@@ -351,9 +412,13 @@ bash run_ghdl_window.sh --vcd && gtkwave tb_window3x3_stream.vcd
 bash run_ghdl_stream_cell.sh
 bash run_ghdl_stream_cell.sh --vcd && gtkwave tb_stream_conv3x3_cell.vcd
 
-# 3-channel integrated cell testbench
+# 3-channel integrated cell testbench (toy analytical weights)
 bash run_ghdl_3chan_cell.sh
 bash run_ghdl_3chan_cell.sh --vcd && gtkwave tb_stream_conv3x3_3chan_cell.vcd
+
+# 3-channel cell — real trained-model weights (Python golden vectors)
+bash run_ghdl_3chan_realweights.sh
+bash run_ghdl_3chan_realweights.sh --vcd && gtkwave tb_stream_conv3x3_3chan_realweights.vcd
 ```
 
 ### Option B — Vivado xsim (requires Xilinx Vivado ≥ 2020.1)
@@ -368,6 +433,12 @@ vivado -mode batch -source run_vivado_sim.tcl
 ```bash
 cd hardware/vhdl_conv3x3
 vivado -mode batch -source run_vivado_sim_pipelined.tcl
+```
+
+**Real trained-model weights — via Tcl:**
+```bash
+cd hardware/vhdl_conv3x3
+vivado -mode batch -source run_vivado_sim_3chan_realweights.tcl
 ```
 
 **Via xvhdl/xelab/xsim directly (after sourcing Vivado settings):**
@@ -395,10 +466,15 @@ xvhdl --2008 window3x3_stream.vhd conv3x3_dot_pipelined.vhd stream_conv3x3_cell.
 xelab -debug typical tb_stream_conv3x3_cell -s tb_cell_sim
 xsim  tb_cell_sim --runall
 
-# 3-channel integrated cell
+# 3-channel integrated cell (toy analytical weights)
 xvhdl --2008 window3x3_stream.vhd conv3x3_dot_pipelined.vhd stream_conv3x3_3chan_cell.vhd tb_stream_conv3x3_3chan_cell.vhd
 xelab -debug typical tb_stream_conv3x3_3chan_cell -s tb_3chan_sim
 xsim  tb_3chan_sim --runall
+
+# 3-channel cell — real trained-model weights (Python golden vectors)
+xvhdl --2008 window3x3_stream.vhd conv3x3_dot_pipelined.vhd stream_conv3x3_3chan_cell.vhd tb_stream_conv3x3_3chan_realweights.vhd
+xelab -debug typical tb_stream_conv3x3_3chan_realweights -s tb_rw_sim
+xsim  tb_rw_sim --runall
 ```
 
 Expected output — combinational:
@@ -433,12 +509,26 @@ PASS output 9 (stream_conv3x3_cell): y = -6
 === All stream_conv3x3_cell tests PASSED ===  (9 / 9 outputs, all y = -6)
 ```
 
-Expected output — 3-channel integrated cell:
+Expected output — 3-channel integrated cell (toy weights):
 ```
 PASS output 1 (stream_conv3x3_3chan_cell): y = -2
 ...
 PASS output 9 (stream_conv3x3_3chan_cell): y = -2
 === All stream_conv3x3_3chan_cell tests PASSED ===  (9 / 9 outputs, all y = -2 = bias(10) + y_c0(-6) + y_c1(-12) + y_c2(+6))
+```
+
+Expected output — real trained-model weights:
+```
+PASS output 1 (stream_conv3x3_3chan_realweights): y = 11287
+PASS output 2 (stream_conv3x3_3chan_realweights): y = 12749
+PASS output 3 (stream_conv3x3_3chan_realweights): y = 14211
+PASS output 4 (stream_conv3x3_3chan_realweights): y = 18597
+PASS output 5 (stream_conv3x3_3chan_realweights): y = 20059
+PASS output 6 (stream_conv3x3_3chan_realweights): y = 21521
+PASS output 7 (stream_conv3x3_3chan_realweights): y = 25907
+PASS output 8 (stream_conv3x3_3chan_realweights): y = 27369
+PASS output 9 (stream_conv3x3_3chan_realweights): y = 28831
+=== All stream_conv3x3_3chan_realweights tests PASSED ===  (9 / 9 outputs match Python golden vectors)
 ```
 
 ---
