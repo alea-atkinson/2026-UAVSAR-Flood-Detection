@@ -1,0 +1,16 @@
+This branch is reserved for processing and training on hurricane milton data
+milton/data_stats contatins csv files with mask and UAVSAR overlap data and flood pixel percentages
+
+IMPORTANT!!!
+Check naming conventions in the scripts before running to ensure you do not accidentally overwrite any data!
+There are many intermediary steps, and the scripts take in file names, so make sure you know how your files are saved before running any scripts.
+
+DATA PROCESSING PIPELINE
+
+1.  Download mask from https://aria-share.jpl.nasa.gov/20241010-Hurricane_Milton/DSWx/ OR find in milton/raw_data. The mask files are denoted by OPERA and are labeled by date
+2. Download UAVSAR flight paths from https://uavsar.jpl.nasa.gov/cgi-bin/data.pl OR find in milton/raw_data. The flight paths are all files not starting with OPERA
+3. Reproject the chosen mask onto each UAVSAR flight path using reproject.py. You can change which mask is being reprojected by changing the mask index. This script will also convert no data values to 255 and remove water loss pixel to replace them with no change
+4. Filter the UAVSAR flight paths with an enhanced lee filter by running lee_filter.py
+5. Remove reprojected mask areas with no UAVSAR coverage by running filter_masks.py
+6. Change the resolution on both the masks and the UAVSAR flight paths by running change_resolution.py
+7. Break final masks and flight paths into tiles by running tile.py

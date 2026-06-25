@@ -5,7 +5,7 @@ from rasterio.warp import reproject, Resampling
 
 uavsar_files = [
 
-    "flcorr_06206_24075_007_241011_L090_CX_01_pauli.tif",
+    "flcorr_06206_24075_007_241011_L090_CX_01_pauli.tif"
     "peacer_19512_24075_004_241011_L090_CX_01_pauli.tif",
     "stjohn_17815_24075_002_241011_L090_CX_01_pauli.tif",
     "tampab_15102_24075_006_241011_L090_CX_01_pauli.tif",
@@ -22,7 +22,7 @@ for uav_file in uavsar_files:
     with rasterio.open(mask_file) as src:
         mask = src.read(1)
 
-    with rasterio.open(f"milton/raw_data/{uav_file}") as src:
+    with rasterio.open(f"milton/lee_uavsar/filtered_{uav_file}") as src:
         uav = src.read()
 
     coverage = np.any(uav > 0, axis=0) #any valid data
