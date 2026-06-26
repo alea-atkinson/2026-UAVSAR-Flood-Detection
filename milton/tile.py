@@ -32,7 +32,7 @@ for uav_file in uavsar_files:
     os.makedirs(f"milton/tiles/fp{fp}/uavsar", exist_ok=True)
     os.makedirs(f"milton/tiles/fp{fp}/masks", exist_ok=True)
 
-    with rasterio.open(f"milton/raw_data/{uav_file}") as uav, rasterio.open(f"milton/filtered_masks_by_fp/coverage_filtered_mask_fp{fp}.tif") as mask:
+    with rasterio.open(f"milton/uavsar_20_res/filtered_20m_fp{fp}.tif") as uav, rasterio.open(f"milton/masks_20_res/mask_20m_fp{fp}.tif") as mask:
 
         tile_id = 0
         

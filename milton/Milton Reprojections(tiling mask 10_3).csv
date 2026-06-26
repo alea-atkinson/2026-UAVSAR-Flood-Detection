@@ -1,0 +1,13 @@
+Flight Path,OG File name,Edges removed,No flood tiles removed,Minimal coverage tiles removed,Total tiles removed,Total saved tiles
+1,flcorr_06206_24075_007_241011_L090_CX_01_pauli.tif,255,9465,88,9808,1835
+2,peacer_19512_24075_004_241011_L090_CX_01_pauli.tif,154,3435,70,3659,1417
+3,stjohn_17815_24075_002_241011_L090_CX_01_pauli.tif,116,403,71,590,1350
+4,tampab_15102_24075_006_241011_L090_CX_01_pauli.tif,80,8611,27,8718,402
+5,tampab_33105_24075_005_241011_L090_CX_01_pauli.tif,195,8159,52,8406,909
+6,tampaf_06207_24075_010_241011_L090_CX_01_pauli.tif,225,9522,82,9829,1784
+7,tampaf_24209_24075_011_241011_L090_CX_01_pauli.tif,76,889,31,996,430
+,,,,,,
+,,,,,,
+,,,,,,
+,,,,,,
+GRAND TOTAL,,,,,,8127
