@@ -2,7 +2,7 @@
 """Train a simple SAR-only U-Net baseline for flood/change segmentation.
 
 Example: 
-    python3 scripts/train_unet_baseline_tuned.py \
+    python3 milton/train_test_unet.py \
         --train-csv {your training csv here} \
         --val-csv {your validation csv here} \
         --test-csv {your test csv here}
@@ -100,35 +100,57 @@ class FloodTileDataset(Dataset):
         mask_path = row["flood_mask_path"]
 
         with rasterio.open(sar_path) as src:
-            sar = src.read(out_dtype="float32")
+            sar = src.read().astype(np.float32)
+            # UAVSAR: NoData is 0
+            sar[sar == 0] = np.nan
         if sar.shape[0] < 3:
             raise ValueError(f"Expected at least 3 SAR bands, got {sar.shape[0]} in {sar_path}")
         sar = sar[:3]
 
         with rasterio.open(mask_path) as src:
-            mask = src.read(1, out_dtype="float32")
+            mask = src.read(1)
+            mask_nodata = src.nodata
+            if mask_nodata is None:
+                valid_mask = np.ones_like(mask, dtype=bool)
+            else:
+                valid_mask = mask != mask_nodata
 
         sar = self._normalize_per_tile(sar)
-        mask = (mask > 0).astype(np.float32)[None, :, :]
+        binary_mask = np.zeros_like(mask, dtype=np.float32)
 
-        return torch.from_numpy(sar), torch.from_numpy(mask)
+        binary_mask[(mask == 1) & valid_mask] = 1.0
 
+        sar_valid = np.isfinite(sar).all(axis=0)  # valid SAR pixels (no NaNs across channels)
+    
+
+        valid = sar_valid & valid_mask #from sar and mask valid data values
+
+
+        return (
+        torch.from_numpy(sar),
+        torch.from_numpy(binary_mask[None]),
+        torch.from_numpy(valid.astype(np.float32)[None]) #return validity mask
+        )  
+    
     @staticmethod
     def _normalize_per_tile(sar: np.ndarray) -> np.ndarray:
-        """Robustly normalize each tile to roughly zero mean and unit variance."""
         sar = np.nan_to_num(sar, nan=0.0, posinf=0.0, neginf=0.0).astype(np.float32)
-        valid = sar[np.isfinite(sar)]
+
+        # compute stats ONLY on valid pixels (all channels)
+        valid = sar[sar != 0]  # since we already set nodata=0 to nan earlier
+
         if valid.size == 0:
             return np.zeros_like(sar, dtype=np.float32)
 
         low, high = np.percentile(valid, [1.0, 99.0])
-        if high > low:
-            sar = np.clip(sar, low, high)
+        sar = np.clip(sar, low, high)
 
         mean = float(sar.mean())
         std = float(sar.std())
+
         if std < 1e-6:
             return np.zeros_like(sar, dtype=np.float32)
+
         return ((sar - mean) / std).astype(np.float32)
 
 
@@ -190,20 +212,26 @@ class UNet(nn.Module):
         x = self.dec1(torch.cat([x, enc1], dim=1))
         return self.out(x)
 
-
-def dice_iou_from_logits(logits: torch.Tensor, targets: torch.Tensor, threshold: float = 0.5) -> tuple[float, float]:
+#modified to handle no data valuese
+def dice_iou_from_logits(logits, targets, mask, threshold=0.5):
     probs = torch.sigmoid(logits)
     preds = probs > threshold
     targets_bool = targets > 0.5
+
+    # apply mask (IMPORTANT)
+    preds = preds & (mask > 0.5) #keep validity with some padding on either side
+    targets_bool = targets_bool & (mask > 0.5)
 
     intersection = (preds & targets_bool).sum().float()
     pred_sum = preds.sum().float()
     target_sum = targets_bool.sum().float()
     union = (preds | targets_bool).sum().float()
 
-    eps = torch.tensor(1e-7, device=logits.device)
+    eps = 1e-7
+
     dice = (2.0 * intersection + eps) / (pred_sum + target_sum + eps)
     iou = (intersection + eps) / (union + eps)
+
     return float(dice.item()), float(iou.item())
 
 
@@ -214,23 +242,23 @@ class DiceLoss(nn.Module):
         super().__init__()
         self.smooth = smooth
 
-    def forward(self, logits, targets):
+    def forward(self, logits, targets, mask=None):
 
         probs = torch.sigmoid(logits)
+
+        if mask is not None:
+            probs = probs * mask
+            targets = targets * mask
 
         probs = probs.view(-1)
         targets = targets.view(-1)
 
         intersection = (probs * targets).sum()
+        denom = probs.sum() + targets.sum()
 
-        dice = (
-            2.0 * intersection + self.smooth
-        ) / (
-            probs.sum() + targets.sum() + self.smooth
-        )
+        dice = (2.0 * intersection + self.smooth) / (denom + self.smooth)
 
         return 1 - dice
-
 
 class BCEDiceLoss(nn.Module):
     def __init__(self):
@@ -254,7 +282,7 @@ class FocalLoss(nn.Module):
         self.alpha = alpha
         self.gamma = gamma
 
-    def forward(self, logits, targets):
+    def forward(self, logits, targets, mask=None):
 
         bce = F.binary_cross_entropy_with_logits(
             logits,
@@ -271,21 +299,18 @@ class FocalLoss(nn.Module):
         )
 
         focal_weight = self.alpha * (1 - pt) ** self.gamma
-
         loss = focal_weight * bce
+
+        if mask is not None:
+            loss = loss * mask
+            return loss.sum() / (mask.sum() + 1e-6)
 
         return loss.mean()
     
 #focal and dice combined to handle class imbalance and optimize for segmentation metrics
 
 class FocalDiceLoss(nn.Module):
-    def __init__(
-        self,
-        alpha=0.25,
-        gamma=2.0,
-        dice_weight=1.0,
-        focal_weight=1.0,
-    ):
+    def __init__(self, alpha=0.25, gamma=2.0, dice_weight=1.0, focal_weight=1.0):
         super().__init__()
 
         self.focal = FocalLoss(alpha, gamma)
@@ -294,16 +319,12 @@ class FocalDiceLoss(nn.Module):
         self.dice_weight = dice_weight
         self.focal_weight = focal_weight
 
-    def forward(self, logits, targets):
+    def forward(self, logits, targets, mask):
 
-        focal_loss = self.focal(logits, targets)
+        focal_loss = self.focal(logits, targets, mask)
+        dice_loss = self.dice(logits, targets, mask)
 
-        dice_loss = self.dice(logits, targets)
-
-        return (
-            self.focal_weight * focal_loss
-            + self.dice_weight * dice_loss
-        )
+        return self.focal_weight * focal_loss + self.dice_weight * dice_loss
 
 
 def run_epoch(
@@ -321,19 +342,20 @@ def run_epoch(
     total_iou = 0.0
     total_batches = 0
 
-    for images, masks in loader:
+    for images, masks, valid in loader:
         images = images.to(device, non_blocking=True)
         masks = masks.to(device, non_blocking=True)
+        valid = valid.to(device, non_blocking=True)
 
         with torch.set_grad_enabled(is_train):
             logits = model(images)
-            loss = loss_fn(logits, masks)
+            loss = loss_fn(logits, masks, valid)
             if is_train:
                 optimizer.zero_grad(set_to_none=True)
                 loss.backward()
                 optimizer.step()
 
-        dice, iou = dice_iou_from_logits(logits.detach(), masks)
+        dice, iou = dice_iou_from_logits(logits.detach(), masks, valid)
         total_loss += float(loss.item())
         total_dice += dice
         total_iou += iou
@@ -359,11 +381,11 @@ def write_metrics_csv(metrics_path: Path, rows: list[dict[str, float | int]]) ->
 
 
 def parse_args() -> argparse.Namespace:
-    default_split_dir = Path("csv_splits/flood_splits_ieee_png_filtered_standard_strict_train_val/strict_no_overlap")
+    
     parser = argparse.ArgumentParser(description="Train a simple SAR-only binary U-Net baseline.")
-    parser.add_argument("--train-csv", type=Path, default=default_split_dir / "heldout_fp1_train.csv")
-    parser.add_argument("--val-csv", type=Path, default=default_split_dir / "heldout_fp1_validation.csv")
-    parser.add_argument("--test-csv", type=Path, default=default_split_dir / "heldout_fp1_test.csv")
+    parser.add_argument("--train-csv", type=Path, default="milton/csv_splits/train.csv")
+    parser.add_argument("--val-csv", type=Path, default= "milton/csv_splits/validation.csv")
+    parser.add_argument("--test-csv", type=Path, default="milton/csv_splits/test.csv")
     parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--learning-rate", type=float, default= 9.327106954111342e-05)

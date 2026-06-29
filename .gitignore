@@ -1,6 +1,7 @@
 #ignore tifs and xmls except tiles
 *.tif
 *.xml
+*.pt #ignore models
 
 !milton/
 !milton/tiles/

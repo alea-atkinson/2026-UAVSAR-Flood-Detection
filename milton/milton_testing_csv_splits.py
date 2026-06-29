@@ -6,15 +6,9 @@ import random
 # Directories
 # -----------------------------
 
-data_root = Path("2025_Tile_Data")
 
-train_uavsar = data_root / "UAVSAR"
-train_masks = data_root / "flood_change_mask_tiles"
 
-test_uavsar = "milton/tiles"
-test_masks = data_root / "test/masks"
-
-output_dir = Path("csv_splits")
+output_dir = Path("milton/csv_splits")
 
 validation_fraction = 0.20
 random_seed = 42
@@ -45,11 +39,16 @@ def make_pairs(image_dir, mask_dir):
 # Build datasets
 # -----------------------------
 
+train_val_pairs = []
+#run once for every flight path
+for i in range(1, 8):
 
-#combined flight path directory
-train_val_pairs = make_pairs(
-    Path("2025_Tile_Data/UAVSAR"), 
-    Path("2025_Tile_Data/flood_change_mask_tiles"))
+    fp_pairs = make_pairs(
+        Path(f"2025_Tile_Data/Only_PNG_Data/fp{i}/UAVSAR"),
+        Path(f"2025_Tile_Data/Only_PNG_Data/fp{i}/flood_mask")
+    )
+
+    train_val_pairs.extend(fp_pairs)
 
 test_pairs=[]
 
