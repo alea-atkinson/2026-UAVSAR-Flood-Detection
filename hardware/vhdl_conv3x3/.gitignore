@@ -1,0 +1,10 @@
+*.o
+e~*.o
+work-obj08.cf
+tb_conv3x3_dot
+tb_conv3x3_dot_pipelined
+tb_stream_conv3x3_cell
+tb_stream_conv3x3_3chan_cell
+tb_stream_conv3x3_3chan_realweights
+tb_window3x3_stream
+ghdl_build_artifacts_backup/

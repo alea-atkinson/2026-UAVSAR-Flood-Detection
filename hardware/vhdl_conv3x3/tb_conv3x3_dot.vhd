@@ -82,12 +82,12 @@ begin
 
         -- Self-checking assertion
         assert to_integer(y) = EXPECTED
-            report "FAIL: conv3x3_dot test 1 — expected " &
+            report "FAIL: conv3x3_dot test 1 - expected " &
                    integer'image(EXPECTED) & " but got " &
                    integer'image(to_integer(y))
             severity failure;
 
-        report "PASS: conv3x3_dot test 1 — y = " &
+        report "PASS: conv3x3_dot test 1 - y = " &
                integer'image(to_integer(y)) &
                "  (expected " & integer'image(EXPECTED) & ")";
 
@@ -111,11 +111,11 @@ begin
         wait for 10 ns;
 
         assert to_integer(y) = 19
-            report "FAIL: conv3x3_dot test 2 — expected 19 but got " &
+            report "FAIL: conv3x3_dot test 2 - expected 19 but got " &
                    integer'image(to_integer(y))
             severity failure;
 
-        report "PASS: conv3x3_dot test 2 — y = " &
+        report "PASS: conv3x3_dot test 2 - y = " &
                integer'image(to_integer(y)) & "  (expected 19)";
 
         -- ----------------------------------------------------------------
@@ -138,11 +138,11 @@ begin
         wait for 10 ns;
 
         assert to_integer(y) = 10
-            report "FAIL: conv3x3_dot test 3 — expected 10 but got " &
+            report "FAIL: conv3x3_dot test 3 - expected 10 but got " &
                    integer'image(to_integer(y))
             severity failure;
 
-        report "PASS: conv3x3_dot test 3 — y = " &
+        report "PASS: conv3x3_dot test 3 - y = " &
                integer'image(to_integer(y)) & "  (expected 10)";
 
         -- All tests passed

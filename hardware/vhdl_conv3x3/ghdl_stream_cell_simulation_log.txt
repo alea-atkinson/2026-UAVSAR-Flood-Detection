@@ -1,0 +1,25 @@
+Using: GHDL 5.1.1 (tarball) [Dunoon edition]
+
+=== [1/3] Analyzing VHDL-2008 sources (dependency order) ===
+  OK  window3x3_stream.vhd
+  OK  conv3x3_dot_pipelined.vhd
+  OK  stream_conv3x3_cell.vhd
+  OK  tb_stream_conv3x3_cell.vhd
+
+=== [2/3] Elaborating tb_stream_conv3x3_cell ===
+  OK
+
+=== [3/3] Running simulation (stop after 500 ns) ===
+tb_stream_conv3x3_cell.vhd:122:13:@196ns:(report note): PASS output 1 (stream_conv3x3_cell): y = -6
+tb_stream_conv3x3_cell.vhd:122:13:@206ns:(report note): PASS output 2 (stream_conv3x3_cell): y = -6
+tb_stream_conv3x3_cell.vhd:122:13:@216ns:(report note): PASS output 3 (stream_conv3x3_cell): y = -6
+tb_stream_conv3x3_cell.vhd:122:13:@246ns:(report note): PASS output 4 (stream_conv3x3_cell): y = -6
+tb_stream_conv3x3_cell.vhd:122:13:@256ns:(report note): PASS output 5 (stream_conv3x3_cell): y = -6
+tb_stream_conv3x3_cell.vhd:122:13:@266ns:(report note): PASS output 6 (stream_conv3x3_cell): y = -6
+tb_stream_conv3x3_cell.vhd:122:13:@296ns:(report note): PASS output 7 (stream_conv3x3_cell): y = -6
+tb_stream_conv3x3_cell.vhd:122:13:@306ns:(report note): PASS output 8 (stream_conv3x3_cell): y = -6
+tb_stream_conv3x3_cell.vhd:122:13:@316ns:(report note): PASS output 9 (stream_conv3x3_cell): y = -6
+tb_stream_conv3x3_cell.vhd:183:9:@316ns:(report note): === All stream_conv3x3_cell tests PASSED ===  (9 / 9 outputs, all y = -6)
+./tb_stream_conv3x3_cell:info: simulation stopped by --stop-time @500ns
+
+=== Simulation complete ===

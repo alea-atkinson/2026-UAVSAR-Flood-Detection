@@ -1,0 +1,17 @@
+Using: GHDL 5.1.1 (tarball) [Dunoon edition]
+
+=== [1/3] Analyzing VHDL-2008 sources ===
+  OK  conv3x3_dot_pipelined.vhd
+  OK  tb_conv3x3_dot_pipelined.vhd
+
+=== [2/3] Elaborating tb_conv3x3_dot_pipelined ===
+  OK
+
+=== [3/3] Running simulation (stop after 500 ns) ===
+tb_conv3x3_dot_pipelined.vhd:131:9:@75ns:(report note): PASS test 1 (pipelined): y = -6  (expected -6,  latency = 3 cycles)
+tb_conv3x3_dot_pipelined.vhd:164:9:@135ns:(report note): PASS test 2 (pipelined): y = 19  (expected 19)
+tb_conv3x3_dot_pipelined.vhd:196:9:@195ns:(report note): PASS test 3 (pipelined): y = 10  (expected 10)
+tb_conv3x3_dot_pipelined.vhd:200:9:@195ns:(report note): === All conv3x3_dot_pipelined tests PASSED ===
+./tb_conv3x3_dot_pipelined:info: simulation stopped by --stop-time @500ns
+
+=== Simulation complete ===
