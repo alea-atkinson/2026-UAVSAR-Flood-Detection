@@ -1,8 +1,11 @@
-#ignore tifs and xmls exccept for the tiles
+#ignore tifs and xmls except tiles
 *.tif
 *.xml
 
 !milton/
 !milton/tiles/
 !milton/tiles/*/
-!milton/tiles/*/*.tif
+!milton/tiles/*/uavsar/
+!milton/tiles/*/masks/
+!milton/tiles/*/uavsar/*.tif
+!milton/tiles/*/masks/*.tif
