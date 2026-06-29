@@ -1,0 +1,235 @@
+
+****** Vivado v2025.2 (64-bit)
+  **** SW Build 6299465 on Fri Nov 14 12:34:56 MST 2025
+  **** IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+  **** SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+  **** Start of session at: Mon Jun 29 10:31:13 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source hardware/vhdl_conv3x3/synth_stream_conv3x3_3chan_cell.tcl
+# set part_name "xc7a35tcpg236-1"
+# set top_name "stream_conv3x3_3chan_cell"
+# set report_dir "hardware/vhdl_conv3x3/vivado_synth_reports"
+# file mkdir $report_dir
+# read_vhdl -vhdl2008 hardware/vhdl_conv3x3/window3x3_stream.vhd
+# read_vhdl -vhdl2008 hardware/vhdl_conv3x3/conv3x3_dot_pipelined.vhd
+# read_vhdl -vhdl2008 hardware/vhdl_conv3x3/stream_conv3x3_3chan_cell.vhd
+# synth_design -top $top_name -part $part_name -mode out_of_context
+Command: synth_design -top stream_conv3x3_3chan_cell -part xc7a35tcpg236-1 -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 3134563
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2256.719 ; gain = 464.391 ; free physical = 4472 ; free virtual = 42267
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'stream_conv3x3_3chan_cell' [/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/stream_conv3x3_3chan_cell.vhd:109]
+INFO: [Synth 8-638] synthesizing module 'window3x3_stream' [/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/window3x3_stream.vhd:70]
+	Parameter IMG_WIDTH bound to: 5 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'window3x3_stream' (0#1) [/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/window3x3_stream.vhd:70]
+INFO: [Synth 8-638] synthesizing module 'conv3x3_dot_pipelined' [/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/conv3x3_dot_pipelined.vhd:67]
+INFO: [Synth 8-256] done synthesizing module 'conv3x3_dot_pipelined' (0#1) [/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/conv3x3_dot_pipelined.vhd:67]
+INFO: [Synth 8-256] done synthesizing module 'stream_conv3x3_3chan_cell' (0#1) [/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/stream_conv3x3_3chan_cell.vhd:109]
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2348.688 ; gain = 556.359 ; free physical = 4389 ; free virtual = 42190
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2360.562 ; gain = 568.234 ; free physical = 4384 ; free virtual = 42185
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a35tcpg236-1
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2360.562 ; gain = 568.234 ; free physical = 4384 ; free virtual = 42185
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2379.547 ; gain = 587.219 ; free physical = 4361 ; free virtual = 42179
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   4 Input   32 Bit       Adders := 1     
+	   2 Input    3 Bit       Adders := 6     
+	   2 Input    2 Bit       Adders := 6     
++---Registers : 
+	               32 Bit    Registers := 13    
+	                8 Bit    Registers := 72    
+	                3 Bit    Registers := 3     
+	                2 Bit    Registers := 6     
+	                1 Bit    Registers := 13    
++---Muxes : 
+	   3 Input    8 Bit        Muxes := 51    
+	   2 Input    3 Bit        Muxes := 3     
+	   2 Input    1 Bit        Muxes := 66    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 90 (col length:60)
+BRAMs: 100 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 2528.641 ; gain = 736.312 ; free physical = 4200 ; free virtual = 42026
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:07 ; elapsed = 00:00:09 . Memory (MB): peak = 2531.609 ; gain = 739.281 ; free physical = 4200 ; free virtual = 42026
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:08 ; elapsed = 00:00:10 . Memory (MB): peak = 2551.617 ; gain = 759.289 ; free physical = 4187 ; free virtual = 42013
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:09 ; elapsed = 00:00:11 . Memory (MB): peak = 2685.430 ; gain = 893.102 ; free physical = 4071 ; free virtual = 41904
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:09 ; elapsed = 00:00:11 . Memory (MB): peak = 2685.430 ; gain = 893.102 ; free physical = 4073 ; free virtual = 41906
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:09 ; elapsed = 00:00:11 . Memory (MB): peak = 2685.430 ; gain = 893.102 ; free physical = 4071 ; free virtual = 41904
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:09 ; elapsed = 00:00:11 . Memory (MB): peak = 2685.430 ; gain = 893.102 ; free physical = 4071 ; free virtual = 41904
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:09 ; elapsed = 00:00:11 . Memory (MB): peak = 2685.430 ; gain = 893.102 ; free physical = 4071 ; free virtual = 41904
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:09 ; elapsed = 00:00:11 . Memory (MB): peak = 2685.430 ; gain = 893.102 ; free physical = 4071 ; free virtual = 41904
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |CARRY4 |   470|
+|2     |LUT1   |    18|
+|3     |LUT2   |  1179|
+|4     |LUT3   |   204|
+|5     |LUT4   |   733|
+|6     |LUT5   |   528|
+|7     |LUT6   |   981|
+|8     |MUXF7  |    48|
+|9     |FDRE   |  1324|
++------+-------+------+
+
+Report Instance Areas: 
++------+-------------+------------------------+------+
+|      |Instance     |Module                  |Cells |
++------+-------------+------------------------+------+
+|1     |top          |                        |  5485|
+|2     |  dot_c0     |conv3x3_dot_pipelined   |  1074|
+|3     |  dot_c1     |conv3x3_dot_pipelined_0 |  1073|
+|4     |  dot_c2     |conv3x3_dot_pipelined_1 |  1164|
+|5     |  win_gen_c0 |window3x3_stream        |   715|
+|6     |  win_gen_c1 |window3x3_stream_2      |   713|
+|7     |  win_gen_c2 |window3x3_stream_3      |   713|
++------+-------------+------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:09 ; elapsed = 00:00:11 . Memory (MB): peak = 2685.430 ; gain = 893.102 ; free physical = 4071 ; free virtual = 41904
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:09 ; elapsed = 00:00:11 . Memory (MB): peak = 2685.430 ; gain = 893.102 ; free physical = 4071 ; free virtual = 41904
+Synthesis Optimization Complete : Time (s): cpu = 00:00:09 ; elapsed = 00:00:12 . Memory (MB): peak = 2685.438 ; gain = 893.102 ; free physical = 4071 ; free virtual = 41905
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.02 . Memory (MB): peak = 2701.273 ; gain = 0.000 ; free physical = 4203 ; free virtual = 42040
+INFO: [Netlist 29-17] Analyzing 518 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2843.824 ; gain = 0.000 ; free physical = 4083 ; free virtual = 41933
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 3eac7379
+INFO: [Common 17-83] Releasing license: Synthesis
+18 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 2843.859 ; gain = 1051.531 ; free physical = 4083 ; free virtual = 41933
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 1999.729; main = 1999.729; forked = 344.426
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 4197.527; main = 2843.828; forked = 1645.906
+# create_clock -period 10.000 -name clk [get_ports clk]
+# report_utilization -file $report_dir/stream_conv3x3_3chan_cell_utilization.txt
+# report_timing_summary -file $report_dir/stream_conv3x3_3chan_cell_timing_summary.txt
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+WARNING: [Timing 38-242] The property HD.CLK_SRC of clock port "clk" is not set. In out-of-context mode, this prevents timing estimation for clock delay/skew
+Resolution: Set the HD.CLK_SRC property of the out-of-context port to the location of the clock buffer instance in the top-level design
+# report_power -file $report_dir/stream_conv3x3_3chan_cell_power.txt
+Command: report_power -file hardware/vhdl_conv3x3/vivado_synth_reports/stream_conv3x3_3chan_cell_power.txt
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+0 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+# write_checkpoint -force $report_dir/stream_conv3x3_3chan_cell_synth.dcp
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3003.008 ; gain = 0.000 ; free physical = 4071 ; free virtual = 41947
+INFO: [Timing 38-480] Writing timing data to binary archive.
+INFO: [Common 17-1381] The checkpoint '/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/vivado_synth_reports/stream_conv3x3_3chan_cell_synth.dcp' has been generated.
+# puts "SYNTHESIS_COMPLETE: stream_conv3x3_3chan_cell"
+SYNTHESIS_COMPLETE: stream_conv3x3_3chan_cell
+# puts "Reports written to $report_dir"
+Reports written to hardware/vhdl_conv3x3/vivado_synth_reports
+INFO: [Common 17-206] Exiting Vivado at Mon Jun 29 10:31:36 2026...
