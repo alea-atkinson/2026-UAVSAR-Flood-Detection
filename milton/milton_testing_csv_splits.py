@@ -8,7 +8,7 @@ import random
 
 
 
-output_dir = Path("milton/csv_splits")
+output_dir = Path("milton/train_milton_csv_splits")
 
 validation_fraction = 0.20
 random_seed = 42
@@ -61,6 +61,30 @@ for i in range(1, 8):
     )
 
     test_pairs.extend(fp_pairs)
+
+
+test_pairs = []
+#run once for every flight path
+for i in range(1, 8):
+
+    fp_pairs = make_pairs(
+        Path(f"2025_Tile_Data/Only_PNG_Data/fp{i}/UAVSAR"),
+        Path(f"2025_Tile_Data/Only_PNG_Data/fp{i}/flood_mask")
+    )
+
+    test_pairs.extend(fp_pairs)
+
+train_val_pairs=[]
+
+#run once for every flight path
+for i in range(1, 8):
+
+    fp_pairs = make_pairs(
+        Path(f"milton/tiles/fp{i}/uavsar"),
+        Path(f"milton/tiles/fp{i}/masks")
+    )
+
+    train_val_pairs.extend(fp_pairs)
 
 print(f"Training/Validation tiles: {len(train_val_pairs)}")
 print(f"Testing tiles: {len(test_pairs)}")

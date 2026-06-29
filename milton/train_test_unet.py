@@ -94,64 +94,99 @@ class FloodTileDataset(Dataset):
     def __len__(self) -> int:
         return len(self.rows)
 
-    def __getitem__(self, index: int) -> tuple[torch.Tensor, torch.Tensor]:
+    def __getitem__(self, index: int):
+
         row = self.rows[index]
+
         sar_path = row["uavsar_path"]
         mask_path = row["flood_mask_path"]
 
+        # -----------------------------
+        # Read SAR
+        # -----------------------------
         with rasterio.open(sar_path) as src:
             sar = src.read().astype(np.float32)
-            # UAVSAR: NoData is 0
-            sar[sar == 0] = np.nan
+
         if sar.shape[0] < 3:
-            raise ValueError(f"Expected at least 3 SAR bands, got {sar.shape[0]} in {sar_path}")
+            raise ValueError(
+                f"Expected at least 3 SAR bands, got {sar.shape[0]} in {sar_path}"
+            )
+
         sar = sar[:3]
 
+        # Valid SAR pixels:
+        # valid unless ALL THREE bands are zero
+        sar_valid = ~(sar == 0).all(axis=0)
+
+        # Convert only those invalid pixels to NaN
+        sar[:, ~sar_valid] = np.nan
+
+        # -----------------------------
+        # Read mask
+        # -----------------------------
         with rasterio.open(mask_path) as src:
             mask = src.read(1)
-            mask_nodata = src.nodata
-            if mask_nodata is None:
-                valid_mask = np.ones_like(mask, dtype=bool)
-            else:
-                valid_mask = mask != mask_nodata
 
-        sar = self._normalize_per_tile(sar)
-        binary_mask = np.zeros_like(mask, dtype=np.float32)
+            # start by assuming everything is valid
+            valid_mask = np.ones(mask.shape, dtype=bool)
 
+            # some padding for no data value
+
+            valid_mask &= (mask < 200)
+
+        # Binary flood mask
+        binary_mask = np.zeros(mask.shape, dtype=np.float32)
         binary_mask[(mask == 1) & valid_mask] = 1.0
 
-        sar_valid = np.isfinite(sar).all(axis=0)  # valid SAR pixels (no NaNs across channels)
-    
+        # Normalize SAR using SAR validity mask
+        sar = self._normalize_per_tile(sar, sar_valid)
 
-        valid = sar_valid & valid_mask #from sar and mask valid data values
-
+        # Final validity mask
+        valid = sar_valid & valid_mask
 
         return (
-        torch.from_numpy(sar),
-        torch.from_numpy(binary_mask[None]),
-        torch.from_numpy(valid.astype(np.float32)[None]) #return validity mask
-        )  
+            torch.from_numpy(sar),
+            torch.from_numpy(binary_mask[None]),
+            torch.from_numpy(valid.astype(np.float32)[None]),
+        )
     
     @staticmethod
-    def _normalize_per_tile(sar: np.ndarray) -> np.ndarray:
-        sar = np.nan_to_num(sar, nan=0.0, posinf=0.0, neginf=0.0).astype(np.float32)
+    def _normalize_per_tile(
+        sar: np.ndarray,
+        valid: np.ndarray,
+    ) -> np.ndarray:
 
-        # compute stats ONLY on valid pixels (all channels)
-        valid = sar[sar != 0]  # since we already set nodata=0 to nan earlier
+        sar = sar.copy()
 
-        if valid.size == 0:
-            return np.zeros_like(sar, dtype=np.float32)
+        for c in range(sar.shape[0]):
 
-        low, high = np.percentile(valid, [1.0, 99.0])
-        sar = np.clip(sar, low, high)
+            band = sar[c]
 
-        mean = float(sar.mean())
-        std = float(sar.std())
+            values = band[valid]
 
-        if std < 1e-6:
-            return np.zeros_like(sar, dtype=np.float32)
+            if values.size == 0:
+                band[:] = 0.0
+                sar[c] = band
+                continue
 
-        return ((sar - mean) / std).astype(np.float32)
+            low, high = np.percentile(values, [1.0, 99.0])
+
+            values = np.clip(values, low, high)
+
+            mean = values.mean()
+            std = values.std()
+
+            if std < 1e-6:
+                band[:] = 0.0
+            else:
+                band[valid] = (values - mean) / std
+
+            # Keep invalid pixels at zero
+            band[~valid] = 0.0
+
+            sar[c] = band
+
+        return sar.astype(np.float32)
 
 
 class DoubleConv(nn.Module):
@@ -383,9 +418,9 @@ def write_metrics_csv(metrics_path: Path, rows: list[dict[str, float | int]]) ->
 def parse_args() -> argparse.Namespace:
     
     parser = argparse.ArgumentParser(description="Train a simple SAR-only binary U-Net baseline.")
-    parser.add_argument("--train-csv", type=Path, default="milton/csv_splits/train.csv")
-    parser.add_argument("--val-csv", type=Path, default= "milton/csv_splits/validation.csv")
-    parser.add_argument("--test-csv", type=Path, default="milton/csv_splits/test.csv")
+    parser.add_argument("--train-csv", type=Path, default="milton/train_milton_csv_splits/train.csv")
+    parser.add_argument("--val-csv", type=Path, default= "milton/train_milton_csv_splits/validation.csv")
+    parser.add_argument("--test-csv", type=Path, default="milton/train_milton_csv_splits/test.csv")
     parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--learning-rate", type=float, default= 9.327106954111342e-05)
@@ -476,6 +511,8 @@ def main() -> None:
         print(
             f"Epoch {epoch:03d}/{args.epochs:03d} "
             f"train_loss={train_metrics['loss']:.4f} "
+            f"train_dice={train_metrics['dice']:.4f} "
+            f"train_iou={train_metrics['iou']:.4f} "
             f"val_loss={val_metrics['loss']:.4f} "
             f"val_dice={val_metrics['dice']:.4f} "
             f"val_iou={val_metrics['iou']:.4f}"
@@ -509,6 +546,55 @@ def main() -> None:
         f"iou={test_metrics['iou']:.4f}"
     )
     print(f"Metrics CSV: {metrics_path}")
+
+
+    # -------------------------------------------------------
+    # Visualize one training prediction
+    # -------------------------------------------------------
+    model.eval()
+
+    train_dataset = FloodTileDataset(Path(args.train_csv))
+
+    image, mask, valid = train_dataset[5]
+
+    with torch.no_grad():
+
+        logits = model(image.unsqueeze(0).to(device))
+
+        probs = torch.sigmoid(logits)
+
+        prediction = (probs > 0.5).float()
+
+    prediction = prediction.squeeze().cpu().numpy()
+    mask = mask.squeeze().numpy()
+    valid = valid.squeeze().numpy()
+
+    sar = image[0].numpy()
+    print("valid unique:", np.unique(valid))
+    print("valid mean:", valid.mean())
+    print("valid sum:", valid.sum())
+    print("shape:", valid.shape)
+
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(1, 4, figsize=(20,5))
+
+    ax[0].imshow(sar, cmap="gray")
+    ax[0].set_title("SAR")
+
+    ax[1].imshow(mask, cmap="gray", vmin=0, vmax=1)
+    ax[1].set_title("Ground Truth")
+
+    ax[2].imshow(prediction, cmap="gray", vmin=0, vmax=1)
+    ax[2].set_title("Prediction")
+
+    ax[3].imshow(valid, cmap="gray", vmin=0, vmax=1)
+    ax[3].set_title("Valid Pixels")
+
+    for a in ax:
+        a.axis("off")
+
+    plt.show()
 
 
 if __name__ == "__main__":
