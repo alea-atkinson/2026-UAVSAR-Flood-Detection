@@ -1,2 +1,8 @@
-# Ignore large tif files to speed up git processes
+#ignore tifs and xmls exccept for the tiles
 *.tif
+*.xml
+
+!milton/
+!milton/tiles/
+!milton/tiles/*/
+!milton/tiles/*/*.tif
