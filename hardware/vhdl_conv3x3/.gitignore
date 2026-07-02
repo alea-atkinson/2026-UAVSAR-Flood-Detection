@@ -10,6 +10,7 @@ tb_stream_conv3x3_3chan_kernels0_to3
 tb_stream_conv3x3_3chan_4out_cell
 tb_stream_conv3x3_3chan_8out_cell
 tb_stream_conv3x3_3chan_8out_cell_dsp
+tb_conv3x3_dot_time_mux
 tb_window3x3_stream
 ghdl_build_artifacts_backup/
 *.dcp
