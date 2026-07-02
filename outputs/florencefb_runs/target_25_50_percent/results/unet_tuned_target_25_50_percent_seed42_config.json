@@ -1,0 +1,19 @@
+{
+  "train_csv": "/mnt/linuxlab/home/reuuzheng/2026-UAVSAR-Flood-Detection/csv_organized_tiles/Only_PNG_Data/fb_nonoverlap_splits/target_25_50_percent/train.csv",
+  "val_csv": "/mnt/linuxlab/home/reuuzheng/2026-UAVSAR-Flood-Detection/csv_organized_tiles/Only_PNG_Data/fb_nonoverlap_splits/target_25_50_percent/val.csv",
+  "test_csv": "/mnt/linuxlab/home/reuuzheng/2026-UAVSAR-Flood-Detection/csv_organized_tiles/Only_PNG_Data/fb_nonoverlap_splits/target_25_50_percent/test.csv",
+  "epochs": "20",
+  "batch_size": "16",
+  "learning_rate": "9.327106954111342e-05",
+  "weight_decay": "6.088353841746043e-06",
+  "num_workers": "2",
+  "base_channels": "32",
+  "seed": "42",
+  "models_dir": "/mnt/linuxlab/home/reuuzheng/2026-UAVSAR-Flood-Detection/outputs/florencefb_runs/target_25_50_percent/checkpoints",
+  "results_dir": "/mnt/linuxlab/home/reuuzheng/2026-UAVSAR-Flood-Detection/outputs/florencefb_runs/target_25_50_percent/results",
+  "visuals_dir": "/mnt/linuxlab/home/reuuzheng/2026-UAVSAR-Flood-Detection/outputs/florencefb_runs/target_25_50_percent/visuals",
+  "output_dir": "/mnt/linuxlab/home/reuuzheng/2026-UAVSAR-Flood-Detection/outputs/florencefb_runs/target_25_50_percent",
+  "run_name": "unet_tuned_target_25_50_percent_seed42",
+  "overwrite": "False",
+  "device": "cuda"
+}
