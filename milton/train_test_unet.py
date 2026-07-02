@@ -360,7 +360,27 @@ class FocalDiceLoss(nn.Module):
         dice_loss = self.dice(logits, targets, mask)
 
         return self.focal_weight * focal_loss + self.dice_weight * dice_loss
+    
+class MaskedBCEWithLogitsLoss(nn.Module):
+    def __init__(self):
+        super().__init__()
 
+        # Compute a loss for every pixel
+        self.bce = nn.BCEWithLogitsLoss(reduction="none")
+
+    def forward(self, logits, targets, mask):
+
+        # logits: (B, 1, H, W)
+        # targets: (B, 1, H, W)
+        # mask: (B, 1, H, W)
+
+        loss = self.bce(logits, targets)
+
+        # Ignore no-data pixels
+        loss = loss * mask
+
+        # Average only over valid pixels
+        return loss.sum() / (mask.sum() + 1e-6)
 
 def run_epoch(
     model: nn.Module,
@@ -418,19 +438,20 @@ def write_metrics_csv(metrics_path: Path, rows: list[dict[str, float | int]]) ->
 def parse_args() -> argparse.Namespace:
     
     parser = argparse.ArgumentParser(description="Train a simple SAR-only binary U-Net baseline.")
-    parser.add_argument("--train-csv", type=Path, default="milton/train_milton_csv_splits/train.csv")
-    parser.add_argument("--val-csv", type=Path, default= "milton/train_milton_csv_splits/validation.csv")
-    parser.add_argument("--test-csv", type=Path, default="milton/train_milton_csv_splits/test.csv")
+    parser.add_argument("--train-csv", type=Path, default="milton/csv_splits/png_train.csv")
+    parser.add_argument("--val-csv", type=Path, default= "milton/csv_splits/png_validation.csv")
+    parser.add_argument("--test-csv", type=Path, default="milton/flood_ratio_csv_splits/test_10.csv")
     parser.add_argument("--epochs", type=int, default=20)
-    parser.add_argument("--batch-size", type=int, default=16)
-    parser.add_argument("--learning-rate", type=float, default= 9.327106954111342e-05)
-    parser.add_argument("--weight-decay", type=float, default=  6.088353841746043e-06)
+    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--learning-rate", type=float, default=1e-3)
+    parser.add_argument("--loss-fn", type=str, default="bce")
+    parser.add_argument("--optimizer", type=str, default="adam")
     parser.add_argument("--num-workers", type=int, default=2)
     parser.add_argument("--base-channels", type=int, default=32)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--models-dir", type=Path, default=Path("models"))
     parser.add_argument("--results-dir", type=Path, default=Path("results"))
-    parser.add_argument("--run-name", default="unet_baseline_strict_tuned_fp1")
+    parser.add_argument("--run-name", default="unet_baseline_nontuned")
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     return parser.parse_args()
 
@@ -482,8 +503,23 @@ def main() -> None:
     )
 
     model = UNet(in_channels=3, out_channels=1, base_channels=args.base_channels).to(device)
-    loss_fn = FocalDiceLoss()
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
+    loss_name = args.loss_fn  
+
+    if loss_name == "dice":
+         loss_fn = DiceLoss()
+    elif loss_name == "bce_dice":
+         loss_fn = BCEDiceLoss()
+    elif loss_name == "focal":
+        loss_fn = FocalLoss()
+    elif loss_name == "focal_dice":
+        loss_fn = FocalDiceLoss()
+    else:
+        loss_fn = MaskedBCEWithLogitsLoss()
+    if args.optimizer == "adam":
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+    elif args.optimizer == "adamw": 
+        optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate)
+
 
     args.models_dir.mkdir(parents=True, exist_ok=True)
     checkpoint_path = args.models_dir / f"{args.run_name}_best.pt"
@@ -555,7 +591,7 @@ def main() -> None:
 
     train_dataset = FloodTileDataset(Path(args.train_csv))
 
-    image, mask, valid = train_dataset[5]
+    image, mask, valid = test_dataset[0]
 
     with torch.no_grad():
 

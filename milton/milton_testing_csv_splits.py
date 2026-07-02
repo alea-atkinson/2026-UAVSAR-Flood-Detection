@@ -39,30 +39,6 @@ def make_pairs(image_dir, mask_dir):
 # Build datasets
 # -----------------------------
 
-train_val_pairs = []
-#run once for every flight path
-for i in range(1, 8):
-
-    fp_pairs = make_pairs(
-        Path(f"2025_Tile_Data/Only_PNG_Data/fp{i}/UAVSAR"),
-        Path(f"2025_Tile_Data/Only_PNG_Data/fp{i}/flood_mask")
-    )
-
-    train_val_pairs.extend(fp_pairs)
-
-test_pairs=[]
-
-#run once for every flight path
-for i in range(1, 8):
-
-    fp_pairs = make_pairs(
-        Path(f"milton/tiles/fp{i}/uavsar"),
-        Path(f"milton/tiles/fp{i}/masks")
-    )
-
-    test_pairs.extend(fp_pairs)
-
-
 test_pairs = []
 #run once for every flight path
 for i in range(1, 8):
@@ -123,8 +99,8 @@ def write_csv(filename, rows):
         writer.writeheader()
         writer.writerows(rows)
 
-write_csv("train.csv", train_pairs)
-write_csv("validation.csv", validation_pairs)
-write_csv("test.csv", test_pairs)
+write_csv("train2.csv", train_pairs)
+write_csv("validation2.csv", validation_pairs)
+write_csv("test2.csv", test_pairs)
 
 print("Finished writing CSV files.")
