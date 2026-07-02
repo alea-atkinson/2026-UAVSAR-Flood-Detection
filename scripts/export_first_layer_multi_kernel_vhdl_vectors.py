@@ -4,17 +4,29 @@ export_first_layer_multi_kernel_vhdl_vectors.py
 Generalization of export_first_layer_conv3x3_vhdl_vectors.py to multiple
 output channels ("kernels") of the same first-layer Conv2d tensor.
 
-Extracts output channels 0-3 (by default) of the first-layer 3x3 convolution
-from the Alea-tuned U-Net checkpoint, quantizes each to INT8 using the same
-symmetric per-tensor scheme as the original single-kernel script, applies
-each kernel to the same canonical toy 5x5x3 input patch used by the existing
-VHDL testbenches, and emits:
+Extracts a configurable range of output channels (kernels 0-3 by default) of
+the first-layer 3x3 convolution from the Alea-tuned U-Net checkpoint,
+quantizes each to INT8 using the same symmetric per-tensor scheme as the
+original single-kernel script, applies each kernel to the same canonical toy
+5x5x3 input patch used by the existing VHDL testbenches, and emits:
 
   - a JSON file with float/INT8 weights and INT32 golden outputs per kernel
   - a CSV file with per-kernel/per-output golden INT32 values
   - a Markdown summary
-  - a VHDL-2008 package of constants for kernels 0-3 (weights + expected
-    outputs + bias), for use by a self-checking testbench
+  - a VHDL-2008 package of constants for the selected kernels (weights +
+    expected outputs + bias), for use by a self-checking testbench
+
+Usage
+-----
+    python3 scripts/export_first_layer_multi_kernel_vhdl_vectors.py           # default: kernels 0-3
+    python3 scripts/export_first_layer_multi_kernel_vhdl_vectors.py 0-7       # inclusive range
+    python3 scripts/export_first_layer_multi_kernel_vhdl_vectors.py 0,2,5     # explicit list
+
+All output filenames and the VHDL package name are derived from the selected
+channel range (e.g. "0-7" -> first_layer_kernels0_to7_pkg.vhd), so running
+with a different range does not overwrite artifacts from another range.
+Running with no argument (or "0-3") reproduces the existing kernels0_to3
+artifacts bit-for-bit.
 
 This script is ANALYSIS ONLY -- it does not retrain, modify the model, or
 touch any dataset splits. It reuses the exact quantization method and toy
@@ -29,12 +41,12 @@ IMPORTANT LIMITATIONS (carried over from the single-kernel script):
   - Weights use symmetric per-tensor INT8 quantization; the toy input is
     already integer-valued (scale_x = 1.0).
 
-Output files
+Output files (named from the selected channel range, e.g. "0_to3", "0_to7")
 ------------
-hardware/vhdl_conv3x3/test_vectors/multi_kernel_first_layer/first_layer_kernels0_to3_int8.json
-hardware/vhdl_conv3x3/test_vectors/multi_kernel_first_layer/first_layer_kernels0_to3_expected_outputs.csv
-hardware/vhdl_conv3x3/test_vectors/multi_kernel_first_layer/first_layer_kernels0_to3_summary.md
-hardware/vhdl_conv3x3/first_layer_kernels0_to3_pkg.vhd
+hardware/vhdl_conv3x3/test_vectors/multi_kernel_first_layer/first_layer_kernels<range>_int8.json
+hardware/vhdl_conv3x3/test_vectors/multi_kernel_first_layer/first_layer_kernels<range>_expected_outputs.csv
+hardware/vhdl_conv3x3/test_vectors/multi_kernel_first_layer/first_layer_kernels<range>_summary.md
+hardware/vhdl_conv3x3/first_layer_kernels<range>_pkg.vhd
 """
 
 import json
@@ -48,7 +60,23 @@ import torch
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
-OUT_CHANNELS = [0, 1, 2, 3]   # kernels to export by default
+def parse_out_channels(argv):
+    """Parse an optional CLI arg into a list of output-channel indices.
+
+    Accepts an inclusive range "A-B" or an explicit comma list "A,B,C".
+    Defaults to [0, 1, 2, 3] (the original single-range behavior) when no
+    argument is given, so existing kernels0_to3 artifacts stay reproducible.
+    """
+    if len(argv) < 2:
+        return [0, 1, 2, 3]
+    spec = argv[1]
+    if "-" in spec and "," not in spec:
+        lo_str, hi_str = spec.split("-", 1)
+        return list(range(int(lo_str), int(hi_str) + 1))
+    return [int(tok) for tok in spec.split(",")]
+
+
+OUT_CHANNELS = parse_out_channels(sys.argv)   # kernels to export
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -59,9 +87,10 @@ CHECKPOINT_PATH = (
 CONV_KEY_EXPECTED = "enc1.block.0.weight"
 
 OUT_DIR = REPO_ROOT / "hardware" / "vhdl_conv3x3" / "test_vectors" / "multi_kernel_first_layer"
-PKG_PATH = REPO_ROOT / "hardware" / "vhdl_conv3x3" / "first_layer_kernels0_to3_pkg.vhd"
 
 KSTR = f"{OUT_CHANNELS[0]}_to{OUT_CHANNELS[-1]}"
+PKG_NAME  = f"first_layer_kernels{KSTR}_pkg"
+PKG_PATH  = REPO_ROOT / "hardware" / "vhdl_conv3x3" / f"{PKG_NAME}.vhd"
 JSON_PATH = OUT_DIR / f"first_layer_kernels{KSTR}_int8.json"
 CSV_PATH  = OUT_DIR / f"first_layer_kernels{KSTR}_expected_outputs.csv"
 MD_PATH   = OUT_DIR / f"first_layer_kernels{KSTR}_summary.md"
@@ -366,10 +395,11 @@ Conv2d layer:
 y = bias + dot(x_ch0_window, w_ch0) + dot(x_ch1_window, w_ch1) + dot(x_ch2_window, w_ch2)
 ```
 
-See `hardware/vhdl_conv3x3/first_layer_kernels0_to3_pkg.vhd` for VHDL constants
-and `hardware/vhdl_conv3x3/tb_stream_conv3x3_3chan_kernels0_to3.vhd` for the
-self-checking testbench that runs all {len(OUT_CHANNELS)} kernels sequentially
-through the same DUT instance.
+See `hardware/vhdl_conv3x3/{PKG_NAME}.vhd` for VHDL constants. Depending on the
+channel range, these constants are consumed either by a sequential
+per-kernel verification testbench (reusing one single-output DUT, reloading
+weights between kernels) or by a parallel N-output hardware cell that
+computes all {len(OUT_CHANNELS)} kernels at once from a shared input window.
 
 ## Limitations
 
@@ -404,7 +434,7 @@ def vhdl_int8_array(vals) -> str:
 
 pkg_lines = []
 pkg_lines.append(f"""\
--- first_layer_kernels0_to3_pkg.vhd
+-- {PKG_NAME}.vhd
 -- VHDL-2008 package of INT8 weight and INT32 golden-output constants for
 -- first-layer U-Net convolution kernels {OUT_CHANNELS[0]}-{OUT_CHANNELS[-1]}.
 --
@@ -438,7 +468,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-package first_layer_kernels0_to3_pkg is
+package {PKG_NAME} is
 
     -- 9 INT8 weights per input channel, row-major (w0=top-left .. w8=bottom-right)
     type int8_kernel_t is array (0 to 8) of integer range -128 to 127;
@@ -472,7 +502,7 @@ for oc, k in kernels.items():
 
 """)
 
-pkg_lines.append("end package first_layer_kernels0_to3_pkg;\n")
+pkg_lines.append(f"end package {PKG_NAME};\n")
 
 with open(PKG_PATH, "w") as f:
     f.write("".join(pkg_lines))
