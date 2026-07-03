@@ -1,0 +1,4 @@
+target_bucket,split,total_rows,unique_tile_stems,count_00_01_percent,count_01_02_percent,count_02_05_percent,count_05_10_percent,count_10_25_percent,count_25_50_percent,count_gt_50_percent,mean_flood_fraction,median_flood_fraction,min_flood_fraction,max_flood_fraction
+05_10_percent,train,771,586,52,32,100,79,199,173,136,0.25928820,0.17007446,0.00000000,0.99867222
+05_10_percent,val,193,147,20,18,31,28,47,25,24,0.19450256,0.09845421,0.00000000,0.95456419
+05_10_percent,test,103,84,0,0,0,103,0,0,0,0.07383916,0.07306153,0.05001907,0.09770352

@@ -1,0 +1,8 @@
+seed,target_bucket,train_rows,val_rows,test_rows,train_unique_tile_stems,val_unique_tile_stems,test_unique_tile_stems,target_bucket_total_rows,target_bucket_test_rows,target_bucket_test_fraction,overlap_passed
+42,00_01_percent,823,205,39,636,159,22,72,39,0.541667,True
+42,01_02_percent,833,206,28,638,159,20,50,28,0.560000,True
+42,02_05_percent,794,208,65,612,153,52,131,65,0.496183,True
+42,05_10_percent,771,193,103,586,147,84,210,103,0.490476,True
+42,10_25_percent,754,186,127,578,145,94,246,127,0.516260,True
+42,25_50_percent,776,184,107,593,148,76,198,107,0.540404,True
+42,gt_50_percent,793,195,79,605,151,61,160,79,0.493750,True
