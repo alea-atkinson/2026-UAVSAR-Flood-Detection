@@ -1,0 +1,278 @@
+
+****** Vivado v2025.2 (64-bit)
+  **** SW Build 6299465 on Fri Nov 14 12:34:56 MST 2025
+  **** IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+  **** SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+  **** Start of session at: Wed Jul  8 10:39:14 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source hardware/vhdl_conv3x3/synth_target_parameterized.tcl
+# if {$argc < 4} {
+#     puts "ERROR: synth_target_parameterized.tcl requires at least 4 -tclargs:"
+#     puts "  <part_name> <top_name> <report_dir> <src_file1> \[<src_file2> ...\]"
+#     puts "Got argc=$argc argv={$argv}"
+#     exit 1
+# }
+# set part_name  [lindex $argv 0]
+# set top_name   [lindex $argv 1]
+# set report_dir [lindex $argv 2]
+# set src_files  [lrange $argv 3 end]
+# puts "=== synth_target_parameterized.tcl ==="
+=== synth_target_parameterized.tcl ===
+# puts "  part_name  = $part_name"
+  part_name  = xc7a200tsbg484-1
+# puts "  top_name   = $top_name"
+  top_name   = conv3x3_3chan_8out_time_mux
+# puts "  report_dir = $report_dir"
+  report_dir = hardware/vhdl_conv3x3/vivado_reports_larger_target
+# puts "  src_files  = $src_files"
+  src_files  = hardware/vhdl_conv3x3/first_layer_kernels0_to7_pkg.vhd hardware/vhdl_conv3x3/conv3x3_dot_time_mux.vhd hardware/vhdl_conv3x3/conv3x3_3chan_8out_time_mux.vhd
+# file mkdir $report_dir
+# foreach f $src_files {
+#     puts "Reading: $f"
+#     read_vhdl -vhdl2008 $f
+# }
+Reading: hardware/vhdl_conv3x3/first_layer_kernels0_to7_pkg.vhd
+Reading: hardware/vhdl_conv3x3/conv3x3_dot_time_mux.vhd
+Reading: hardware/vhdl_conv3x3/conv3x3_3chan_8out_time_mux.vhd
+# synth_design -top $top_name -part $part_name -mode out_of_context
+Command: synth_design -top conv3x3_3chan_8out_time_mux -part xc7a200tsbg484-1 -mode out_of_context
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a200t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a200t'
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 3268137
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:02 ; elapsed = 00:00:02 . Memory (MB): peak = 2249.309 ; gain = 398.672 ; free physical = 11405 ; free virtual = 46280
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'conv3x3_3chan_8out_time_mux' [/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/conv3x3_3chan_8out_time_mux.vhd:120]
+INFO: [Synth 8-638] synthesizing module 'conv3x3_dot_time_mux' [/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/conv3x3_dot_time_mux.vhd:101]
+INFO: [Synth 8-256] done synthesizing module 'conv3x3_dot_time_mux' (0#1) [/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/conv3x3_dot_time_mux.vhd:101]
+INFO: [Synth 8-256] done synthesizing module 'conv3x3_3chan_8out_time_mux' (0#1) [/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/conv3x3_3chan_8out_time_mux.vhd:120]
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2338.277 ; gain = 487.641 ; free physical = 11296 ; free virtual = 46169
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2350.152 ; gain = 499.516 ; free physical = 11296 ; free virtual = 46170
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a200tsbg484-1
+INFO: [Device 21-403] Loading part xc7a200tsbg484-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 2350.152 ; gain = 499.516 ; free physical = 11296 ; free virtual = 46169
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 2381.012 ; gain = 530.375 ; free physical = 11316 ; free virtual = 46190
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   32 Bit       Adders := 1     
+	   2 Input    5 Bit       Adders := 1     
+	   2 Input    4 Bit       Adders := 1     
++---Registers : 
+	               32 Bit    Registers := 10    
+	                8 Bit    Registers := 18    
+	                5 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                1 Bit    Registers := 5     
++---Muxes : 
+	   2 Input   32 Bit        Muxes := 1     
+	   2 Input    8 Bit        Muxes := 18    
+	   3 Input    1 Bit        Muxes := 11    
+	   2 Input    1 Bit        Muxes := 30    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 740 (col length:100)
+BRAMs: 730 (col length: RAMB18 100 RAMB36 50)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:05 ; elapsed = 00:00:07 . Memory (MB): peak = 2547.074 ; gain = 696.438 ; free physical = 11202 ; free virtual = 46076
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+ROM: Preliminary Mapping Report
++----------------------------+------------------+---------------+----------------+
+|Module Name                 | RTL Object       | Depth x Width | Implemented As | 
++----------------------------+------------------+---------------+----------------+
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][0] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][1] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][2] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][3] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][4] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][5] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][6] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][7] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][8] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][1] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][2] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][3] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][4] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][5] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][6] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][7] | 32x8          | LUT            | 
+|conv3x3_3chan_8out_time_mux | WEIGHT_LUT[0][8] | 32x8          | LUT            | 
++----------------------------+------------------+---------------+----------------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:06 ; elapsed = 00:00:08 . Memory (MB): peak = 2550.043 ; gain = 699.406 ; free physical = 11201 ; free virtual = 46075
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:06 ; elapsed = 00:00:08 . Memory (MB): peak = 2550.043 ; gain = 699.406 ; free physical = 11216 ; free virtual = 46091
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:07 ; elapsed = 00:00:10 . Memory (MB): peak = 2707.855 ; gain = 857.219 ; free physical = 11104 ; free virtual = 45978
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:07 ; elapsed = 00:00:10 . Memory (MB): peak = 2707.855 ; gain = 857.219 ; free physical = 11105 ; free virtual = 45979
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:07 ; elapsed = 00:00:10 . Memory (MB): peak = 2707.855 ; gain = 857.219 ; free physical = 11105 ; free virtual = 45979
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:07 ; elapsed = 00:00:10 . Memory (MB): peak = 2707.855 ; gain = 857.219 ; free physical = 11128 ; free virtual = 45998
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:07 ; elapsed = 00:00:11 . Memory (MB): peak = 2707.855 ; gain = 857.219 ; free physical = 11169 ; free virtual = 46040
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:07 ; elapsed = 00:00:11 . Memory (MB): peak = 2707.855 ; gain = 857.219 ; free physical = 11176 ; free virtual = 46046
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |CARRY4 |    44|
+|2     |LUT1   |     3|
+|3     |LUT2   |   153|
+|4     |LUT3   |    45|
+|5     |LUT4   |    28|
+|6     |LUT5   |   174|
+|7     |LUT6   |    69|
+|8     |FDRE   |   510|
++------+-------+------+
+
+Report Instance Areas: 
++------+-----------+---------------------+------+
+|      |Instance   |Module               |Cells |
++------+-----------+---------------------+------+
+|1     |top        |                     |  1026|
+|2     |  dot_inst |conv3x3_dot_time_mux |   724|
++------+-----------+---------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:07 ; elapsed = 00:00:11 . Memory (MB): peak = 2707.855 ; gain = 857.219 ; free physical = 11294 ; free virtual = 46159
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:07 ; elapsed = 00:00:11 . Memory (MB): peak = 2707.855 ; gain = 857.219 ; free physical = 11294 ; free virtual = 46159
+Synthesis Optimization Complete : Time (s): cpu = 00:00:07 ; elapsed = 00:00:11 . Memory (MB): peak = 2707.863 ; gain = 857.219 ; free physical = 11294 ; free virtual = 46159
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 2723.699 ; gain = 0.000 ; free physical = 11465 ; free virtual = 46330
+INFO: [Netlist 29-17] Analyzing 44 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2868.281 ; gain = 0.000 ; free physical = 11351 ; free virtual = 46216
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: acf89185
+INFO: [Common 17-83] Releasing license: Synthesis
+16 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:10 ; elapsed = 00:00:14 . Memory (MB): peak = 2868.316 ; gain = 1017.680 ; free physical = 11350 ; free virtual = 46215
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 2079.688; main = 2045.425; forked = 339.815
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 4353.641; main = 2868.285; forked = 1645.781
+# create_clock -period 10.000 -name clk [get_ports clk]
+# report_utilization    -file $report_dir/${top_name}_utilization.txt
+# report_timing_summary -file $report_dir/${top_name}_timing_summary.txt
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+WARNING: [Timing 38-242] The property HD.CLK_SRC of clock port "clk" is not set. In out-of-context mode, this prevents timing estimation for clock delay/skew
+Resolution: Set the HD.CLK_SRC property of the out-of-context port to the location of the clock buffer instance in the top-level design
+# report_power          -file $report_dir/${top_name}_power.txt
+Command: report_power -file hardware/vhdl_conv3x3/vivado_reports_larger_target/conv3x3_3chan_8out_time_mux_power.txt
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+0 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+# write_checkpoint -force $report_dir/${top_name}_synth.dcp
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.03 . Memory (MB): peak = 3027.465 ; gain = 0.000 ; free physical = 11291 ; free virtual = 46159
+INFO: [Common 17-1381] The checkpoint '/mnt/linuxlab/home/reujsalter/reu_flood_project/2026-UAVSAR-Flood-Detection/hardware/vhdl_conv3x3/vivado_reports_larger_target/conv3x3_3chan_8out_time_mux_synth.dcp' has been generated.
+# puts "SYNTHESIS_COMPLETE: $top_name ($part_name)"
+SYNTHESIS_COMPLETE: conv3x3_3chan_8out_time_mux (xc7a200tsbg484-1)
+# puts "Reports written to $report_dir"
+Reports written to hardware/vhdl_conv3x3/vivado_reports_larger_target
+INFO: [Common 17-206] Exiting Vivado at Wed Jul  8 10:39:34 2026...
