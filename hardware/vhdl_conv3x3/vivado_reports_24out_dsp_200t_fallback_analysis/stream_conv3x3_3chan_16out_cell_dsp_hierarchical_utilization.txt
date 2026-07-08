@@ -1,0 +1,32 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
+| Date         : Wed Jul  8 14:25:59 2026
+| Host         : hpcl5-5.hslinux running 64-bit Fedora Linux 43 (Forty Three)
+| Command      : report_utilization -hierarchical -file hardware/vhdl_conv3x3/vivado_reports_24out_dsp_200t_fallback_analysis/stream_conv3x3_3chan_16out_cell_dsp_hierarchical_utilization.txt
+| Design       : stream_conv3x3_3chan_16out_cell_dsp
+| Device       : xc7a200tsbg484-1
+| Speed File   : -1
+| Design State : Synthesized
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-----------------------------------------+---------------------+------------+------------+---------+------+-----+--------+--------+------------+
+|                 Instance                |        Module       | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++-----------------------------------------+---------------------+------------+------------+---------+------+-----+--------+--------+------------+
+| stream_conv3x3_3chan_16out_cell_dsp     |               (top) |        929 |        929 |       0 |    0 | 418 |      0 |      0 |        405 |
+|   (stream_conv3x3_3chan_16out_cell_dsp) |               (top) |          0 |          0 |       0 |    0 |   1 |      0 |      0 |         16 |
+|   win_gen_c0                            |    window3x3_stream |        397 |        397 |       0 |    0 | 144 |      0 |      0 |          0 |
+|   win_gen_c1                            | window3x3_stream_47 |        267 |        267 |       0 |    0 | 135 |      0 |      0 |          0 |
+|   win_gen_c2                            | window3x3_stream_48 |        265 |        265 |       0 |    0 | 135 |      0 |      0 |          0 |
++-----------------------------------------+---------------------+------------+------------+---------+------+-----+--------+--------+------------+
+
+
