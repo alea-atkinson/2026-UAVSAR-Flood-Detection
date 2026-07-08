@@ -1,0 +1,128 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2025 Advanced Micro Devices, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2025.2 (lin64) Build 6299465 Fri Nov 14 12:34:56 MST 2025
+| Date         : Wed Jul  8 15:19:56 2026
+| Host         : hpcl5-5.hslinux running 64-bit Fedora Linux 43 (Forty Three)
+| Command      : report_utilization -hierarchical -file hardware/vhdl_conv3x3/vivado_reports_32out_dsp_200t_fallback_analysis/stream_conv3x3_3chan_32out_cell_dsp_hierarchical_utilization.txt
+| Design       : stream_conv3x3_3chan_32out_cell_dsp
+| Device       : xc7a200tsbg484-1
+| Speed File   : -1
+| Design State : Synthesized
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++-----------------------------------------+------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|                 Instance                |            Module            | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++-----------------------------------------+------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| stream_conv3x3_3chan_32out_cell_dsp     |                        (top) |      10461 |      10461 |       0 |    0 | 4618 |      0 |      0 |        740 |
+|   (stream_conv3x3_3chan_32out_cell_dsp) |                        (top) |          0 |          0 |       0 |    0 | 1025 |      0 |      0 |          0 |
+|   dot_k0_c0                             |    conv3x3_dot_pipelined_dsp |         64 |         64 |       0 |    0 |   35 |      0 |      0 |          9 |
+|   dot_k0_c1                             |  conv3x3_dot_pipelined_dsp_0 |        133 |        133 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k0_c2                             |  conv3x3_dot_pipelined_dsp_1 |         84 |         84 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k10_c0                            |  conv3x3_dot_pipelined_dsp_2 |         69 |         69 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k10_c1                            |  conv3x3_dot_pipelined_dsp_3 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k10_c2                            |  conv3x3_dot_pipelined_dsp_4 |         68 |         68 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k11_c0                            |  conv3x3_dot_pipelined_dsp_5 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k11_c1                            |  conv3x3_dot_pipelined_dsp_6 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k11_c2                            |  conv3x3_dot_pipelined_dsp_7 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k12_c0                            |  conv3x3_dot_pipelined_dsp_8 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k12_c1                            |  conv3x3_dot_pipelined_dsp_9 |         98 |         98 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k12_c2                            | conv3x3_dot_pipelined_dsp_10 |         76 |         76 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k13_c0                            | conv3x3_dot_pipelined_dsp_11 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k13_c1                            | conv3x3_dot_pipelined_dsp_12 |        109 |        109 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k13_c2                            | conv3x3_dot_pipelined_dsp_13 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k14_c0                            | conv3x3_dot_pipelined_dsp_14 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k14_c1                            | conv3x3_dot_pipelined_dsp_15 |         98 |         98 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k14_c2                            | conv3x3_dot_pipelined_dsp_16 |         68 |         68 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k15_c0                            | conv3x3_dot_pipelined_dsp_17 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k15_c1                            | conv3x3_dot_pipelined_dsp_18 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k15_c2                            | conv3x3_dot_pipelined_dsp_19 |         74 |         74 |       0 |    0 |   32 |      0 |      0 |          6 |
+|   dot_k16_c0                            | conv3x3_dot_pipelined_dsp_20 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k16_c1                            | conv3x3_dot_pipelined_dsp_21 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k16_c2                            | conv3x3_dot_pipelined_dsp_22 |         93 |         93 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k17_c0                            | conv3x3_dot_pipelined_dsp_23 |         88 |         88 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k17_c1                            | conv3x3_dot_pipelined_dsp_24 |        109 |        109 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k17_c2                            | conv3x3_dot_pipelined_dsp_25 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k18_c0                            | conv3x3_dot_pipelined_dsp_26 |         74 |         74 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k18_c1                            | conv3x3_dot_pipelined_dsp_27 |         98 |         98 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k18_c2                            | conv3x3_dot_pipelined_dsp_28 |         74 |         74 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k19_c0                            | conv3x3_dot_pipelined_dsp_29 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k19_c1                            | conv3x3_dot_pipelined_dsp_30 |        106 |        106 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k19_c2                            | conv3x3_dot_pipelined_dsp_31 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k1_c0                             | conv3x3_dot_pipelined_dsp_32 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k1_c1                             | conv3x3_dot_pipelined_dsp_33 |        126 |        126 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k1_c2                             | conv3x3_dot_pipelined_dsp_34 |         82 |         82 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k20_c0                            | conv3x3_dot_pipelined_dsp_35 |         66 |         66 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k20_c1                            | conv3x3_dot_pipelined_dsp_36 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k20_c2                            | conv3x3_dot_pipelined_dsp_37 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k21_c0                            | conv3x3_dot_pipelined_dsp_38 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k21_c1                            | conv3x3_dot_pipelined_dsp_39 |        104 |        104 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k21_c2                            | conv3x3_dot_pipelined_dsp_40 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k22_c0                            | conv3x3_dot_pipelined_dsp_41 |         74 |         74 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k22_c1                            | conv3x3_dot_pipelined_dsp_42 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k22_c2                            | conv3x3_dot_pipelined_dsp_43 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k23_c0                            | conv3x3_dot_pipelined_dsp_44 |         67 |         67 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k23_c1                            | conv3x3_dot_pipelined_dsp_45 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k23_c2                            | conv3x3_dot_pipelined_dsp_46 |         77 |         77 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k24_c0                            | conv3x3_dot_pipelined_dsp_47 |         78 |         78 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k24_c1                            | conv3x3_dot_pipelined_dsp_48 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k24_c2                            | conv3x3_dot_pipelined_dsp_49 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k25_c0                            | conv3x3_dot_pipelined_dsp_50 |         73 |         73 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k25_c1                            | conv3x3_dot_pipelined_dsp_51 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k25_c2                            | conv3x3_dot_pipelined_dsp_52 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k26_c0                            | conv3x3_dot_pipelined_dsp_53 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k26_c1                            | conv3x3_dot_pipelined_dsp_54 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k26_c2                            | conv3x3_dot_pipelined_dsp_55 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k27_c0                            | conv3x3_dot_pipelined_dsp_56 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k27_c1                            | conv3x3_dot_pipelined_dsp_57 |         95 |         95 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k27_c2                            | conv3x3_dot_pipelined_dsp_58 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k28_c0                            | conv3x3_dot_pipelined_dsp_59 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k28_c1                            | conv3x3_dot_pipelined_dsp_60 |        104 |        104 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k28_c2                            | conv3x3_dot_pipelined_dsp_61 |         74 |         74 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k29_c0                            | conv3x3_dot_pipelined_dsp_62 |         64 |         64 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k29_c1                            | conv3x3_dot_pipelined_dsp_63 |        117 |        117 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k29_c2                            | conv3x3_dot_pipelined_dsp_64 |         74 |         74 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k2_c0                             | conv3x3_dot_pipelined_dsp_65 |        108 |        108 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k2_c1                             | conv3x3_dot_pipelined_dsp_66 |        130 |        130 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k2_c2                             | conv3x3_dot_pipelined_dsp_67 |         97 |         97 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k30_c0                            | conv3x3_dot_pipelined_dsp_68 |         76 |         76 |       0 |    0 |   32 |      0 |      0 |          6 |
+|   dot_k30_c1                            | conv3x3_dot_pipelined_dsp_69 |        111 |        111 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k30_c2                            | conv3x3_dot_pipelined_dsp_70 |         65 |         65 |       0 |    0 |   32 |      0 |      0 |          9 |
+|   dot_k31_c0                            | conv3x3_dot_pipelined_dsp_71 |         69 |         69 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k31_c1                            | conv3x3_dot_pipelined_dsp_72 |        112 |        112 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k31_c2                            | conv3x3_dot_pipelined_dsp_73 |         70 |         70 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k3_c0                             | conv3x3_dot_pipelined_dsp_74 |         75 |         75 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k3_c1                             | conv3x3_dot_pipelined_dsp_75 |        104 |        104 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k3_c2                             | conv3x3_dot_pipelined_dsp_76 |         83 |         83 |       0 |    0 |   32 |      0 |      0 |          6 |
+|   dot_k4_c0                             | conv3x3_dot_pipelined_dsp_77 |         84 |         84 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k4_c1                             | conv3x3_dot_pipelined_dsp_78 |        116 |        116 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k4_c2                             | conv3x3_dot_pipelined_dsp_79 |         88 |         88 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k5_c0                             | conv3x3_dot_pipelined_dsp_80 |        111 |        111 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k5_c1                             | conv3x3_dot_pipelined_dsp_81 |        100 |        100 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k5_c2                             | conv3x3_dot_pipelined_dsp_82 |         99 |         99 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k6_c0                             | conv3x3_dot_pipelined_dsp_83 |         67 |         67 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k6_c1                             | conv3x3_dot_pipelined_dsp_84 |        104 |        104 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k6_c2                             | conv3x3_dot_pipelined_dsp_85 |         85 |         85 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k7_c0                             | conv3x3_dot_pipelined_dsp_86 |         81 |         81 |       0 |    0 |   32 |      0 |      0 |          6 |
+|   dot_k7_c1                             | conv3x3_dot_pipelined_dsp_87 |        107 |        107 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k7_c2                             | conv3x3_dot_pipelined_dsp_88 |         79 |         79 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k8_c0                             | conv3x3_dot_pipelined_dsp_89 |         77 |         77 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k8_c1                             | conv3x3_dot_pipelined_dsp_90 |        109 |        109 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k8_c2                             | conv3x3_dot_pipelined_dsp_91 |         68 |         68 |       0 |    0 |   32 |      0 |      0 |          7 |
+|   dot_k9_c0                             | conv3x3_dot_pipelined_dsp_92 |         82 |         82 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k9_c1                             | conv3x3_dot_pipelined_dsp_93 |        111 |        111 |       0 |    0 |   32 |      0 |      0 |          8 |
+|   dot_k9_c2                             | conv3x3_dot_pipelined_dsp_94 |         74 |         74 |       0 |    0 |   32 |      0 |      0 |          6 |
+|   win_gen_c0                            |             window3x3_stream |        825 |        825 |       0 |    0 |  176 |      0 |      0 |          0 |
+|   win_gen_c1                            |          window3x3_stream_95 |        886 |        886 |       0 |    0 |  167 |      0 |      0 |          0 |
+|   win_gen_c2                            |          window3x3_stream_96 |        877 |        877 |       0 |    0 |  175 |      0 |      0 |          0 |
++-----------------------------------------+------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+
+
