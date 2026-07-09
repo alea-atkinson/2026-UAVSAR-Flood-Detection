@@ -1,0 +1,151 @@
+{
+  "checkpoint_path": "models/alea_tuned_filtered_strict_fp2_focaldice_adamw_20epochs_best.pt",
+  "kernel_id": 2,
+  "conv_tensor_key": "enc1.block.0.weight",
+  "bn_prefix": "enc1.block.1",
+  "bn_eps": 1e-05,
+  "scale_bn": 3.7534189224243164,
+  "b_folded": -0.011989293619990349,
+  "scale_w_folded": 0.0057568099555068124,
+  "w_folded_int8": {
+    "channel_0": [
+      36,
+      52,
+      39,
+      -1,
+      99,
+      -91,
+      10,
+      -85,
+      37
+    ],
+    "channel_1": [
+      -41,
+      40,
+      -25,
+      106,
+      -72,
+      -74,
+      -73,
+      114,
+      43
+    ],
+    "channel_2": [
+      118,
+      -106,
+      -127,
+      -99,
+      -86,
+      46,
+      44,
+      102,
+      -68
+    ]
+  },
+  "scale_x": 1.0,
+  "fixed_point_format": "Q.16 (signed, 16 fractional bits)",
+  "frac_bits": 16,
+  "scale_fx": 377,
+  "bias_fx": -786,
+  "relu_clamping_exercised": false,
+  "width_warnings": [],
+  "input_patch_description": "5x5 toy patch: ch0=1..25 row-major, ch1=2xch0, ch2=-1xch0. scale_x=1.0 exact (matches every other VHDL testbench's literal INT8 pixel stimulus in this repo).",
+  "positions": [
+    {
+      "output_index": 0,
+      "row": 0,
+      "col": 0,
+      "raw_conv_int32": 1522,
+      "product_fx": 573794,
+      "biased_fx": 573008,
+      "relu_fx": 573008,
+      "relu_float_equiv": 8.743408203125
+    },
+    {
+      "output_index": 1,
+      "row": 0,
+      "col": 1,
+      "raw_conv_int32": 1830,
+      "product_fx": 689910,
+      "biased_fx": 689124,
+      "relu_fx": 689124,
+      "relu_float_equiv": 10.51519775390625
+    },
+    {
+      "output_index": 2,
+      "row": 0,
+      "col": 2,
+      "raw_conv_int32": 2138,
+      "product_fx": 806026,
+      "biased_fx": 805240,
+      "relu_fx": 805240,
+      "relu_float_equiv": 12.2869873046875
+    },
+    {
+      "output_index": 3,
+      "row": 1,
+      "col": 0,
+      "raw_conv_int32": 3062,
+      "product_fx": 1154374,
+      "biased_fx": 1153588,
+      "relu_fx": 1153588,
+      "relu_float_equiv": 17.60235595703125
+    },
+    {
+      "output_index": 4,
+      "row": 1,
+      "col": 1,
+      "raw_conv_int32": 3370,
+      "product_fx": 1270490,
+      "biased_fx": 1269704,
+      "relu_fx": 1269704,
+      "relu_float_equiv": 19.3741455078125
+    },
+    {
+      "output_index": 5,
+      "row": 1,
+      "col": 2,
+      "raw_conv_int32": 3678,
+      "product_fx": 1386606,
+      "biased_fx": 1385820,
+      "relu_fx": 1385820,
+      "relu_float_equiv": 21.14593505859375
+    },
+    {
+      "output_index": 6,
+      "row": 2,
+      "col": 0,
+      "raw_conv_int32": 4602,
+      "product_fx": 1734954,
+      "biased_fx": 1734168,
+      "relu_fx": 1734168,
+      "relu_float_equiv": 26.4613037109375
+    },
+    {
+      "output_index": 7,
+      "row": 2,
+      "col": 1,
+      "raw_conv_int32": 4910,
+      "product_fx": 1851070,
+      "biased_fx": 1850284,
+      "relu_fx": 1850284,
+      "relu_float_equiv": 28.23309326171875
+    },
+    {
+      "output_index": 8,
+      "row": 2,
+      "col": 2,
+      "raw_conv_int32": 5218,
+      "product_fx": 1967186,
+      "biased_fx": 1966400,
+      "relu_fx": 1966400,
+      "relu_float_equiv": 30.0048828125
+    }
+  ],
+  "notes": [
+    "This is a fixed-point (integer-only) golden reference, distinct from scripts/analyze_first_conv_bn_relu_fidelity.py's float rescale-based fidelity study.",
+    "Uses FOLDED (BatchNorm-absorbed) INT8 weights for kernel 2, NOT the raw unfolded weights used by every prior VHDL prototype in this repo.",
+    "relu_fx is the EXACT integer VHDL golden output.",
+    "relu_float_equiv is for human-readable comparison only; the VHDL testbench compares against the exact integer relu_fx, not this float value."
+  ]
+}
