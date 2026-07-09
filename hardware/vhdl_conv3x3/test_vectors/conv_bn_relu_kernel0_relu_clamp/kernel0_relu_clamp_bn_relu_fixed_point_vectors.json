@@ -1,0 +1,192 @@
+{
+  "checkpoint_path": "models/alea_tuned_filtered_strict_fp2_focaldice_adamw_20epochs_best.pt",
+  "kernel_id": 0,
+  "input_mode": "synthetic_relu_clamp",
+  "conv_tensor_key": "enc1.block.0.weight",
+  "bn_prefix": "enc1.block.1",
+  "bn_eps": 1e-05,
+  "scale_bn": 1.5156784057617188,
+  "b_folded": -0.014275223948061466,
+  "scale_w_folded": 0.0020622841016514097,
+  "w_folded_int8": {
+    "channel_0": [
+      110,
+      117,
+      -38,
+      127,
+      -28,
+      33,
+      -66,
+      86,
+      124
+    ],
+    "channel_1": [
+      -103,
+      120,
+      24,
+      102,
+      20,
+      67,
+      -19,
+      108,
+      20
+    ],
+    "channel_2": [
+      -68,
+      31,
+      -72,
+      -21,
+      -59,
+      92,
+      -112,
+      -66,
+      -44
+    ]
+  },
+  "scale_x": 1.0,
+  "fixed_point_format": "Q.16 (signed, 16 fractional bits)",
+  "frac_bits": 16,
+  "scale_fx": 135,
+  "bias_fx": -936,
+  "relu_clamping_exercised": true,
+  "num_clamped_outputs": 9,
+  "clamped_positions_row_col": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      2,
+      2
+    ]
+  ],
+  "width_warnings": [],
+  "input_patch_description": "SYNTHETIC ReLU clamp test patch: all-zero 5x5x3 input (NOT a real UAVSAR tile). raw_conv_int32 = 0 for every position by construction (sum(0 * w) = 0 regardless of weights), so biased_fx = BIAS_FX exactly for all 9 positions -- deterministically forces the ReLU clamp branch whenever BIAS_FX < 0. scale_x=1.0 exact.",
+  "positions": [
+    {
+      "output_index": 0,
+      "row": 0,
+      "col": 0,
+      "raw_conv_int32": 0,
+      "product_fx": 0,
+      "biased_fx": -936,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 1,
+      "row": 0,
+      "col": 1,
+      "raw_conv_int32": 0,
+      "product_fx": 0,
+      "biased_fx": -936,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 2,
+      "row": 0,
+      "col": 2,
+      "raw_conv_int32": 0,
+      "product_fx": 0,
+      "biased_fx": -936,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 3,
+      "row": 1,
+      "col": 0,
+      "raw_conv_int32": 0,
+      "product_fx": 0,
+      "biased_fx": -936,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 4,
+      "row": 1,
+      "col": 1,
+      "raw_conv_int32": 0,
+      "product_fx": 0,
+      "biased_fx": -936,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 5,
+      "row": 1,
+      "col": 2,
+      "raw_conv_int32": 0,
+      "product_fx": 0,
+      "biased_fx": -936,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 6,
+      "row": 2,
+      "col": 0,
+      "raw_conv_int32": 0,
+      "product_fx": 0,
+      "biased_fx": -936,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 7,
+      "row": 2,
+      "col": 1,
+      "raw_conv_int32": 0,
+      "product_fx": 0,
+      "biased_fx": -936,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 8,
+      "row": 2,
+      "col": 2,
+      "raw_conv_int32": 0,
+      "product_fx": 0,
+      "biased_fx": -936,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    }
+  ],
+  "notes": [
+    "This is a fixed-point (integer-only) golden reference, distinct from scripts/analyze_first_conv_bn_relu_fidelity.py's float rescale-based fidelity study.",
+    "Uses FOLDED (BatchNorm-absorbed) INT8 weights for kernel 0, NOT the raw unfolded weights used by every prior VHDL prototype in this repo.",
+    "relu_fx is the EXACT integer VHDL golden output.",
+    "relu_float_equiv is for human-readable comparison only; the VHDL testbench compares against the exact integer relu_fx, not this float value.",
+    "*** SYNTHETIC UNIT TEST INPUT (all-zero) -- NOT a real UAVSAR tile, NOT a real model inference example. Used only to force at least one biased_fx <= 0 and exercise the ReLU clamp (negative) branch. ***"
+  ]
+}
