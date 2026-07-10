@@ -21,6 +21,7 @@ tb_conv3x3_dot_time_mux
 tb_conv3x3_3chan_8out_time_mux
 tb_stream_conv3x3_3chan_8out_time_mux
 tb_stream_conv3x3_3chan_4out_bn_relu_time_mux
+tb_stream_conv3x3_3chan_32out_bn_relu_time_mux
 tb_window3x3_stream
 ghdl_build_artifacts_backup/
 *.dcp
