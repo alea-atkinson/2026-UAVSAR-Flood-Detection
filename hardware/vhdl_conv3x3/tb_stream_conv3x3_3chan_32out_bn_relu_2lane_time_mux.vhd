@@ -1,0 +1,394 @@
+-- tb_stream_conv3x3_3chan_32out_bn_relu_2lane_time_mux.vhd
+-- Self-checking testbench for stream_conv3x3_3chan_32out_bn_relu_2lane_time_mux.
+--
+-- This is the 2-LANE resource-shared (time-multiplexed) folded
+-- Conv-BN-ReLU PROTOTYPE testbench covering the COMPLETE 32-output first
+-- Conv2d layer, not full U-Net inference and not a board demo. It
+-- streams the SAME canonical 5x5x3 toy image used by every other
+-- testbench in this directory into the DUT, then waits (with no
+-- back-pressure or overlap) for the DUT's internal lane-0/lane-1
+-- schedulers to process all 9 buffered windows -- lane 0 (kernels 0-15)
+-- and lane 1 (kernels 16-31) running IN PARALLEL per window -- checking
+-- each window's 32 combined kernel outputs (Q.16 fixed-point, folded
+-- BatchNorm + ReLU applied) as they appear.
+--
+-- ---- Input patch --------------------------------------------------------
+-- Canonical 5x5x3 toy patch matching every other testbench in this directory:
+--   Channel 0: 1..25 row-major
+--   Channel 1: 2 x channel 0  (2..50)
+--   Channel 2: -1 x channel 0  (-1..-25)
+--
+-- ---- Expected outputs -----------------------------------------------------
+-- Golden vectors REUSED UNCHANGED from
+-- first_layer_32out_bn_relu_resource_shared_pkg's EXPECTED_RELU_FX array
+-- (the SAME array the 1-lane design's testbench checks against; no new
+-- Python generation was needed -- see the design memo's Section 4/7 for
+-- why this is valid: lane 0's kernels 0-15 and lane 1's kernels 16-31
+-- combine into the identical window-major/kernel-minor 32-value order
+-- the 1-lane design already produces). WINDOW-MAJOR / KERNEL-MINOR
+-- order: index = window_idx*32 + kernel_idx. Total: 9 windows x 32
+-- kernels = 288 outputs, ALL 288 checked.
+--
+-- ---- Timing behavior (two non-overlapped phases) -------------------------
+-- Phase 1 (capture): pixels stream in at 1/clock for ~25 clocks. No
+-- valid_out pulses occur during this phase.
+-- Phase 2 (process): the DUT's internal lane-0/lane-1 schedulers process
+-- the 9 buffered windows ONE WINDOW AT A TIME (no overlap ACROSS
+-- windows), but WITHIN each window both lanes run CONCURRENTLY. This
+-- testbench does NOT assert an exact precomputed total cycle count -- it
+-- MEASURES and reports the actual total directly, with only a generous
+-- safety bound to catch a runaway FSM (same convention as every other
+-- time-mux testbench here).
+--
+-- ---- What this validates -----------------------------------------------
+-- This testbench confirms that
+-- stream_conv3x3_3chan_32out_bn_relu_2lane_time_mux, built from TWO
+-- PARALLEL conv3x3_3chan_16out_bn_relu_time_mux lane instances (each
+-- reusing the UNMODIFIED conv3x3_dot_time_mux engine) plus an
+-- all-lanes-done barrier, reproduces the SAME 9x32=288 Q.16 fixed-point
+-- values as the already-verified 1-lane design and the Python golden
+-- generator, for the COMPLETE first Conv2d layer's folded Conv-BN-ReLU
+-- stage. It does NOT validate full quantized U-Net inference, does NOT
+-- overlap window capture with compute, and has NOT been run on real
+-- FPGA hardware. It is not a real UAVSAR inference example (canonical
+-- toy input only).
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.numeric_std.all;
+use work.first_layer_32out_bn_relu_resource_shared_pkg.all;
+
+entity tb_stream_conv3x3_3chan_32out_bn_relu_2lane_time_mux is
+end entity tb_stream_conv3x3_3chan_32out_bn_relu_2lane_time_mux;
+
+architecture sim of tb_stream_conv3x3_3chan_32out_bn_relu_2lane_time_mux is
+
+    constant CLK_PERIOD : time     := 10 ns;
+    constant IMG_W      : positive := 5;
+
+    -- Generous sanity bound only, NOT an asserted exact cycle count.
+    constant MAX_CYCLES : integer := 25 + NUM_WINDOWS * 3500;
+
+    signal clk      : std_logic := '0';
+    signal rst      : std_logic := '1';
+    signal valid_in : std_logic := '0';
+
+    signal pixel_c0 : signed(7 downto 0) := (others => '0');
+    signal pixel_c1 : signed(7 downto 0) := (others => '0');
+    signal pixel_c2 : signed(7 downto 0) := (others => '0');
+
+    signal valid_out : std_logic;
+    signal all_done  : std_logic;
+    signal s_y0, s_y1, s_y2, s_y3, s_y4, s_y5, s_y6, s_y7, s_y8, s_y9, s_y10, s_y11, s_y12, s_y13, s_y14, s_y15, s_y16, s_y17, s_y18, s_y19, s_y20, s_y21, s_y22, s_y23, s_y24, s_y25, s_y26, s_y27, s_y28, s_y29, s_y30, s_y31 : signed(47 downto 0);
+
+begin
+
+    clk <= not clk after CLK_PERIOD / 2;
+
+    dut : entity work.stream_conv3x3_3chan_32out_bn_relu_2lane_time_mux
+        generic map (IMG_WIDTH => IMG_W)
+        port map (
+            clk      => clk,
+            rst      => rst,
+            valid_in => valid_in,
+            pixel_c0 => pixel_c0,
+            pixel_c1 => pixel_c1,
+            pixel_c2 => pixel_c2,
+            valid_out => valid_out,
+            y0 => s_y0, y1 => s_y1, y2 => s_y2, y3 => s_y3, y4 => s_y4, y5 => s_y5, y6 => s_y6, y7 => s_y7, y8 => s_y8, y9 => s_y9, y10 => s_y10, y11 => s_y11, y12 => s_y12, y13 => s_y13, y14 => s_y14, y15 => s_y15, y16 => s_y16, y17 => s_y17, y18 => s_y18, y19 => s_y19, y20 => s_y20, y21 => s_y21, y22 => s_y22, y23 => s_y23, y24 => s_y24, y25 => s_y25, y26 => s_y26, y27 => s_y27, y28 => s_y28, y29 => s_y29, y30 => s_y30, y31 => s_y31,
+            all_done => all_done
+        );
+
+    stim : process
+
+        variable out_count    : integer := 0;   -- window count (0..8)
+        variable total_cycles : integer := 0;
+        variable all_done_seen_at : integer := -1;
+
+        procedure check_output(window_num : integer) is
+            -- window_num is 1-based window count; convert to 0-based
+            -- window index for the WINDOW-MAJOR/KERNEL-MINOR golden array.
+            variable widx : integer := window_num - 1;
+            variable base : integer := widx * NUM_KERNELS;
+        begin
+            assert to_integer(s_y0) = EXPECTED_RELU_FX(base + 0)
+                report "FAIL window " & integer'image(window_num) & " kernel 0: y0 = " &
+                       integer'image(to_integer(s_y0)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 0))
+                severity failure;
+            assert to_integer(s_y1) = EXPECTED_RELU_FX(base + 1)
+                report "FAIL window " & integer'image(window_num) & " kernel 1: y1 = " &
+                       integer'image(to_integer(s_y1)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 1))
+                severity failure;
+            assert to_integer(s_y2) = EXPECTED_RELU_FX(base + 2)
+                report "FAIL window " & integer'image(window_num) & " kernel 2: y2 = " &
+                       integer'image(to_integer(s_y2)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 2))
+                severity failure;
+            assert to_integer(s_y3) = EXPECTED_RELU_FX(base + 3)
+                report "FAIL window " & integer'image(window_num) & " kernel 3: y3 = " &
+                       integer'image(to_integer(s_y3)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 3))
+                severity failure;
+            assert to_integer(s_y4) = EXPECTED_RELU_FX(base + 4)
+                report "FAIL window " & integer'image(window_num) & " kernel 4: y4 = " &
+                       integer'image(to_integer(s_y4)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 4))
+                severity failure;
+            assert to_integer(s_y5) = EXPECTED_RELU_FX(base + 5)
+                report "FAIL window " & integer'image(window_num) & " kernel 5: y5 = " &
+                       integer'image(to_integer(s_y5)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 5))
+                severity failure;
+            assert to_integer(s_y6) = EXPECTED_RELU_FX(base + 6)
+                report "FAIL window " & integer'image(window_num) & " kernel 6: y6 = " &
+                       integer'image(to_integer(s_y6)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 6))
+                severity failure;
+            assert to_integer(s_y7) = EXPECTED_RELU_FX(base + 7)
+                report "FAIL window " & integer'image(window_num) & " kernel 7: y7 = " &
+                       integer'image(to_integer(s_y7)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 7))
+                severity failure;
+            assert to_integer(s_y8) = EXPECTED_RELU_FX(base + 8)
+                report "FAIL window " & integer'image(window_num) & " kernel 8: y8 = " &
+                       integer'image(to_integer(s_y8)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 8))
+                severity failure;
+            assert to_integer(s_y9) = EXPECTED_RELU_FX(base + 9)
+                report "FAIL window " & integer'image(window_num) & " kernel 9: y9 = " &
+                       integer'image(to_integer(s_y9)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 9))
+                severity failure;
+            assert to_integer(s_y10) = EXPECTED_RELU_FX(base + 10)
+                report "FAIL window " & integer'image(window_num) & " kernel 10: y10 = " &
+                       integer'image(to_integer(s_y10)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 10))
+                severity failure;
+            assert to_integer(s_y11) = EXPECTED_RELU_FX(base + 11)
+                report "FAIL window " & integer'image(window_num) & " kernel 11: y11 = " &
+                       integer'image(to_integer(s_y11)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 11))
+                severity failure;
+            assert to_integer(s_y12) = EXPECTED_RELU_FX(base + 12)
+                report "FAIL window " & integer'image(window_num) & " kernel 12: y12 = " &
+                       integer'image(to_integer(s_y12)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 12))
+                severity failure;
+            assert to_integer(s_y13) = EXPECTED_RELU_FX(base + 13)
+                report "FAIL window " & integer'image(window_num) & " kernel 13: y13 = " &
+                       integer'image(to_integer(s_y13)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 13))
+                severity failure;
+            assert to_integer(s_y14) = EXPECTED_RELU_FX(base + 14)
+                report "FAIL window " & integer'image(window_num) & " kernel 14: y14 = " &
+                       integer'image(to_integer(s_y14)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 14))
+                severity failure;
+            assert to_integer(s_y15) = EXPECTED_RELU_FX(base + 15)
+                report "FAIL window " & integer'image(window_num) & " kernel 15: y15 = " &
+                       integer'image(to_integer(s_y15)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 15))
+                severity failure;
+            assert to_integer(s_y16) = EXPECTED_RELU_FX(base + 16)
+                report "FAIL window " & integer'image(window_num) & " kernel 16: y16 = " &
+                       integer'image(to_integer(s_y16)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 16))
+                severity failure;
+            assert to_integer(s_y17) = EXPECTED_RELU_FX(base + 17)
+                report "FAIL window " & integer'image(window_num) & " kernel 17: y17 = " &
+                       integer'image(to_integer(s_y17)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 17))
+                severity failure;
+            assert to_integer(s_y18) = EXPECTED_RELU_FX(base + 18)
+                report "FAIL window " & integer'image(window_num) & " kernel 18: y18 = " &
+                       integer'image(to_integer(s_y18)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 18))
+                severity failure;
+            assert to_integer(s_y19) = EXPECTED_RELU_FX(base + 19)
+                report "FAIL window " & integer'image(window_num) & " kernel 19: y19 = " &
+                       integer'image(to_integer(s_y19)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 19))
+                severity failure;
+            assert to_integer(s_y20) = EXPECTED_RELU_FX(base + 20)
+                report "FAIL window " & integer'image(window_num) & " kernel 20: y20 = " &
+                       integer'image(to_integer(s_y20)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 20))
+                severity failure;
+            assert to_integer(s_y21) = EXPECTED_RELU_FX(base + 21)
+                report "FAIL window " & integer'image(window_num) & " kernel 21: y21 = " &
+                       integer'image(to_integer(s_y21)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 21))
+                severity failure;
+            assert to_integer(s_y22) = EXPECTED_RELU_FX(base + 22)
+                report "FAIL window " & integer'image(window_num) & " kernel 22: y22 = " &
+                       integer'image(to_integer(s_y22)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 22))
+                severity failure;
+            assert to_integer(s_y23) = EXPECTED_RELU_FX(base + 23)
+                report "FAIL window " & integer'image(window_num) & " kernel 23: y23 = " &
+                       integer'image(to_integer(s_y23)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 23))
+                severity failure;
+            assert to_integer(s_y24) = EXPECTED_RELU_FX(base + 24)
+                report "FAIL window " & integer'image(window_num) & " kernel 24: y24 = " &
+                       integer'image(to_integer(s_y24)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 24))
+                severity failure;
+            assert to_integer(s_y25) = EXPECTED_RELU_FX(base + 25)
+                report "FAIL window " & integer'image(window_num) & " kernel 25: y25 = " &
+                       integer'image(to_integer(s_y25)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 25))
+                severity failure;
+            assert to_integer(s_y26) = EXPECTED_RELU_FX(base + 26)
+                report "FAIL window " & integer'image(window_num) & " kernel 26: y26 = " &
+                       integer'image(to_integer(s_y26)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 26))
+                severity failure;
+            assert to_integer(s_y27) = EXPECTED_RELU_FX(base + 27)
+                report "FAIL window " & integer'image(window_num) & " kernel 27: y27 = " &
+                       integer'image(to_integer(s_y27)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 27))
+                severity failure;
+            assert to_integer(s_y28) = EXPECTED_RELU_FX(base + 28)
+                report "FAIL window " & integer'image(window_num) & " kernel 28: y28 = " &
+                       integer'image(to_integer(s_y28)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 28))
+                severity failure;
+            assert to_integer(s_y29) = EXPECTED_RELU_FX(base + 29)
+                report "FAIL window " & integer'image(window_num) & " kernel 29: y29 = " &
+                       integer'image(to_integer(s_y29)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 29))
+                severity failure;
+            assert to_integer(s_y30) = EXPECTED_RELU_FX(base + 30)
+                report "FAIL window " & integer'image(window_num) & " kernel 30: y30 = " &
+                       integer'image(to_integer(s_y30)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 30))
+                severity failure;
+            assert to_integer(s_y31) = EXPECTED_RELU_FX(base + 31)
+                report "FAIL window " & integer'image(window_num) & " kernel 31: y31 = " &
+                       integer'image(to_integer(s_y31)) & "  expected " &
+                       integer'image(EXPECTED_RELU_FX(base + 31))
+                severity failure;
+
+            report "PASS window " & integer'image(window_num) &
+                   " y0=" & integer'image(to_integer(s_y0)) &
+                   " y1=" & integer'image(to_integer(s_y1)) &
+                   " y2=" & integer'image(to_integer(s_y2)) &
+                   " y3=" & integer'image(to_integer(s_y3)) &
+                   " y4=" & integer'image(to_integer(s_y4)) &
+                   " y5=" & integer'image(to_integer(s_y5)) &
+                   " y6=" & integer'image(to_integer(s_y6)) &
+                   " y7=" & integer'image(to_integer(s_y7)) &
+                   " y8=" & integer'image(to_integer(s_y8)) &
+                   " y9=" & integer'image(to_integer(s_y9)) &
+                   " y10=" & integer'image(to_integer(s_y10)) &
+                   " y11=" & integer'image(to_integer(s_y11)) &
+                   " y12=" & integer'image(to_integer(s_y12)) &
+                   " y13=" & integer'image(to_integer(s_y13)) &
+                   " y14=" & integer'image(to_integer(s_y14)) &
+                   " y15=" & integer'image(to_integer(s_y15)) &
+                   " y16=" & integer'image(to_integer(s_y16)) &
+                   " y17=" & integer'image(to_integer(s_y17)) &
+                   " y18=" & integer'image(to_integer(s_y18)) &
+                   " y19=" & integer'image(to_integer(s_y19)) &
+                   " y20=" & integer'image(to_integer(s_y20)) &
+                   " y21=" & integer'image(to_integer(s_y21)) &
+                   " y22=" & integer'image(to_integer(s_y22)) &
+                   " y23=" & integer'image(to_integer(s_y23)) &
+                   " y24=" & integer'image(to_integer(s_y24)) &
+                   " y25=" & integer'image(to_integer(s_y25)) &
+                   " y26=" & integer'image(to_integer(s_y26)) &
+                   " y27=" & integer'image(to_integer(s_y27)) &
+                   " y28=" & integer'image(to_integer(s_y28)) &
+                   " y29=" & integer'image(to_integer(s_y29)) &
+                   " y30=" & integer'image(to_integer(s_y30)) &
+                   " y31=" & integer'image(to_integer(s_y31)) &
+                   " (@ cycle " & integer'image(total_cycles) & ")";
+        end procedure check_output;
+
+    begin
+        -- ---- Reset (3 clocks) ----------------------------------------
+        rst      <= '1';
+        valid_in <= '0';
+        pixel_c0 <= (others => '0');
+        pixel_c1 <= (others => '0');
+        pixel_c2 <= (others => '0');
+        wait until rising_edge(clk);
+        wait until rising_edge(clk);
+        wait until rising_edge(clk);
+        rst  <= '0';
+        wait until rising_edge(clk);
+        wait for 1 ns;
+
+        -- ---- PHASE 1: stream the 5x5 image (one pixel triplet/clock) ---
+        valid_in <= '1';
+        for i in 1 to 25 loop
+            pixel_c0 <= to_signed(i,    8);
+            pixel_c1 <= to_signed(2*i,  8);
+            pixel_c2 <= to_signed(-i,   8);
+            wait until rising_edge(clk);
+            wait for 1 ns;
+            total_cycles := total_cycles + 1;
+
+            if valid_out = '1' then
+                out_count := out_count + 1;
+                check_output(out_count);
+            end if;
+        end loop;
+        valid_in <= '0';
+
+        -- ---- PHASE 2: wait for the DUT to sequentially process all 9 --
+        -- buffered windows, both lanes running in parallel per window.
+        while out_count < NUM_WINDOWS loop
+            assert total_cycles <= MAX_CYCLES
+                report "FAIL: did not observe all " & integer'image(NUM_WINDOWS) &
+                       " windows within " & integer'image(MAX_CYCLES) &
+                       " cycles (runaway FSM?)"
+                severity failure;
+
+            wait until rising_edge(clk);
+            wait for 1 ns;
+            total_cycles := total_cycles + 1;
+
+            if valid_out = '1' then
+                out_count := out_count + 1;
+                check_output(out_count);
+            end if;
+
+            if all_done = '1' then
+                all_done_seen_at := out_count;
+            end if;
+        end loop;
+
+        -- ---- Final checks --------------------------------------------
+        assert out_count = NUM_WINDOWS
+            report "FAIL: expected exactly " & integer'image(NUM_WINDOWS) &
+                   " valid windows, observed " & integer'image(out_count)
+            severity failure;
+
+        assert all_done_seen_at = NUM_WINDOWS
+            report "FAIL: all_done did not pulse on the same cycle as the " &
+                   integer'image(NUM_WINDOWS) & "th window's valid_out " &
+                   "(all_done seen at window count " & integer'image(all_done_seen_at) & ")"
+            severity failure;
+
+        report "Total cycles for streaming capture + sequential processing: " &
+               integer'image(total_cycles) & " (measured, not asserted exact)";
+
+        report "=== All stream_conv3x3_3chan_32out_bn_relu_2lane_time_mux tests PASSED ===" &
+               "  (" & integer'image(NUM_WINDOWS) & " windows x " & integer'image(NUM_KERNELS) &
+               " kernels = " & integer'image(NUM_WINDOWS * NUM_KERNELS) & " / " &
+               integer'image(NUM_WINDOWS * NUM_KERNELS) &
+               " outputs match Python Q.16 fixed-point golden vectors, REUSED UNCHANGED" &
+               " from the 1-lane design's package)" severity note;
+        report "    NOTE: 2-LANE RESOURCE-SHARED (time-multiplexed) folded Conv-BN-ReLU" &
+               " PROTOTYPE, COMPLETE 32-output first Conv2d layer. Not full U-Net inference," &
+               " not board-tested, not a measured speedup/power claim, not a real UAVSAR" &
+               " inference example." severity note;
+
+        wait;
+    end process stim;
+
+end architecture sim;
