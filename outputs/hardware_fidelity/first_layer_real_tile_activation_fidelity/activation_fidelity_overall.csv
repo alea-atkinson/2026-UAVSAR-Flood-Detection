@@ -1,0 +1,2 @@
+num_tiles,num_kernels,num_activation_values,mae,max_abs_error,p99_abs_error,mean_relative_error_safe_subset,n_relative_error_samples,pearson_correlation,cosine_similarity,fold_sanity_max_diff,fold_sanity_mean_diff
+32,32,66064384,0.003197782835469843,0.07193810232284514,0.021899021824550405,0.007675518794097152,22375035,0.9999513030622299,0.9999658380725568,2.481592818348588e-06,4.5370567905493124e-08
