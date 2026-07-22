@@ -379,9 +379,32 @@ def load_model(checkpoint_path: pathlib.Path, device: torch.device) -> UNet:
     return model.to(device)
 
 
+def repo_relative_str(path: pathlib.Path) -> str:
+    """Best-effort repo-relative display string for a path, for printing
+    only. Falls back to the absolute path (never raises) if `path` is not
+    under REPO_ROOT -- e.g. a relative --output-dir that resolves outside
+    the repo, or any path on a different mount entirely."""
+    path = pathlib.Path(path)
+    if not path.is_absolute():
+        path = (REPO_ROOT / path).resolve()
+    else:
+        path = path.resolve()
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
+
+
 def main() -> None:
     args = parse_args()
-    output_dir = args.output_dir
+    # Normalize output_dir to an absolute path up front: a relative
+    # --output-dir (e.g. "outputs/foo") must not be compared against the
+    # absolute REPO_ROOT later via .relative_to(), which raises ValueError
+    # if one path is relative and the other absolute.
+    output_dir = pathlib.Path(args.output_dir)
+    if not output_dir.is_absolute():
+        output_dir = REPO_ROOT / output_dir
+    output_dir = output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
 
     overall_csv_path = output_dir / "segmentation_impact_overall.csv"
@@ -602,7 +625,7 @@ def main() -> None:
         writer.writeheader()
         for row in per_tile_rows:
             writer.writerow(row)
-    print(f"    Written: {by_tile_csv_path.relative_to(REPO_ROOT)}")
+    print(f"    Written: {repo_relative_str(by_tile_csv_path)}")
 
     overall_fieldnames = [
         "num_tiles", "threshold", "surgery_correctness_max_diff_overall", "surgery_check_passed",
@@ -647,7 +670,7 @@ def main() -> None:
             "mean_per_tile_iou_diff": float(per_tile_iou_diffs.mean()),
             "std_per_tile_iou_diff": float(per_tile_iou_diffs.std()),
         })
-    print(f"    Written: {overall_csv_path.relative_to(REPO_ROOT)}")
+    print(f"    Written: {repo_relative_str(overall_csv_path)}")
 
     # -- Optional small diagnostic PNG (first tile only) --
     try:
@@ -676,7 +699,7 @@ def main() -> None:
         fig.tight_layout()
         fig.savefig(diagnostic_png_path, dpi=110)
         plt.close(fig)
-        print(f"    Written: {diagnostic_png_path.relative_to(REPO_ROOT)}")
+        print(f"    Written: {repo_relative_str(diagnostic_png_path)}")
     except Exception as exc:  # pragma: no cover - diagnostic only, non-fatal
         print(f"    NOTE: skipped diagnostic PNG ({exc})")
 
@@ -760,9 +783,9 @@ Reused verbatim from `FloodTileDataset._normalize_per_tile` in
 
 | Setting | Value |
 |---|---|
-| Checkpoint | `{args.checkpoint.relative_to(REPO_ROOT) if args.checkpoint.is_relative_to(REPO_ROOT) else args.checkpoint}` |
-| Split CSV | `{args.split_csv.relative_to(REPO_ROOT) if args.split_csv.is_relative_to(REPO_ROOT) else args.split_csv}` |
-| Data root | `{args.data_root.relative_to(REPO_ROOT) if args.data_root.is_relative_to(REPO_ROOT) else args.data_root}` |
+| Checkpoint | `{repo_relative_str(args.checkpoint)}` |
+| Split CSV | `{repo_relative_str(args.split_csv)}` |
+| Data root | `{repo_relative_str(args.data_root)}` |
 | Device | {device} |
 | Max tiles requested | {args.max_tiles} |
 | Tiles actually loaded | {num_tiles} |
@@ -832,7 +855,7 @@ Reused verbatim from `FloodTileDataset._normalize_per_tile` in
 - **Does not retrain, fine-tune, or otherwise modify the checkpoint.**
 """
     summary_md_path.write_text(md)
-    print(f"    Written: {summary_md_path.relative_to(REPO_ROOT)}")
+    print(f"    Written: {repo_relative_str(summary_md_path)}")
 
     print("\n" + "=" * 70)
     print("SUMMARY")
