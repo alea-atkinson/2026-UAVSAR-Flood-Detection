@@ -212,6 +212,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--frac-bits", type=int, default=16,
                          help="Fixed-point fractional bits (Q.F format). Default 16, same "
                          "as every other folded Conv-BN-ReLU VHDL prototype in this repo.")
+    parser.add_argument("--variant-suffix", default="",
+                         help="Optional suffix (e.g. '_q20') inserted into the output "
+                         "vectors directory, package filename, and VHDL package name, so a "
+                         "non-default --frac-bits run NEVER overwrites the default Q.16 "
+                         "outputs. Leave empty (default) to reproduce the exact existing "
+                         "Q.16 file paths/names unchanged.")
     return parser.parse_args()
 
 
@@ -223,12 +229,14 @@ def main() -> None:
     N_VALID = BLOCK - 2
     N_POSITIONS = N_VALID * N_VALID
 
-    out_dir = OUT_VECTORS_DIR / f"kernel{K}"
+    SUFFIX = args.variant_suffix
+
+    out_dir = OUT_VECTORS_DIR / f"kernel{K}{SUFFIX}"
     out_dir.mkdir(parents=True, exist_ok=True)
-    json_path = out_dir / f"kernel{K}_real_tile_bn_relu_fixed_point_vectors.json"
-    csv_path = out_dir / f"kernel{K}_real_tile_bn_relu_fixed_point_vectors.csv"
-    md_path = out_dir / f"kernel{K}_real_tile_bn_relu_fixed_point_summary.md"
-    pkg_path = REPO_ROOT / "hardware" / "vhdl_conv3x3" / f"first_conv_bn_relu_kernel{K}_real_tile_pkg.vhd"
+    json_path = out_dir / f"kernel{K}{SUFFIX}_real_tile_bn_relu_fixed_point_vectors.json"
+    csv_path = out_dir / f"kernel{K}{SUFFIX}_real_tile_bn_relu_fixed_point_vectors.csv"
+    md_path = out_dir / f"kernel{K}{SUFFIX}_real_tile_bn_relu_fixed_point_summary.md"
+    pkg_path = REPO_ROOT / "hardware" / "vhdl_conv3x3" / f"first_conv_bn_relu_kernel{K}_real_tile{SUFFIX}_pkg.vhd"
 
     # -- 1. Load checkpoint, extract kernel K's Conv2d weight + BN params --
     print(f"[1] Loading checkpoint: {args.checkpoint}")
@@ -530,7 +538,7 @@ end package real_tile_stimulus_pkg;
     # -- 10. Write the kernel-specific real-tile VHDL package --
     print(f"\n[10] Writing kernel-{K} real-tile VHDL package: {pkg_path.relative_to(REPO_ROOT)} ...")
     relu_fx_flat = relu_fx.flatten().tolist()
-    pkg_name = f"first_conv_bn_relu_kernel{K}_real_tile_pkg"
+    pkg_name = f"first_conv_bn_relu_kernel{K}_real_tile{SUFFIX}_pkg"
     expected_rows = ",\n        ".join(
         ", ".join(str(v) for v in relu_fx_flat[i:i + 4])
         for i in range(0, len(relu_fx_flat), 4)
