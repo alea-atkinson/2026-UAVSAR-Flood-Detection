@@ -442,8 +442,8 @@ def main() -> None:
         w_folded_int8_all[oc], scales_w_folded[oc] = quantize_symmetric_int8(w_folded_all[oc])
     print(f"    scale_w_folded range: [{scales_w_folded.min():.8f}, {scales_w_folded.max():.8f}]")
 
-    # -- Load real fp2 test tiles + ground-truth masks --
-    print(f"\n[4] Loading up to {args.max_tiles} real fp2 test tiles ...")
+    # -- Load real test tiles + ground-truth masks --
+    print(f"\n[4] Loading up to {args.max_tiles} real test tiles ...")
     print(f"    Split CSV : {args.split_csv}")
     if not args.split_csv.exists():
         sys.exit(f"ERROR: split CSV not found at {args.split_csv}")
