@@ -5,7 +5,7 @@ analyze_first_layer_fixed_point_segmentation_impact.py
 Segmentation-level impact study: does replacing ONLY the first
 Conv-BN-ReLU stage (`enc1.block.0` Conv2d -> `enc1.block.1` BatchNorm2d ->
 ReLU) with a hardware-style fixed-point folded approximation change the
-COMPLETE U-Net's final segmentation output, on real UAVSAR fp2 test tiles?
+COMPLETE U-Net's final segmentation output, on real UAVSAR test tiles?
 
 This is a DIRECT FOLLOW-ON to
 scripts/analyze_first_layer_real_activation_fidelity.py, which already
@@ -352,7 +352,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=pathlib.Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     parser.add_argument("--max-tiles", type=int, default=32,
-                         help="Maximum number of fp2 test tiles to evaluate (default: 32).")
+                         help="Maximum number of test tiles to evaluate (default: 32).")
     parser.add_argument("--threshold", type=float, default=0.5,
                          help="Probability threshold for binary flood prediction (default: 0.5).")
     return parser.parse_args()
