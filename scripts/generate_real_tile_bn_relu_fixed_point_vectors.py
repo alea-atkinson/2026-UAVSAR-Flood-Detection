@@ -22,18 +22,25 @@ datapath produces bit-exact fixed-point integers on real sensor-derived
 data, not just synthetic integers.
 
 ---- Scope note (read this before trusting the numbers) --------------------
-This generates vectors for TWO of the 32 output channels (kernel 0 and
-kernel 2) only, reusing the existing
+This originally generated vectors for TWO of the 32 output channels
+(kernel 0 and kernel 2) only, reusing the existing
 `stream_conv3x3_3chan_kernel{0,2}_bn_relu_pipelined` ARCHITECTURE
 unchanged (same `stream_conv3x3_3chan_cell` sub-component, same two-stage
-Q.16 BN-fold + ReLU pipeline) -- it is a REAL-DATA VERIFICATION SUBSET,
-not full 32-output real-tile verification, and not a new hardware
-architecture. Extending to the complete 32-output resource-shared design
-would additionally require adapting that design's window-scheduling FSM
-to a non-5x5 image geometry and regenerating all 32 kernels' real-tile
-golden vectors at once; this was assessed and deliberately deferred (see
-the accompanying report under hardware/vhdl_conv3x3/reports/) in favor of
-first landing a smaller, well-understood, low-risk real-data subset.
+BN-fold + ReLU pipeline) -- a REAL-DATA VERIFICATION SUBSET, not a new
+hardware architecture. The `--kernel-id` restriction has since been
+relaxed from `choices=[0, 2]` to the full `0-31` range: the generation
+logic itself (BatchNorm folding, INT8 quantization, fixed-point
+scale/bias, valid convolution) was always fully general per output
+channel, indexing the checkpoint's `enc1.block.0.weight[K]` and
+`enc1.block.1`'s per-channel BatchNorm parameters directly -- only the
+CLI validation was narrowed to 0/2 originally. This script is now used,
+called once per kernel (0 through 31), to generate the complete
+first-layer real-tile Q.20 verification
+(`hardware/vhdl_conv3x3/reports/real_tile_all32_kernels_q20_verification_summary.md`).
+Extending the DIFFERENT, separate complete 32-output RESOURCE-SHARED
+design (`stream_conv3x3_3chan_32out_bn_relu_time_mux`) to real-tile input
+remains a distinct, larger undertaking not attempted by this script (see
+that report for why).
 
 ---- Quantization / BN-folding convention -----------------------------
 IDENTICAL formulas to scripts/analyze_first_layer_fixed_point_segmentation_impact.py
@@ -191,10 +198,13 @@ def vhdl_int_array(vals) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--kernel-id", type=int, required=True, choices=[0, 2],
-                         help="Output channel index of enc1.block.0.weight to process. "
-                         "Only 0 and 2 are supported, matching the existing kernel0/kernel2 "
-                         "folded Conv-BN-ReLU pipelined VHDL prototypes.")
+    parser.add_argument("--kernel-id", type=int, required=True, choices=list(range(32)),
+                         help="Output channel index of enc1.block.0.weight to process "
+                         "(0-31). The generation logic itself is fully general per-kernel; "
+                         "0 and 2 were the original real-data verification subset "
+                         "(matching the existing kernel0/kernel2 folded Conv-BN-ReLU "
+                         "pipelined VHDL prototypes), later extended to all 32 channels "
+                         "for the all-32-kernel Q.20 verification.")
     parser.add_argument("--checkpoint", type=pathlib.Path, default=DEFAULT_CHECKPOINT)
     parser.add_argument("--split-csv", type=pathlib.Path, default=DEFAULT_SPLIT_CSV)
     parser.add_argument("--data-root", type=pathlib.Path, default=DEFAULT_DATA_ROOT)

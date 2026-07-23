@@ -1,0 +1,221 @@
+{
+  "checkpoint_path": "models/alea_tuned_filtered_strict_fp2_focaldice_adamw_20epochs_best.pt",
+  "kernel_id": 4,
+  "tile_name": "tile_16_42.tif",
+  "uavsar_path": "fp2_lee7_tiles/tile_16_42.tif",
+  "block_size": 6,
+  "row_offset": 125,
+  "col_offset": 125,
+  "n_valid_positions": 16,
+  "scale_bn": 1.0441020727157593,
+  "b_folded": 0.018499627709388733,
+  "scale_w_folded": 0.0016223139415575763,
+  "w_folded_int8": {
+    "channel_0": [
+      -99,
+      -73,
+      127,
+      23,
+      45,
+      -113,
+      -79,
+      -38,
+      26
+    ],
+    "channel_1": [
+      -108,
+      -54,
+      -78,
+      -6,
+      -46,
+      -13,
+      -85,
+      -89,
+      -73
+    ],
+    "channel_2": [
+      -35,
+      -94,
+      106,
+      -25,
+      113,
+      41,
+      -104,
+      87,
+      -28
+    ]
+  },
+  "scale_x_full_tile": 0.018086544172031673,
+  "frac_bits": 20,
+  "scale_fx": 31,
+  "bias_fx": 19398,
+  "relu_clamping_exercised": true,
+  "width_warnings": [],
+  "positions": [
+    {
+      "output_index": 0,
+      "row": 0,
+      "col": 0,
+      "raw_conv_int32": -35439,
+      "product_fx": -1098609,
+      "biased_fx": -1079211,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 1,
+      "row": 0,
+      "col": 1,
+      "raw_conv_int32": 14504,
+      "product_fx": 449624,
+      "biased_fx": 469022,
+      "relu_fx": 469022,
+      "relu_float_equiv": 0.4472942352294922
+    },
+    {
+      "output_index": 2,
+      "row": 0,
+      "col": 2,
+      "raw_conv_int32": 40870,
+      "product_fx": 1266970,
+      "biased_fx": 1286368,
+      "relu_fx": 1286368,
+      "relu_float_equiv": 1.226776123046875
+    },
+    {
+      "output_index": 3,
+      "row": 0,
+      "col": 3,
+      "raw_conv_int32": -6762,
+      "product_fx": -209622,
+      "biased_fx": -190224,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 4,
+      "row": 1,
+      "col": 0,
+      "raw_conv_int32": -10054,
+      "product_fx": -311674,
+      "biased_fx": -292276,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 5,
+      "row": 1,
+      "col": 1,
+      "raw_conv_int32": -14987,
+      "product_fx": -464597,
+      "biased_fx": -445199,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 6,
+      "row": 1,
+      "col": 2,
+      "raw_conv_int32": 19357,
+      "product_fx": 600067,
+      "biased_fx": 619465,
+      "relu_fx": 619465,
+      "relu_float_equiv": 0.5907678604125977
+    },
+    {
+      "output_index": 7,
+      "row": 1,
+      "col": 3,
+      "raw_conv_int32": 52259,
+      "product_fx": 1620029,
+      "biased_fx": 1639427,
+      "relu_fx": 1639427,
+      "relu_float_equiv": 1.5634794235229492
+    },
+    {
+      "output_index": 8,
+      "row": 2,
+      "col": 0,
+      "raw_conv_int32": -48451,
+      "product_fx": -1501981,
+      "biased_fx": -1482583,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 9,
+      "row": 2,
+      "col": 1,
+      "raw_conv_int32": -24227,
+      "product_fx": -751037,
+      "biased_fx": -731639,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 10,
+      "row": 2,
+      "col": 2,
+      "raw_conv_int32": 768,
+      "product_fx": 23808,
+      "biased_fx": 43206,
+      "relu_fx": 43206,
+      "relu_float_equiv": 0.04120445251464844
+    },
+    {
+      "output_index": 11,
+      "row": 2,
+      "col": 3,
+      "raw_conv_int32": 18054,
+      "product_fx": 559674,
+      "biased_fx": 579072,
+      "relu_fx": 579072,
+      "relu_float_equiv": 0.55224609375
+    },
+    {
+      "output_index": 12,
+      "row": 3,
+      "col": 0,
+      "raw_conv_int32": -29564,
+      "product_fx": -916484,
+      "biased_fx": -897086,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 13,
+      "row": 3,
+      "col": 1,
+      "raw_conv_int32": -42938,
+      "product_fx": -1331078,
+      "biased_fx": -1311680,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 14,
+      "row": 3,
+      "col": 2,
+      "raw_conv_int32": -11240,
+      "product_fx": -348440,
+      "biased_fx": -329042,
+      "relu_fx": 0,
+      "relu_float_equiv": 0.0
+    },
+    {
+      "output_index": 15,
+      "row": 3,
+      "col": 3,
+      "raw_conv_int32": 14534,
+      "product_fx": 450554,
+      "biased_fx": 469952,
+      "relu_fx": 469952,
+      "relu_float_equiv": 0.44818115234375
+    }
+  ],
+  "notes": [
+    "REAL UAVSAR tile input (NOT the synthetic 5x5x3 toy patch used by every other VHDL testbench in this repo).",
+    "scale_x is computed from the FULL normalized 256x256 tile (matching analyze_first_layer_fixed_point_segmentation_impact.py's convention exactly), then the INT8 sub-block used here is a direct slice of that already-quantized full tile -- not independently re-quantized.",
+    "Kernel 4 only, not all 32 output channels -- a real-data verification SUBSET."
+  ]
+}
