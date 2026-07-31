@@ -1,0 +1,6 @@
+layer_key,layer_label,weight_tensor,out_channels,in_channels,kernel_h,kernel_w
+enc1.block.0,enc1 (encoder stage 1),enc1.block.0.weight,32,3,3,3
+enc2.block.0,enc2 (encoder stage 2),enc2.block.0.weight,64,32,3,3
+enc3.block.0,enc3 (encoder stage 3),enc3.block.0.weight,128,64,3,3
+enc4.block.0,enc4 (encoder stage 4),enc4.block.0.weight,256,128,3,3
+bottleneck.block.0,bottleneck,bottleneck.block.0.weight,512,256,3,3

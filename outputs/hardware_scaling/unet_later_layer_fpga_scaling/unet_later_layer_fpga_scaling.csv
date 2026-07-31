@@ -1,0 +1,6 @@
+layer_key,layer_label,in_channels,out_channels,kernel_h,kernel_w,macs_per_output_pixel,naive_direct_parallel_multiplier_demand,ratio_to_enc1,dsp_budget_artix7_200t,dsp_demand_pct_artix7_200t,fits_one_dsp_per_multiplier_artix7_200t,dsp_budget_kintex7_160t,dsp_demand_pct_kintex7_160t,fits_one_dsp_per_multiplier_kintex7_160t,dsp_budget_zynq_xc7z030,dsp_demand_pct_zynq_xc7z030,fits_one_dsp_per_multiplier_zynq_xc7z030,dsp_budget_spartan7_xc7s100,dsp_demand_pct_spartan7_xc7s100,fits_one_dsp_per_multiplier_spartan7_xc7s100
+enc1.block.0,enc1 (encoder stage 1),3,32,3,3,864,864,1.0,740,116.76,False,600,144.0,False,400,216.0,False,160,540.0,False
+enc2.block.0,enc2 (encoder stage 2),32,64,3,3,18432,18432,21.3333,740,2490.81,False,600,3072.0,False,400,4608.0,False,160,11520.0,False
+enc3.block.0,enc3 (encoder stage 3),64,128,3,3,73728,73728,85.3333,740,9963.24,False,600,12288.0,False,400,18432.0,False,160,46080.0,False
+enc4.block.0,enc4 (encoder stage 4),128,256,3,3,294912,294912,341.3333,740,39852.97,False,600,49152.0,False,400,73728.0,False,160,184320.0,False
+bottleneck.block.0,bottleneck,256,512,3,3,1179648,1179648,1365.3333,740,159411.89,False,600,196608.0,False,400,294912.0,False,160,737280.0,False
