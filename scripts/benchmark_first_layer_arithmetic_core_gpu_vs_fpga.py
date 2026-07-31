@@ -177,8 +177,8 @@ FPGA_CLOCKS_HZ = {"100mhz": 100e6, "300mhz": 300e6}
 FPGA_PIPELINE_FILL_CYCLES = 6
 
 # Existing, already-synthesized direct-parallel 32-output first Conv2d
-# context, reused here (NOT re-derived) purely for narrative context in
-# the markdown summary.
+# context (RAW Conv2d only, no folded BN/ReLU) -- reused here (NOT
+# re-derived) purely for narrative context in the markdown summary.
 EXISTING_DIRECT_PARALLEL_200T_CONTEXT = {
     "part": "xc7a200tsbg484-1",
     "dsps_used": 740,
@@ -186,6 +186,34 @@ EXISTING_DIRECT_PARALLEL_200T_CONTEXT = {
     "wns_ns": 2.343,
     "clock_mhz": 100,
     "source": "hardware/vhdl_conv3x3/first_layer_32out_dsp_200t_summary.md",
+}
+
+# The FULL folded 32-output Conv-BN-ReLU arithmetic core -- i.e. the
+# EXACT architecture this benchmark's FPGA estimate assumed (one
+# pre-extracted flattened window in, all 32 folded Conv-BN-ReLU channels
+# out, 6-cycle latency, 1 window/cycle throughput) -- was subsequently
+# DESIGNED, GHDL-VERIFIED, AND VIVADO-SYNTHESIZED in commit 313558e4
+# ("Added 32-output folded arithmetic core"). This is a REUSED result
+# (not re-derived here): see
+# hardware/vhdl_conv3x3/reports/first_layer_32out_folded_arithmetic_core_summary.md
+# and hardware/vhdl_conv3x3/vivado_reports_32out_folded_arithmetic_core_200t/.
+SYNTHESIZED_FOLDED_ARITHMETIC_CORE_CONTEXT = {
+    "part": "xc7a200tsbg484-1",
+    "clock_mhz": 100,
+    "ghdl_pass": 160,
+    "ghdl_total": 160,
+    "latency_cycles_confirmed": 6,
+    "throughput_confirmed": "1 window/cycle",
+    "luts": 12039,
+    "registers": 6564,
+    "dsps_used": 740,
+    "dsps_available": 740,
+    "bram_tiles": 0,
+    "wns_ns": 2.218,
+    "whs_ns": 0.262,
+    "power_w": 1.334,
+    "source": "hardware/vhdl_conv3x3/reports/first_layer_32out_folded_arithmetic_core_summary.md",
+    "vivado_reports_dir": "hardware/vhdl_conv3x3/vivado_reports_32out_folded_arithmetic_core_200t/",
 }
 
 
@@ -365,10 +393,20 @@ def fpga_estimate_us(n_windows: int, clock_hz: float, pipeline_fill_cycles: int)
     return with_fill_us, no_fill_us
 
 
-def winner(gpu_us: float, fpga_us: float) -> str:
+# FPGA winner labels are clock-specific: 100 MHz is now backed by commit
+# 313558e4's GHDL-confirmed latency/throughput and Vivado-confirmed 100 MHz
+# timing closure (still cycle-count-derived, still NOT board-measured); 300
+# MHz remains a purely hypothetical, unsynthesized clock target. Using two
+# different label strings keeps that distinction visible in every winner
+# column/table cell, not just in prose.
+FPGA_LABEL_100MHZ = "FPGA (synthesis-supported)"
+FPGA_LABEL_300MHZ = "FPGA (hypothetical estimate)"
+
+
+def winner(gpu_us: float, fpga_us: float, fpga_label: str) -> str:
     if gpu_us != gpu_us:  # NaN check
         return "N/A"
-    return "FPGA (estimated)" if fpga_us < gpu_us else "GPU (measured)"
+    return fpga_label if fpga_us < gpu_us else "GPU (measured)"
 
 
 def main() -> None:
@@ -482,11 +520,13 @@ def main() -> None:
             "fpga_100mhz_us_nofill": fpga_100_nofill,
             "fpga_300mhz_us": fpga_300_fill,
             "fpga_300mhz_us_nofill": fpga_300_nofill,
-            # -- Ratios / winners vs. NORMAL measured (unchanged) --
+            # -- Ratios / winners vs. NORMAL measured (ratio columns unchanged;
+            # 100mhz winner column renamed to make clear it is now checked
+            # against synthesis-supported cycle timing, not a bare estimate) --
             "gpu_vs_fpga100_ratio": gpu_normal_mean / fpga_100_fill,
             "gpu_vs_fpga300_ratio": gpu_normal_mean / fpga_300_fill,
-            "winner_100mhz_estimate": winner(gpu_normal_mean, fpga_100_fill),
-            "winner_300mhz_estimate": winner(gpu_normal_mean, fpga_300_fill),
+            "winner_100mhz_synth_supported": winner(gpu_normal_mean, fpga_100_fill, FPGA_LABEL_100MHZ),
+            "winner_300mhz_estimate": winner(gpu_normal_mean, fpga_300_fill, FPGA_LABEL_300MHZ),
             # -- Ratios / winners vs. CUDA Graph replay (NEW) --
             "gpu_cudagraph_vs_fpga100_ratio": (
                 gpu_cudagraph_mean / fpga_100_fill if cudagraph else float("nan")
@@ -494,13 +534,13 @@ def main() -> None:
             "gpu_cudagraph_vs_fpga300_ratio": (
                 gpu_cudagraph_mean / fpga_300_fill if cudagraph else float("nan")
             ),
-            "winner_100mhz_cudagraph": winner(gpu_cudagraph_mean, fpga_100_fill),
-            "winner_300mhz_cudagraph": winner(gpu_cudagraph_mean, fpga_300_fill),
+            "winner_100mhz_cudagraph_synth_supported": winner(gpu_cudagraph_mean, fpga_100_fill, FPGA_LABEL_100MHZ),
+            "winner_300mhz_cudagraph": winner(gpu_cudagraph_mean, fpga_300_fill, FPGA_LABEL_300MHZ),
             # -- Ratios / winners vs. overhead-corrected estimate (NEW) --
             "gpu_overhead_corrected_vs_fpga100_ratio": overhead_corrected_us / fpga_100_fill,
             "gpu_overhead_corrected_vs_fpga300_ratio": overhead_corrected_us / fpga_300_fill,
-            "winner_100mhz_overhead_corrected": winner(overhead_corrected_us, fpga_100_fill),
-            "winner_300mhz_overhead_corrected": winner(overhead_corrected_us, fpga_300_fill),
+            "winner_100mhz_overhead_corrected_synth_supported": winner(overhead_corrected_us, fpga_100_fill, FPGA_LABEL_100MHZ),
+            "winner_300mhz_overhead_corrected": winner(overhead_corrected_us, fpga_300_fill, FPGA_LABEL_300MHZ),
         }
         rows.append(row)
 
@@ -548,8 +588,8 @@ def write_markdown_summary(
     )
 
     winners_table_rows = "\n".join(
-        f"| {r['patch_size']} | {r['output_windows']:,} | {r['winner_100mhz_estimate']} | "
-        f"{r['winner_100mhz_cudagraph']} | {r['winner_100mhz_overhead_corrected']} | "
+        f"| {r['patch_size']} | {r['output_windows']:,} | {r['winner_100mhz_synth_supported']} | "
+        f"{r['winner_100mhz_cudagraph_synth_supported']} | {r['winner_100mhz_overhead_corrected_synth_supported']} | "
         f"{r['winner_300mhz_estimate']} | {r['winner_300mhz_cudagraph']} | "
         f"{r['winner_300mhz_overhead_corrected']} |"
         for r in rows
@@ -565,20 +605,28 @@ def write_markdown_summary(
     def first_gpu_win(key: str):
         return next((r for r in rows if r[key] == "GPU (measured)"), None)
 
-    def crossover_sentence(crossover_row, clock_label, view_label):
+    # fpga_desc distinguishes the two clock targets in every crossover
+    # sentence: 100 MHz is synthesis-supported cycle timing (commit
+    # 313558e4's GHDL-confirmed / Vivado-confirmed folded core); 300 MHz
+    # remains a purely hypothetical, unsynthesized estimate.
+    FPGA_DESC_100MHZ = "100 MHz synthesis-supported FPGA cycle timing"
+    FPGA_DESC_300MHZ = "300 MHz hypothetical FPGA estimate"
+
+    def crossover_sentence(crossover_row, clock_label, view_label, fpga_desc):
         if crossover_row is None:
             return (
-                f"Under {view_label} at {clock_label}, the FPGA estimate remains faster "
+                f"Under {view_label} at {clock_label}, the {fpga_desc} remains faster "
                 f"across the ENTIRE tested workload range (up to "
                 f"{rows[-1]['output_windows']:,} windows) -- no crossover observed."
             )
         return (
             f"Under {view_label} at {clock_label}, the crossover (GPU first faster than "
-            f"the FPGA estimate) falls at or before **{crossover_row['output_windows']:,} "
+            f"the {fpga_desc}) falls at or before **{crossover_row['output_windows']:,} "
             f"windows** (patch_size={crossover_row['patch_size']})."
         )
 
     ctx = EXISTING_DIRECT_PARALLEL_200T_CONTEXT
+    ctx2 = SYNTHESIZED_FOLDED_ARITHMETIC_CORE_CONTEXT
 
     model_overhead_sign_note = (
         f"NEGATIVE ({model['fixed_overhead_us']:.4f} us), not positive as a naive "
@@ -597,7 +645,7 @@ def write_markdown_summary(
         f"is unaffected."
     )
 
-    md = f"""# First-Layer Arithmetic-Core Benchmark: GPU (Measured) vs. Speed-Oriented FPGA Estimate
+    md = f"""# First-Layer Arithmetic-Core Benchmark: GPU (Measured) vs. Speed-Oriented FPGA Estimate (100 MHz: Synthesis-Supported)
 
 Generated by `scripts/benchmark_first_layer_arithmetic_core_gpu_vs_fpga.py`.
 
@@ -605,7 +653,12 @@ This revision ADDS GPU-overhead analysis (CUDA Graph replay timing and an
 overhead-corrected/amortized throughput estimate) alongside the ORIGINAL
 measured, normal-PyTorch-dispatch GPU latency, which is UNCHANGED and
 NOT removed -- see Section 4 for why all three views are kept side by
-side rather than replacing one with another.
+side rather than replacing one with another. It also documents a
+progression on the FPGA side: the 100 MHz FPGA arithmetic core this
+benchmark assumed has since been designed, GHDL-verified, and
+Vivado-synthesized (commit `313558e4`) -- see Section 6a for the full
+progression from estimate to synthesized core. The original estimate,
+its assumptions, and its numbers are all PRESERVED below, not replaced.
 
 ## 1. What this benchmark measures
 
@@ -732,15 +785,24 @@ multiplexed architecture used elsewhere in this repo):
   measured 6-cycle total latency). This is a REUSED, already-documented
   number, not a new invention.
 - **100 MHz**: the SAME clock target used by every Vivado synthesis in
-  this repo, including the existing direct-parallel 32-output DSP-aware
-  design, which is ALREADY SYNTHESIZED and meets 100 MHz timing on
-  Artix-7 200T (`{ctx["part"]}`) using **{ctx["dsps_used"]}/{ctx["dsps_available"]} DSPs
-  (100%)**, WNS = +{ctx["wns_ns"]} ns (source: `{ctx["source"]}`). This
-  existing result is direct evidence that the direct-parallel,
-  speed-oriented architecture family assumed here is synthesizable and
-  timing-closes at 100 MHz for the real 32-channel first layer -- though
-  it is RESOURCE-HEAVY (100% of the part's DSP budget) and does not
-  itself include the folded BN+ReLU stage.
+  this repo. This is no longer a purely hypothetical, unsynthesized
+  estimate: the EXACT architecture assumed here (one pre-extracted
+  flattened window in, all 32 folded Conv-BN-ReLU channels out, 6-cycle
+  latency, 1 window/cycle throughput) was subsequently designed,
+  GHDL-verified (160/160 outputs correct), and Vivado-synthesized on
+  Artix-7 200T (`{ctx2["part"]}`), closing timing at 100 MHz with
+  **WNS = +{ctx2["wns_ns"]} ns** using **{ctx2["dsps_used"]}/{ctx2["dsps_available"]} DSPs
+  (100%)**, {ctx2["luts"]:,} LUTs, {ctx2["registers"]:,} registers, and
+  {ctx2["bram_tiles"]} BRAM tiles (source: `{ctx2["source"]}`). See
+  Section 6a for the full progression from estimate to synthesized core.
+  The precursor RAW-Conv2d-only design (no folded BN/ReLU) already
+  synthesized similarly at **{ctx["dsps_used"]}/{ctx["dsps_available"]} DSPs
+  (100%)**, WNS = +{ctx["wns_ns"]} ns (source: `{ctx["source"]}`) and first
+  established that this architecture family was synthesizable at all.
+  The 100 MHz FPGA-side numbers in this report are still CYCLE-COUNT
+  ESTIMATES (`cycles / clock_hz`), not board-measured latencies -- but
+  the clock rate and pipeline depth they use are now synthesis-supported,
+  not assumed.
 - **300 MHz**: a CLEARLY HYPOTHETICAL, speed-oriented target. NO
   synthesis run in this repo has confirmed 300 MHz timing closure for
   this or any other design -- this number is reported ONLY as an
@@ -750,6 +812,63 @@ multiplexed architecture used elsewhere in this repo):
   `fpga_100mhz_us`/`fpga_300mhz_us` columns) and WITHOUT fill
   (`cycles = N`, a simple throughput-only estimate, reported alongside
   for transparency in Section 8).
+
+## 6a. Progression: from estimated FPGA core to synthesized FPGA core
+
+**This section explains how the FPGA side of this benchmark evolved --
+it is documentation of what changed and why the 100 MHz numbers can now
+be trusted further, not a new set of timing numbers of its own.**
+
+1. The original version of this benchmark compared MEASURED GPU timing
+   against an ESTIMATED speed-oriented FPGA arithmetic core -- a cycle
+   count derived from an assumed architecture, with no synthesizable
+   VHDL design built specifically for it at the time.
+2. That estimate assumed a specific pipeline: **6-cycle latency** (4
+   cycles raw convolution + 2 cycles BatchNorm-fold + ReLU) and
+   **1-window/cycle steady-state throughput**, reused from other
+   GHDL-verified designs in this repo but never assembled into one
+   complete, synthesized, 32-output folded core.
+3. Commit `313558e4` ("Added 32-output folded arithmetic core") then
+   DESIGNED, GHDL-VERIFIED, AND VIVADO-SYNTHESIZED exactly that assumed
+   architecture: `first_layer_32out_folded_arithmetic_core.vhd` accepts
+   one pre-extracted flattened 3x3x3 window and produces all 32 folded
+   Conv-BN-ReLU output channels. GHDL confirmed **160/160** outputs
+   correct against Python golden vectors, and confirmed **in simulation**
+   -- not just by assumption -- both the 6-cycle latency and the
+   1-window/cycle throughput. Vivado then synthesized this design on
+   Artix-7 200T (`{ctx2["part"]}`) at 100 MHz, closing timing with
+   **WNS = +{ctx2["wns_ns"]} ns** / **WHS = +{ctx2["whs_ns"]} ns**, using
+   **{ctx2["luts"]:,} LUTs**, **{ctx2["registers"]:,} registers**,
+   **{ctx2["dsps_used"]}/{ctx2["dsps_available"]} DSP48E1 (100%)**, and
+   **{ctx2["bram_tiles"]} BRAM tiles**, with a Vivado power estimate of
+   **{ctx2["power_w"]} W** (see
+   `{ctx2["source"]}`).
+4. As a result, **the 100 MHz FPGA-side numbers in this report are now
+   cycle timing derived from a GHDL-confirmed, Vivado-synthesized folded
+   arithmetic core** -- not a purely assumed, unsynthesized estimate. The
+   underlying formula (`cycles / clock_hz`) is unchanged, and this is
+   still NOT a board measurement -- but the clock rate, pipeline depth,
+   and "does this actually fit and close timing" question are no longer
+   hypothetical for 100 MHz.
+5. The synthesis result ALSO confirms a resource limit: the synthesized
+   folded core consumes **{ctx2["dsps_used"]}/{ctx2["dsps_available"]} DSPs
+   (100%)** of the Artix-7 200T -- the same full DSP budget already
+   consumed by the precursor raw-Conv2d-only design (Section 6). Naive
+   multi-window-per-cycle duplication of this core is therefore NOT
+   feasible on this target with the same DSP-heavy mapping (see Section
+   6b, now backed by this synthesized result rather than only the
+   raw-Conv2d precursor).
+6. **The original estimate was not useless.** It defined the target
+   architecture (pipeline depth, throughput assumption, clock target)
+   that motivated building and synthesizing the real core in the first
+   place. The old estimate is preserved below (Sections 6-9 use the same
+   cycle-count formula and the same 6-cycle/100-MHz/300-MHz numbers as
+   before) precisely so the progression -- estimate first, synthesis
+   confirmation second -- remains visible, rather than silently
+   replacing one framing with another.
+7. **300 MHz remains explicitly, unchanged, hypothetical.** No synthesis
+   run anywhere in this repo -- including the new folded-core synthesis
+   -- has confirmed 300 MHz timing closure for this or any other design.
 
 ## 6b. Architecture sanity check: is one-window-per-cycle the fastest practical estimate?
 
@@ -764,15 +883,19 @@ windows per cycle would require duplicating the arithmetic core (or
 using a different mapping), so it is fair to ask whether that is
 actually feasible on the target used here.
 
-It is not, at least not with the same DSP-heavy mapping: the existing
-32-output direct-parallel Conv2d synthesis already consumes
-**{ctx["dsps_used"]}/{ctx["dsps_available"]} DSPs (100%)** on Artix-7 200T
-(`{ctx["part"]}`, source: `{ctx["source"]}`) -- and that design is RAW
-Conv2d only, without the folded BN/ReLU arithmetic this benchmark's
-estimate also assumes. Because the DSP budget is already fully consumed
-by a single one-window-per-cycle core, naively duplicating that core to
-process 2 or more windows per cycle would not fit on the same target
-using the same DSP-heavy approach.
+It is not, at least not with the same DSP-heavy mapping: the SYNTHESIZED
+folded 32-output Conv-BN-ReLU arithmetic core (Section 6a) already
+consumes **{ctx2["dsps_used"]}/{ctx2["dsps_available"]} DSPs (100%)** on
+Artix-7 200T (`{ctx2["part"]}`, source: `{ctx2["source"]}`) -- and this
+design DOES include the folded BN/ReLU arithmetic, not just raw Conv2d.
+(The precursor raw-Conv2d-only design, source: `{ctx["source"]}`, had
+already independently shown the same 100%-DSP saturation before the
+folded core existed.) Because the DSP budget is already fully consumed
+by a single one-window-per-cycle core -- with the added BN-fold/ReLU
+logic absorbed entirely into extra LUT/register fabric rather than more
+DSPs, since none remained -- naively duplicating this core to process 2
+or more windows per cycle would not fit on the same target using the
+same DSP-heavy approach.
 
 Thus, one-window-per-cycle is a reasonable FASTEST-SIMPLE estimate for
 the currently available Artix-7 200T target, using this DSP-parallel
@@ -836,7 +959,7 @@ slope (`per_window_us`), applied per-window.
 |---|---:|---:|---:|---:|---:|---:|
 {main_table_rows}
 
-## 8b. Winner by view (GPU vs. FPGA estimate, at each clock)
+## 8b. Winner by view (GPU vs. FPGA, at each clock -- 100 MHz is synthesis-supported cycle timing, 300 MHz is a hypothetical estimate)
 
 | Patch | Windows | Winner @100MHz (normal) | Winner @100MHz (CUDA Graph) | Winner @100MHz (overhead-corrected) | Winner @300MHz (normal) | Winner @300MHz (CUDA Graph) | Winner @300MHz (overhead-corrected) |
 |---|---:|---|---|---|---|---|---|
@@ -852,21 +975,21 @@ slope (`per_window_us`), applied per-window.
 
 **Under measured, normal GPU latency** (the real small-job-latency view):
 
-{crossover_sentence(first_gpu_win("winner_100mhz_estimate"), "100 MHz", "measured normal latency")}
+{crossover_sentence(first_gpu_win("winner_100mhz_synth_supported"), "100 MHz", "measured normal latency", FPGA_DESC_100MHZ)}
 
-{crossover_sentence(first_gpu_win("winner_300mhz_estimate"), "300 MHz", "measured normal latency")}
+{crossover_sentence(first_gpu_win("winner_300mhz_estimate"), "300 MHz", "measured normal latency", FPGA_DESC_300MHZ)}
 
 **Under CUDA Graph replay timing** (reduced-overhead sensitivity view):
 
-{crossover_sentence(first_gpu_win("winner_100mhz_cudagraph"), "100 MHz", "CUDA Graph replay timing")}
+{crossover_sentence(first_gpu_win("winner_100mhz_cudagraph_synth_supported"), "100 MHz", "CUDA Graph replay timing", FPGA_DESC_100MHZ)}
 
-{crossover_sentence(first_gpu_win("winner_300mhz_cudagraph"), "300 MHz", "CUDA Graph replay timing")}
+{crossover_sentence(first_gpu_win("winner_300mhz_cudagraph"), "300 MHz", "CUDA Graph replay timing", FPGA_DESC_300MHZ)}
 
 **Under the overhead-corrected / amortized throughput estimate** (zero-fixed-overhead sensitivity bound):
 
-{crossover_sentence(first_gpu_win("winner_100mhz_overhead_corrected"), "100 MHz", "the overhead-corrected estimate")}
+{crossover_sentence(first_gpu_win("winner_100mhz_overhead_corrected_synth_supported"), "100 MHz", "the overhead-corrected estimate", FPGA_DESC_100MHZ)}
 
-{crossover_sentence(first_gpu_win("winner_300mhz_overhead_corrected"), "300 MHz", "the overhead-corrected estimate")}
+{crossover_sentence(first_gpu_win("winner_300mhz_overhead_corrected"), "300 MHz", "the overhead-corrected estimate", FPGA_DESC_300MHZ)}
 
 As expected, reducing/removing GPU overhead (CUDA Graph, then the
 overhead-corrected estimate) shifts the crossover point to smaller
@@ -905,6 +1028,20 @@ raw arithmetic throughput.
   end-to-end flood-segmentation speed -- only about the isolated
   first-layer Conv-BN-ReLU arithmetic, per window, with data already
   resident before timing starts on all sides.
+- **The original FPGA estimate was not useless -- it was the hypothesis
+  and target architecture.** It specified exactly what to build (6-cycle
+  latency, 1 window/cycle throughput, 100 MHz) before that design
+  existed. Commit `313558e4`'s synthesized folded arithmetic core
+  (Section 6a) now VALIDATES that model at 100 MHz on Artix-7 200T:
+  GHDL confirms the pipeline behaves as assumed, and Vivado confirms it
+  closes timing with positive slack. The comparison in this report
+  remains MEASURED GPU latency versus SYNTHESIS-SUPPORTED FPGA cycle
+  timing -- it is still not measured GPU-vs-board latency.
+- **The synthesized design strengthens the 100 MHz result while also
+  exposing its resource limit**: all 740/740 DSPs on this part are
+  consumed by the single one-window-per-cycle core, so this specific
+  DSP-heavy mapping cannot simply be duplicated for higher throughput on
+  this target (Section 6b).
 
 ## 11. Claim boundaries
 
@@ -913,11 +1050,24 @@ raw arithmetic throughput.
   Environment table). The overhead-corrected estimate (view 3) is a
   FITTED sensitivity bound derived from measured data, not itself a
   direct measurement.
-- **FPGA timing is ESTIMATED**, from a speed-oriented, direct-parallel
-  core assumption plus this repo's own existing Artix-7 200T synthesis
-  context (Section 6) -- it is NOT a board measurement, and NOT a new
-  synthesis run for this specific benchmark.
+- **FPGA 100 MHz timing is cycle-count derived, but now
+  SYNTHESIS-SUPPORTED**: the underlying number is still `cycles /
+  clock_hz`, but the cycle count (6-cycle latency) and the 100 MHz clock
+  target are no longer purely assumed -- they are confirmed by a
+  GHDL-verified (160/160 PASS), Vivado-synthesized (WNS = +{ctx2["wns_ns"]} ns)
+  folded 32-output Conv-BN-ReLU arithmetic core (Section 6a). This is
+  STILL NOT a board measurement, and the reported figure is still a
+  cycle-count estimate, not a place-and-route or silicon-measured
+  latency.
+- **FPGA 300 MHz timing remains a purely hypothetical, UNSYNTHESIZED
+  estimate** -- no design in this repo, including the new folded core,
+  has been synthesized or verified to close timing at 300 MHz.
+- **This remains an arithmetic-core-only comparison** -- pre-extracted
+  windows only, no line buffers, no image streaming, no full U-Net.
 - **No board-measured FPGA speedup is claimed anywhere in this report.**
+- **No board-measured FPGA power is claimed anywhere in this report** --
+  the {ctx2["power_w"]} W figure cited in Section 6a is Vivado's
+  vectorless synthesis-time power estimate, not a silicon measurement.
 - **No full FPGA U-Net is claimed or implied** -- this is the first
   Conv-BN-ReLU stage's arithmetic core only.
 - **The 300 MHz figure is explicitly hypothetical** -- no design in this
