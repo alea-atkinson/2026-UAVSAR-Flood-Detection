@@ -1,0 +1,5 @@
+design,img_width,luts,registers,dsps_used,dsps_available,bram,wns_ns,whs_ns,power_w
+core_only,N/A,12039,6564,740,740,0,2.218,0.262,1.334
+integrated_front_end_plus_core,6,13713,7154,740,740,0,2.218,0.262,1.441
+integrated_front_end_plus_core,128,30120,16156,740,740,0,2.063,0.262,1.695
+integrated_front_end_plus_core,256,47542,25585,740,740,0,2.063,0.262,1.745
