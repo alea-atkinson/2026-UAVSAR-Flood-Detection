@@ -1,0 +1,4 @@
+tile_label,input_pixels_H_times_W,valid_windows,old_no_front_end_cycles_windows_plus_6,corrected_with_front_end_cycles_HW_plus_6,old_us_100mhz,corrected_us_100mhz,old_us_300mhz_hypothetical,corrected_us_300mhz_hypothetical,pct_increase_from_front_end_overhead
+6x6,36,16,22,42,0.22,0.42,0.0733,0.14,90.91
+128x128,16384,15876,15882,16390,158.82,163.9,52.94,54.6333,3.2
+256x256,65536,64516,64522,65542,645.22,655.42,215.0733,218.4733,1.58
