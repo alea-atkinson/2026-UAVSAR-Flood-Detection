@@ -1,0 +1,4 @@
+tile_label,input_size,windows,direct_parallel_cycles,direct_parallel_us_100mhz,direct_parallel_us_300mhz_hypothetical,resource_shared_2lane_cycles,resource_shared_2lane_us_100mhz,resource_shared_2lane_us_300mhz_hypothetical,resource_shared_vs_direct_parallel_slowdown_100mhz,gpu_arithmetic_core_only_us,gpu_full_unet_us
+6x6 (real UAVSAR sub-block),6,16,22,0.22,0.0733,9066.0,90.66,30.22,412.09,N/A,N/A
+128x128,128,15876,15882,158.82,52.94,8976401.5,89764.015,29921.3383,565.19,15.109,563.3
+256x256,256,64516,64522,645.22,215.0733,36476753.5,364767.535,121589.1783,565.34,28.302,1212.8
