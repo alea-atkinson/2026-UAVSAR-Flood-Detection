@@ -1,0 +1,8 @@
+design,num_out_channels,img_width,luts,luts_pct,registers,registers_pct,dsps_used,dsps_available,dsps_pct,bram,wns_ns,whs_ns,power_w
+core_only,32,N/A,12039,8.94,6564,2.44,740,740,100.00,0,2.218,0.262,1.334
+integrated_front_end_plus_core,32,6,13713,10.19,7154,2.66,740,740,100.00,0,2.218,0.262,1.441
+integrated_front_end_plus_core,32,128,30120,22.4,16156,6.0,740,740,100.00,0,2.063,0.262,1.695
+integrated_front_end_plus_core,32,256,47542,35.3,25585,9.5,740,740,100.00,0,2.063,0.262,1.745
+core_only,16,N/A,1796,1.33,1238,0.46,405,740,54.73,0,2.218,0.262,0.624
+integrated_front_end_plus_core,16,128,16444,12.22,10701,3.98,405,740,54.73,0,2.218,0.262,0.888
+integrated_front_end_plus_core,16,256,30660,22.78,20046,7.45,405,740,54.73,0,2.218,0.262,0.940
