@@ -33,6 +33,7 @@ ghdl_work_resource_shared_real_tile_q20/
 tb_window3x3_stream_3chan_flattened
 ghdl_build_artifacts_backup/
 tb_first_layer_16out_folded_arithmetic_core_streaming_front_end
+tb_first_layer_2win_8out_folded_arithmetic_core
 *.dcp
 vivado*.jou
 vivado*.log

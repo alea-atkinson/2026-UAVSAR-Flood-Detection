@@ -1,0 +1,4 @@
+design,windows_per_cycle,channels_per_window,total_channel_computations_per_cycle,luts,luts_pct,registers,registers_pct,dsps_used,dsps_available,dsps_pct,bram,wns_ns,whs_ns,power_w,ghdl_pass,ghdl_total
+32out_1win,1,32,32,12039,8.94,6564,2.44,740,740,100.00,0,2.218,0.262,1.334,160,160
+16out_1win,1,16,16,1796,1.33,1238,0.46,405,740,54.73,0,2.218,0.262,0.624,256,256
+2win_8out,2,8,16,1888,1.40,1254,0.47,406,740,54.86,0,2.218,0.262,0.630,128,128
